@@ -1,0 +1,455 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+
+// 1. Fetch ONLY Games and group them by Game Category
+export async function getStaticPaths({ paginate }: { paginate: any }) {
+    const APP_ID = "6467266";
+    const wpDomain = `https://wordpress-1164434-${APP_ID}.cloudwaysapps.com`;
+    const wpUrl = `${wpDomain}/graphql`; 
+
+    const safeHeaders = { 
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    };
+
+    let allGames: any[] = [];
+    let hasNextGames = true;
+    let gamesCursor = null;
+
+    while (hasNextGames) {
+        const response = await fetch(wpUrl, {
+            method: 'POST',
+            headers: safeHeaders,
+            body: JSON.stringify({
+                query: `
+                    query GetCategoryGames($after: String) {
+                        games(first: 100, after: $after) {
+                            pageInfo { hasNextPage endCursor }
+                            nodes {
+                                uri title excerpt date
+                                featuredImage { node { sourceUrl altText } }
+                                gameCategories { nodes { name slug } }
+                            }
+                        }
+                    }
+                `,
+                variables: { after: gamesCursor }
+            })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            if (result?.data?.games?.nodes) {
+                allGames.push(...result.data.games.nodes);
+                hasNextGames = result.data.games.pageInfo.hasNextPage;
+                gamesCursor = result.data.games.pageInfo.endCursor;
+            } else {
+                hasNextGames = false;
+            }
+        } else {
+            hasNextGames = false;
+        }
+    }
+
+    // 2. Group Content strictly by Game Category
+    const categoryMap = new Map();
+
+    allGames.forEach((item) => {
+        if (!item.uri || item.uri === '/') return;
+        
+        const cats = item.gameCategories?.nodes || [];
+
+        cats.forEach((cat: any) => {
+            if (!categoryMap.has(cat.slug)) {
+                categoryMap.set(cat.slug, {
+                    categoryData: {
+                        name: cat.name,
+                        slug: cat.slug
+                    },
+                    posts: []
+                });
+            }
+            categoryMap.get(cat.slug).posts.push(item);
+        });
+    });
+
+    // 3. Paginate the games (12 per page)
+    return Array.from(categoryMap.values()).flatMap(({ categoryData, posts }) => {
+        return paginate(posts, {
+            params: { category: categoryData.slug },
+            pageSize: 12,
+            props: { categoryData }
+        });
+    });
+}
+
+// 4. Extract Props and Parameters
+const { page, categoryData } = Astro.props;
+const { category } = Astro.params;
+
+const APP_ID = "6467266";
+const wpDomain = `https://wordpress-1164434-${APP_ID}.cloudwaysapps.com`;
+
+const stripHtml = (html: string) => {
+    if (!html) return "";
+    return html.replace(/<\/?[^>]+(>|$)/g, "");
+};
+
+const WP_HOSTS = [
+  "https://wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://wordpress-1164434-6467266.cloudwaysapps.com",
+  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "//wordpress-1164434-6467266.cloudwaysapps.com",
+];
+
+// Strip the origin host from any string (HTML, JSON-LD, a single URL).
+// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
+function stripWp(input = "") {
+  let out = input;
+  for (const h of WP_HOSTS) out = out.split(h).join("");
+  return out;
+}
+---
+
+<Layout 
+    title={`${categoryData.name} Games | AU Crazy Vegas`} 
+    description={`Play the best ${categoryData.name} games available right now.`}
+    robots="index, follow"
+>
+    <header class="category-hero">
+        <div class="category-hero-container">
+            
+            <nav class="post-breadcrumbs" aria-label="breadcrumb">
+                <a href="/">Home</a>
+                <span class="separator">›</span>
+                <span class="current">Games</span>
+                <span class="separator">›</span>
+                <span class="current">{categoryData.name}</span>
+            </nav>
+
+            <div class="category-hero-info">
+                <h1 class="category-hero-title">{categoryData.name} Games</h1>
+                <p class="category-hero-subtitle">Browse and play our top-rated games</p>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="page-wrapper">
+        <section class="page-container" style="background: transparent; box-shadow: none; border: none; padding: 0;">
+            
+            <div class="posts-grid">
+                {page.data.map((post: any) => {
+                    let relativeUri = post.uri ? post.uri.replace(/https?:\/\/[^\/]+/g, "") : "/";
+                    const cleanSlug = relativeUri.replace(/^\/|\/$/g, '');
+                    const postLink = `/${cleanSlug}/`;
+                    
+                    let featImage = post.featuredImage?.node?.sourceUrl || 'https://via.placeholder.com/600x400?text=Game';
+                    featImage = featImage.replace('https://au.crazyvegas.com', wpDomain).replace('https://casinous.com', wpDomain);
+                    
+                    const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                    const excerpt = stripHtml(post.excerpt).substring(0, 120) + '...';
+
+                    return (
+                        <article class="post-card">
+                            <a href={postLink} class="post-card-image-link">
+                                <img src={featImage} alt={post.title} class="post-card-image" loading="lazy" referrerpolicy="no-referrer" />
+                            </a>
+                            <div class="post-card-content">
+                                <div class="post-card-meta">
+                                    <span>{postDate}</span>
+                                </div>
+                                <h2 class="post-card-title">
+                                    <a href={postLink} set:html={post.title}></a>
+                                </h2>
+                                <p class="post-card-excerpt" set:html={excerpt}></p>
+                                <a href={postLink} class="post-card-readmore">Play Game <i class="fa-solid fa-gamepad"></i></a>
+                            </div>
+                        </article>
+                    );
+                })}
+            </div>
+
+            {page.lastPage > 1 && (
+                <div class="pagination-container">
+                    {page.url.prev ? (
+                        <a href={page.url.prev.replace(/^https?:\/\/[^\/]+/g, '')} class="pagination-btn"><i class="fa-solid fa-chevron-left"></i> Previous</a>
+                    ) : (
+                        <span class="pagination-btn disabled"><i class="fa-solid fa-chevron-left"></i> Previous</span>
+                    )}
+
+                    <span class="pagination-info">Page {page.currentPage} of {page.lastPage}</span>
+
+                    {page.url.next ? (
+                        <a href={page.url.next.replace(/^https?:\/\/[^\/]+/g, '')} class="pagination-btn">Next <i class="fa-solid fa-chevron-right"></i></a>
+                    ) : (
+                        <span class="pagination-btn disabled">Next <i class="fa-solid fa-chevron-right"></i></span>
+                    )}
+                </div>
+            )}
+
+        </section>
+    </main>
+
+</Layout>
+
+<style>
+    /* 🚨 FONT CONSISTENCY: force every text element on this page to the
+       site's system font stack so the body copy matches the rest of the site. */
+    .category-hero,
+    .category-hero-title,
+    .category-hero-subtitle,
+    .post-breadcrumbs,
+    .post-card-title,
+    .post-card-title a,
+    .post-card-meta,
+    .post-card-excerpt,
+    .post-card-excerpt span,
+    .post-card-excerpt font,
+    .post-card-excerpt p,
+    .post-card-readmore,
+    .pagination-btn,
+    .pagination-info {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            Roboto, sans-serif !important;
+    }
+
+    /* =========================================
+       CATEGORY HERO SECTION
+    ========================================= */
+    .category-hero {
+        background-color: #0f172a; 
+        color: #ffffff;
+        padding: 4rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
+    }
+
+    .category-hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 70%), 
+                    linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 1) 100%);
+        pointer-events: none;
+    }
+
+    .category-hero-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .category-hero-info {
+        margin-top: 2rem;
+    }
+
+    .category-hero-title {
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1.1;
+        margin: 0 0 0.5rem 0;
+        letter-spacing: -1px;
+    }
+
+    .category-hero-subtitle {
+        font-size: 1.25rem;
+        color: #94a3b8;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Common Breadcrumbs */
+    .post-breadcrumbs {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        background: rgba(255, 255, 255, 0.05); 
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 0.5rem;
+    }
+    
+    .post-breadcrumbs a { color: #93c5fd; text-decoration: none; transition: color 0.2s ease; }
+    .post-breadcrumbs a:hover { color: #ffffff; }
+    .post-breadcrumbs .separator { color: #64748b; font-size: 1rem; line-height: 1; }
+    .post-breadcrumbs .current { color: #f8fafc; }
+
+    /* =========================================
+       POSTS GRID & CARDS
+    ========================================= */
+    .page-wrapper {
+        background-color: #f8fafc;
+        padding: 3rem 1rem 5rem;
+    }
+
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .post-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .post-card-image-link {
+        display: block;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    }
+
+    .post-card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .post-card:hover .post-card-image {
+        transform: scale(1.05);
+    }
+
+    .post-card-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .post-card-meta {
+        font-size: 0.85rem;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .post-card-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        line-height: 1.3;
+        margin: 0 0 1rem 0;
+    }
+
+    .post-card-title a {
+        color: #0f172a;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .post-card-title a:hover {
+        color: #2563eb;
+    }
+
+    .post-card-excerpt {
+        color: #475569;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .post-card-readmore {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #2563eb;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        margin-top: auto;
+    }
+
+    .post-card-readmore i {
+        font-size: 0.85rem;
+        transition: transform 0.2s ease;
+    }
+
+    .post-card-readmore:hover {
+        color: #1d4ed8;
+    }
+
+    .post-card-readmore:hover i {
+        transform: translateX(4px);
+    }
+
+    /* =========================================
+       PAGINATION CONTROLS
+    ========================================= */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background-color: #ffffff;
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border-radius: 99px;
+        border: 1px solid #cbd5e1;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+        background-color: #f1f5f9;
+        border-color: #94a3b8;
+    }
+
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8fafc;
+    }
+
+    .pagination-info {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+        .category-hero-title {
+            font-size: 2.5rem;
+        }
+    }
+</style>

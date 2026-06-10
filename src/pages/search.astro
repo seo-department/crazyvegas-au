@@ -1,0 +1,339 @@
+---
+import Layout from "../layouts/Layout.astro"
+
+const title = "Search Results | AU Casinos Online"
+const description = "Search for the best online casinos, bonuses, and pokies in Australia."
+
+const WP_HOSTS = [
+  "https://wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://wordpress-1164434-6467266.cloudwaysapps.com",
+  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "//wordpress-1164434-6467266.cloudwaysapps.com",
+];
+
+// Strip the origin host from any string (HTML, JSON-LD, a single URL).
+// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
+function stripWp(input = "") {
+  let out = input;
+  for (const h of WP_HOSTS) out = out.split(h).join("");
+  return out;
+}
+---
+
+<Layout title={title} description={description}>
+    <header class="page-hero">
+        <div class="page-hero-container">
+            <h1 class="page-title" id="search-title">Searching...</h1>
+        </div>
+    </header>
+
+    <main class="page-wrapper">
+        <article class="page-container cus-page-container">
+            <div id="search-loading" style="text-align: center; padding: 40px;">
+                <i class="fa-solid fa-spinner fa-spin fa-3x" style="color: #0ea5e9;"></i>
+                <p style="margin-top: 16px; color: #64748b;">Hunting for the best results...</p>
+            </div>
+
+            <div id="search-results-container" style="display: none; flex-direction: column; gap: 24px;">
+                </div>
+
+            <div id="pagination-controls" style="display: none; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+                <button id="prev-btn" class="pagination-btn" disabled><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                <span id="page-indicator" style="font-weight: 700; color: #64748b;">Page 1</span>
+                <button id="next-btn" class="pagination-btn">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+            <div id="no-results" style="display: none; text-align: center; padding: 40px;">
+                <i class="fa-solid fa-magnifying-glass fa-3x" style="color: #cbd5e1; margin-bottom: 16px;"></i>
+                <h2>No results found</h2>
+                <p style="color: #64748b;">We couldn't find anything matching your search. Try different keywords!</p>
+                <a href="/" style="display: inline-block; margin-top: 16px; color: #0ea5e9; font-weight: bold;"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </article>
+    </main>
+
+    <style>
+        .search-result-row {
+            display: flex;
+            gap: 24px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            align-items: flex-start;
+        }
+
+        .search-result-row:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .search-row-image {
+            flex: 0 0 240px; /* Fixed width for the image block */
+        }
+
+        .search-row-image img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .search-row-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .search-row-title {
+            margin: 0 0 12px 0;
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            transition: color 0.2s ease;
+        }
+
+        .search-row-title:hover {
+            color: #0ea5e9;
+        }
+
+        .search-row-desc {
+            color: #475569;
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+            /* Truncates the text to 3 lines if it's too long */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .search-row-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-read-more {
+            background: #0ea5e9;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .search-read-more:hover {
+            background: #0284c7;
+            color: #ffffff;
+        }
+
+        .pagination-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #0f172a;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #0ea5e9;
+            color: white;
+            border-color: #0ea5e9;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Stack elements vertically on mobile phones */
+        @media (max-width: 768px) {
+            .search-result-row {
+                flex-direction: column;
+                gap: 16px;
+                padding: 16px;
+            }
+            .search-row-image {
+                flex: auto;
+                width: 100%;
+            }
+            .search-row-image img {
+                height: 180px;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('q');
+            
+            const titleEl = document.getElementById('search-title');
+            const loadingEl = document.getElementById('search-loading');
+            const resultsContainer = document.getElementById('search-results-container');
+            const noResultsEl = document.getElementById('no-results');
+            const paginationControls = document.getElementById('pagination-controls');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageIndicator = document.getElementById('page-indicator');
+
+            // Pagination State
+            let allResults = [];
+            let currentPage = 1;
+            const itemsPerPage = 10;
+
+            if (!searchQuery) {
+                titleEl.innerHTML = "Please enter a search term";
+                loadingEl.style.display = 'none';
+                return;
+            }
+
+            titleEl.innerHTML = `Results for: <em>"${searchQuery}"</em>`;
+
+            const wpUrl = "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql";
+            const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com";
+
+            // 🚨 UPDATED QUERY: We now request 50 of each type, and specifically ask for the 'excerpt'
+            const query = `
+                query SearchQuery($term: String!) {
+                    posts(where: {search: $term}, first: 50) {
+                        nodes { title uri date excerpt featuredImage { node { sourceUrl } } }
+                    }
+                    pages(where: {search: $term}, first: 50) {
+                        nodes { title uri date featuredImage { node { sourceUrl } } }
+                    }
+                    casinoReviews(where: {search: $term}, first: 50) {
+                        nodes { title uri date excerpt featuredImage { node { sourceUrl } } }
+                    }
+                }
+            `;
+
+            try {
+                const response = await fetch(wpUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, variables: { term: searchQuery } })
+                });
+
+                const result = await response.json();
+                
+                // Combine and sort results by date (newest first)
+                allResults = [
+                    ...(result.data?.posts?.nodes || []),
+                    ...(result.data?.pages?.nodes || []),
+                    ...(result.data?.casinoReviews?.nodes || [])
+                ].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                loadingEl.style.display = 'none';
+
+                if (allResults.length === 0) {
+                    noResultsEl.style.display = 'block';
+                    return;
+                }
+
+                // Initial Render
+                resultsContainer.style.display = 'flex';
+                renderPage(1);
+
+                // Setup Pagination Button Listeners
+                prevBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back to top of results
+                    }
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    if (currentPage * itemsPerPage < allResults.length) {
+                        currentPage++;
+                        renderPage(currentPage);
+                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back to top of results
+                    }
+                });
+
+            } catch (error) {
+                console.error("Search failed:", error);
+                loadingEl.style.display = 'none';
+                titleEl.innerHTML = "Something went wrong";
+                noResultsEl.style.display = 'block';
+                noResultsEl.querySelector('p').innerHTML = "We had trouble connecting to the database. Please try again.";
+            }
+
+            // Function to render a specific page of results
+            function renderPage(page) {
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = page * itemsPerPage;
+                const paginatedItems = allResults.slice(startIndex, endIndex);
+
+                let htmlOutput = '';
+
+                paginatedItems.forEach(node => {
+                    let cleanSlug = node.uri.replace(wpDomain, "").replace(/https?:\/\/[^\/]+/g, "");
+                    cleanSlug = cleanSlug.replace(/^\/|\/$/g, "");
+                    const finalUrl = `/${cleanSlug}/`;
+
+                    const formattedDate = node.date ? new Date(node.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recently";
+
+                    let imgUrl = node.featuredImage?.node?.sourceUrl || "https://ui-avatars.com/api/?name=C+V&background=0f172a&color=fff";
+                    try {
+                        const parsedUrl = new URL(imgUrl);
+                        imgUrl = parsedUrl.pathname;
+                    } catch(e) {}
+
+                    // Clean up the excerpt (Strip HTML tags injected by WordPress)
+                    let rawExcerpt = node.excerpt || "Click to read our comprehensive review and guide to find out more about this topic.";
+                    let cleanExcerpt = rawExcerpt.replace(/<[^>]*>?/gm, '');
+
+                    htmlOutput += `
+                        <div class="search-result-row">
+                            <div class="search-row-image">
+                                <a href="${finalUrl}">
+                                    <img src="${imgUrl}" alt="${node.title}" loading="lazy" referrerpolicy="no-referrer" />
+                                </a>
+                            </div>
+                            <div class="search-row-content">
+                                <div>
+                                    <a href="${finalUrl}" style="text-decoration: none;">
+                                        <h3 class="search-row-title">${node.title}</h3>
+                                    </a>
+                                    <p class="search-row-desc">${cleanExcerpt}</p>
+                                </div>
+                                <div class="search-row-meta">
+                                    <span style="font-size: 13px; color: #64748b; font-weight: 500;">
+                                        <i class="far fa-clock"></i> ${formattedDate}
+                                    </span>
+                                    <a href="${finalUrl}" class="search-read-more">Read More <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                resultsContainer.innerHTML = htmlOutput;
+
+                // Update Pagination UI
+                pageIndicator.innerHTML = `Page ${page} of ${Math.ceil(allResults.length / itemsPerPage)}`;
+                prevBtn.disabled = page === 1;
+                nextBtn.disabled = endIndex >= allResults.length;
+                
+                // Show controls only if there is more than 1 page of results
+                if (allResults.length > itemsPerPage) {
+                    paginationControls.style.display = 'flex';
+                }
+            }
+        });
+    </script>
+</Layout>
