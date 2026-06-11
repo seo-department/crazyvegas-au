@@ -3992,6 +3992,48 @@ function stripWp(input = "") {
 	.faq-answer-inner li {
 		margin-bottom: 0.5rem;
 	}
+
+
+	/* Mobile Styles (Max-width usually 768px or 991px depending on your design) */
+@media (max-width: 991px) {
+  
+  /* 1. Ensure the parent container stacks elements vertically */
+  .hero-columns {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 2. Ensure the left side is also a flex container so we can reorder its children */
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 3. Assign the display order for the mobile layout */
+  
+  .hero-left > h1 {
+    order: 1; /* H1 stays at the top */
+  }
+
+  /* 4. Pull the Right Column (Bonus Card) UP into the second position */
+  .hero-right {
+    order: 2;
+    margin-bottom: 20px; /* Add some space below the card */
+  }
+
+  /* 5. Push the rest of the left column content down */
+  .hero-left > .hero-intro-box {
+    order: 3;
+  }
+
+  .hero-left > .hero-category-cards {
+    order: 4;
+  }
+
+  .hero-left > .hero-search-wrapper {
+    order: 5;
+  }
+}
 </style>
 
 <script>

@@ -1889,7 +1889,7 @@
     {
       "source": "/voltent-lucky-7s-at-playmojo/",
       "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/savage-fruits-clash/",
@@ -1924,6 +1924,11 @@
     {
       "source": "/play/spins-up-casino/",
       "destination": "https://roosterspartners.media/aajix0r3zd",
+      "permanent": true
+    },
+    {
+      "source": "/blog/online-pokies-megaways/",
+      "destination": "/online-pokies/megaways/",
       "permanent": true
     }
   ]
