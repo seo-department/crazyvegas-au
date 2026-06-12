@@ -806,6 +806,45 @@ function timeAgo(dateString: string) {
 </html>
 
 <style is:global>
+
+    		/* Mobile H1 - hidden on desktop */
+.home-hero-title-us {
+    display: none;
+}
+
+/* Desktop heading (div) - hidden on mobile */
+.home-hero-title {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .home-hero-title-us {
+        display: block;
+    }
+    .home-hero-title {
+        display: none;
+    }
+	.hero-r-mobile {
+    display: block !important;
+}
+
+h1.home-hero-title-us {
+    margin-top: -46px !important;
+}
+.hero-right {
+    display: none !important;
+}
+
+.hero-r-mobile .hero-right {
+    display: block !important;
+}
+
+}
+
+.hero-r-mobile {
+    display: none;
+}
+
     .cus-vote-btn {
         transition: all 0.2s ease !important;
     }

@@ -1839,7 +1839,7 @@
     {
       "source": "/play/lucky-ones-casino/",
       "destination": "https://luckyones.site/kp1kmybxa",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/play/faircrown-casino/",
@@ -1864,7 +1864,7 @@
     {
       "source": "/marathon-stake-race/",
       "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/wild-spring-tournament-at-abo-casino/",
@@ -1879,12 +1879,12 @@
     {
       "source": "/cowboy-party-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/luckywins-whiskey-win-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/voltent-lucky-7s-at-playmojo/",
@@ -1909,7 +1909,7 @@
     {
       "source": "/lucky-hunter-welcome-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/the-weekly-tournament-at-roosterbet-casino/",
@@ -1917,18 +1917,113 @@
       "permanent": false
     },
     {
-      "source": "/play/spin-jo-casino/",
-      "destination": "https://roosterspartners.com/aaszysazps",
-      "permanent": true
-    },
-    {
       "source": "/play/spins-up-casino/",
       "destination": "https://roosterspartners.media/aajix0r3zd",
       "permanent": true
     },
     {
+      "source": "/play/spin-jo-casino/",
+      "destination": "https://roosterspartners.com/aaszysazps",
+      "permanent": true
+    },
+    {
       "source": "/blog/online-pokies-megaways/",
       "destination": "/online-pokies/megaways/",
+      "permanent": true
+    },
+    {
+      "source": "/joka-no-deposit-bonus/",
+      "destination": "https://au.crazyvegas.com/blog/joka-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/jackpot-jill-no-deposit-bonus/",
+      "destination": "https://au.crazyvegas.com/blog/jackpot-jill-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/stellar-spins-no-deposit-bonus/",
+      "destination": "/blog/stellar-spins-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/spinrise-no-deposit-bonus/",
+      "destination": "/blog/spinrise-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/boho-casino-no-deposit-bonus/",
+      "destination": "/blog/boho-casino-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/skycrown-no-deposit-bonus/",
+      "destination": "/blog/skycrown-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/ozwin-no-deposit-bonus/",
+      "destination": "/blog/ozwin-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/fair-go-no-deposit-bonus/",
+      "destination": "/blog/fair-go-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/7bit-no-deposit-bonus/",
+      "destination": "/blog/7bit-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/hellspin-no-deposit-bonus/",
+      "destination": "/blog/hellspin-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/katsubet-no-deposit-bonus/",
+      "destination": "/blog/katsubet-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/las-vegas-usa-no-deposit-bonus/",
+      "destination": "/blog/las-vegas-usa-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/play-croco-no-deposit-bonus/",
+      "destination": "/blog/play-croco-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/ripper-no-deposit-bonus/",
+      "destination": "/blog/ripper-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/slots-gallery-no-deposit-bonus/",
+      "destination": "/blog/slots-gallery-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/wolf-winner-casino-no-deposit-bonus/",
+      "destination": "/blog/wolf-winner-casino-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/slotsplus-no-deposit-bonus/",
+      "destination": "/blog/slotsplus-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/mirax-casino-no-deposit-bonus/",
+      "destination": "/blog/mirax-casino-no-deposit-bonus/",
+      "permanent": true
+    },
+    {
+      "source": "/uptown-pokies-no-deposit-bonus/",
+      "destination": "/blog/uptown-pokies-no-deposit-bonus/",
       "permanent": true
     }
   ]

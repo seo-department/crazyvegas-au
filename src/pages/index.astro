@@ -181,21 +181,20 @@ const breakingStories = recentPosts.slice(0, 3)
 const blogPosts = recentPosts.slice(3, 7)
 
 const WP_HOSTS = [
-  "https://wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://wordpress-1164434-6467266.cloudwaysapps.com",
-  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "//wordpress-1164434-6467266.cloudwaysapps.com",
-];
+	"https://wordpress-1164434-6467266.cloudwaysapps.com",
+	"http://wordpress-1164434-6467266.cloudwaysapps.com",
+	"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+	"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+	"//wordpress-1164434-6467266.cloudwaysapps.com",
+]
 
 // Strip the origin host from any string (HTML, JSON-LD, a single URL).
 // Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
 function stripWp(input = "") {
-  let out = input;
-  for (const h of WP_HOSTS) out = out.split(h).join("");
-  return out;
+	let out = input
+	for (const h of WP_HOSTS) out = out.split(h).join("")
+	return out
 }
-
 ---
 
 <Layout
@@ -207,13 +206,54 @@ function stripWp(input = "") {
 	<header class="home-hero new-split-hero">
 		<div class="home-hero-container">
 			<div class="hero-columns">
+				<!-- Mobile-only H1 -->
+				<h1
+					class="home-hero-title-us"
+					set:html={page?.title ||
+						"Best Online Casinos in the USA for Real Money"}
+				/>
 				<!-- LEFT COLUMN: Text, Cards, Search -->
 				<div class="hero-left">
-					<h1
+					<!-- Desktop-only heading - NOT an h1, just styled div -->
+					<div
 						class="home-hero-title"
 						set:html={page?.title ||
 							"Best Online Casinos in the USA for Real Money"}
 					/>
+
+					<div class="hero-r-mobile">
+					<div class="hero-right">
+						<div class="hero-cta-card">
+							<!-- Shaking Gift Icon on Top -->
+							<div class="gift-icon-wrapper shake-icon">
+								<i class="fa-solid fa-gift"></i>
+							</div>
+
+							<!-- Shaking/Floating Mascot Image -->
+							<img
+								src="/images/roostino-casino.png"
+								alt="roostino"
+								class="hero-mascot-img float-shake-img"
+								fetchpriority="high"
+								decoding="sync"
+							/>
+
+							<!-- Card Content & Breathing Button -->
+							<div class="hero-cta-content">
+								<strong>Exclusive Bonus</strong>
+								<p>AU$750 Bonus + 200 Free Spins</p>
+								<a
+									href="/play/roostino-casino"
+									target="_blank"
+									rel="nofollow noopener noreferrer"
+									class="play-now-btn breathing-btn"
+								>
+									Play Now
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
 
 					<div class="hero-intro-box">
 						<div
@@ -293,7 +333,9 @@ function stripWp(input = "") {
 
 						<a href="/casino-reviews/" class="hero-cat-card">
 							<div class="cat-icon">
-								<i class="fa-solid fa-ranking-star" style="color: #cbd5e1;"></i>
+								<i
+									class="fa-solid fa-ranking-star"
+									style="color: #cbd5e1;"></i>
 							</div>
 							<div class="cat-title">CASINO REVIEWS</div>
 							<div class="cat-sub">100+ REVIEWS</div>
@@ -311,7 +353,9 @@ function stripWp(input = "") {
 
 						<a href="/mobile-casinos/" class="hero-cat-card">
 							<div class="cat-icon">
-								<i class="fa-solid fa-mobile-screen-button" style="color: #a855f7;"></i>
+								<i
+									class="fa-solid fa-mobile-screen-button"
+									style="color: #a855f7;"></i>
 							</div>
 							<div class="cat-title">MOBILE CASINOS</div>
 							<div class="cat-sub">PLAY ON THE GO</div>
@@ -328,7 +372,12 @@ function stripWp(input = "") {
 					</div>
 
 					<!-- NEW: Search Bar -->
-					<form action="/search/" method="get" role="search" class="hero-search-wrapper">
+					<form
+						action="/search/"
+						method="get"
+						role="search"
+						class="hero-search-wrapper"
+					>
 						<input
 							type="search"
 							name="q"
@@ -348,37 +397,39 @@ function stripWp(input = "") {
 				</div>
 
 				<!-- RIGHT COLUMN: Modern CTA Card with Animations -->
-				<div class="hero-right">
-					<div class="hero-cta-card">
-						<!-- Shaking Gift Icon on Top -->
-						<div class="gift-icon-wrapper shake-icon">
-							<i class="fa-solid fa-gift"></i>
-						</div>
+				
+					<div class="hero-right">
+						<div class="hero-cta-card">
+							<!-- Shaking Gift Icon on Top -->
+							<div class="gift-icon-wrapper shake-icon">
+								<i class="fa-solid fa-gift"></i>
+							</div>
 
-						<!-- Shaking/Floating Mascot Image -->
-						<img
-							src="/images/roostino-casino.png"
-							alt="roostino"
-							class="hero-mascot-img float-shake-img"
-							fetchpriority="high"
-							decoding="sync"
-						/>
+							<!-- Shaking/Floating Mascot Image -->
+							<img
+								src="/images/roostino-casino.png"
+								alt="roostino"
+								class="hero-mascot-img float-shake-img"
+								fetchpriority="high"
+								decoding="sync"
+							/>
 
-						<!-- Card Content & Breathing Button -->
-						<div class="hero-cta-content">
-							<strong>Exclusive Bonus</strong>
-							<p>AU$750 Bonus + 200 Free Spins</p>
-							<a
-								href="/play/roostino-casino"
-								target="_blank"
-								rel="nofollow noopener noreferrer"
-								class="play-now-btn breathing-btn"
-							>
-								Play Now
-							</a>
+							<!-- Card Content & Breathing Button -->
+							<div class="hero-cta-content">
+								<strong>Exclusive Bonus</strong>
+								<p>AU$750 Bonus + 200 Free Spins</p>
+								<a
+									href="/play/roostino-casino"
+									target="_blank"
+									rel="nofollow noopener noreferrer"
+									class="play-now-btn breathing-btn"
+								>
+									Play Now
+								</a>
+							</div>
 						</div>
 					</div>
-				</div>
+				
 			</div>
 
 			<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
@@ -421,8 +472,7 @@ function stripWp(input = "") {
 									>editorial process</a
 								> to ensure accuracy, impartiality, and trustworthiness.
 								You can learn more about our evaluation process on
-								our <a
-									href="/how-we-rate-casinos/"
+								our <a href="/how-we-rate-casinos/"
 									>How We Rate</a
 								> page.
 							</p>
@@ -448,226 +498,236 @@ function stripWp(input = "") {
 	<main class="home-wrapper" id="content">
 		<article class="home-container wp-content" set:html={fixedContent} />
 
-	{
-		recentPosts.length >= 4 && (
-			<section class="full-width-discovery-section">
-				<div class="discovery-container">
-					<div class="discovery-columns">
-						<div class="discovery-left-col">
-							<h2 class="discovery-section-title">
-								Read today's breaking stories
-							</h2>
-							<div class="breaking-stories-list">
-								{breakingStories.map((story: any) => {
-									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-									let relativeUri = story.uri
-										? story.uri.replace(
-												/https?:\/\/[^\/]+/g,
-												"",
+		{
+			recentPosts.length >= 4 && (
+				<section class="full-width-discovery-section">
+					<div class="discovery-container">
+						<div class="discovery-columns">
+							<div class="discovery-left-col">
+								<h2 class="discovery-section-title">
+									Read today's breaking stories
+								</h2>
+								<div class="breaking-stories-list">
+									{breakingStories.map((story: any) => {
+										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+										let relativeUri = story.uri
+											? story.uri.replace(
+													/https?:\/\/[^\/]+/g,
+													"",
+												)
+											: "/"
+										const cleanSlug = relativeUri.replace(
+											/^\/|\/$/g,
+											"",
+										)
+										const storyLink = `/${cleanSlug}/`
+
+										const storyDate = new Date(
+											story.date,
+										).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})
+
+										let storyImage =
+											story.featuredImage?.node
+												?.sourceUrl ||
+											"https://via.placeholder.com/300x150"
+
+										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+										try {
+											const parsedUrl = new URL(
+												storyImage,
 											)
-										: "/"
-									const cleanSlug = relativeUri.replace(
-										/^\/|\/$/g,
-										"",
-									)
-									const storyLink = `/${cleanSlug}/`
+											storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
+										} catch (e) {}
 
-									const storyDate = new Date(
-										story.date,
-									).toLocaleDateString("en-US", {
-										year: "numeric",
-										month: "short",
-										day: "numeric",
-									})
+										const authorObj = story.author?.node
+										const recAuthorName = authorObj
+											? authorObj.firstName &&
+												authorObj.lastName
+												? `${authorObj.firstName} ${authorObj.lastName}`
+												: authorObj.name
+											: "Editorial Team"
+										let recAuthorAvatar =
+											authorObj?.avatar?.url ||
+											`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
 
-									let storyImage =
-										story.featuredImage?.node?.sourceUrl ||
-										"https://via.placeholder.com/300x150"
-
-									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-									try {
-										const parsedUrl = new URL(storyImage)
-										storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
-									} catch (e) {}
-
-									const authorObj = story.author?.node
-									const recAuthorName = authorObj
-										? authorObj.firstName &&
-											authorObj.lastName
-											? `${authorObj.firstName} ${authorObj.lastName}`
-											: authorObj.name
-										: "Editorial Team"
-									let recAuthorAvatar =
-										authorObj?.avatar?.url ||
-										`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-									return (
-										<div class="breaking-story-card">
-											<div class="breaking-story-image">
-												<a
-													href={storyLink}
-													class="thumbnail-link"
-												>
-													<img
-														src={storyImage}
-														alt={
-															story.featuredImage
-																?.node
-																?.altText ||
-															story.title
-														}
-														loading="lazy"
-														referrerpolicy="no-referrer"
-													/>
-												</a>
-											</div>
-											<div class="breaking-story-content">
-												<div class="card-meta-top">
-													<span class="card-category">
-														News
-													</span>
-													<span class="card-date">
-														{storyDate}
-													</span>
-												</div>
-												<a
-													href={storyLink}
-													class="card-title-link"
-												>
-													<h3
-														set:html={story.title}
-													/>
-												</a>
-												<div class="card-meta-bottom">
-													<img
-														src={recAuthorAvatar}
-														alt={recAuthorName}
-														class="card-author-avatar"
-													/>
-													<span>
-														{recAuthorName} • 10 min
-														read
-													</span>
-												</div>
-											</div>
-										</div>
-									)
-								})}
-							</div>
-						</div>
-
-						<div class="discovery-right-col">
-							<h2 class="discovery-section-title">
-								Discover our blogs
-							</h2>
-							<div class="discover-blogs-list">
-								{blogPosts.map((blogPost: any) => {
-									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-									let relativeUri = blogPost.uri
-										? blogPost.uri.replace(
-												/https?:\/\/[^\/]+/g,
-												"",
-											)
-										: "/"
-									const cleanSlug = relativeUri.replace(
-										/^\/|\/$/g,
-										"",
-									)
-									const blogLink = `/${cleanSlug}/`
-
-									const blogDate = new Date(
-										blogPost.date,
-									).toLocaleDateString("en-US", {
-										year: "numeric",
-										month: "short",
-										day: "numeric",
-									})
-
-									let blogImage =
-										blogPost.featuredImage?.node
-											?.sourceUrl ||
-										"https://via.placeholder.com/150"
-
-									// 🚨 BULLETPROOF FIX: Use JS URL object to force the Cloudways domain
-									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-									try {
-										const parsedUrl = new URL(blogImage)
-										blogImage = parsedUrl.pathname
-									} catch (e) {}
-
-									const authorObj = blogPost.author?.node
-									const blogAuthorName = authorObj
-										? authorObj.firstName &&
-											authorObj.lastName
-											? `${authorObj.firstName} ${authorObj.lastName}`
-											: authorObj.name
-										: "Editorial Team"
-									let blogAuthorAvatar =
-										authorObj?.avatar?.url ||
-										`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-									return (
-										<div class="blog-post-card">
-											<div class="blog-post-image">
-												<a href={blogLink}>
-													<img
-														src={blogImage}
-														alt={
-															blogPost
-																.featuredImage
-																?.node
-																?.altText ||
-															blogPost.title
-														}
-														loading="lazy"
-														referrerpolicy="no-referrer"
-													/>
-												</a>
-											</div>
-											<div class="blog-post-content">
-												<a
-													href={blogLink}
-													class="blog-title-link"
-												>
-													<h3
-														set:html={
-															blogPost.title
-														}
-													/>
-												</a>
-												<div class="blog-meta">
-													<div class="blog-meta-author">
+										return (
+											<div class="breaking-story-card">
+												<div class="breaking-story-image">
+													<a
+														href={storyLink}
+														class="thumbnail-link"
+													>
 														<img
-															src={
-																blogAuthorAvatar
+															src={storyImage}
+															alt={
+																story
+																	.featuredImage
+																	?.node
+																	?.altText ||
+																story.title
 															}
-															alt={blogAuthorName}
-															class="blog-author-avatar"
+															loading="lazy"
+															referrerpolicy="no-referrer"
 														/>
-														<span>
-															{blogAuthorName} •{" "}
-															{blogDate}
+													</a>
+												</div>
+												<div class="breaking-story-content">
+													<div class="card-meta-top">
+														<span class="card-category">
+															News
+														</span>
+														<span class="card-date">
+															{storyDate}
 														</span>
 													</div>
 													<a
-														href={blogLink}
-														class="blog-read-more"
+														href={storyLink}
+														class="card-title-link"
 													>
-														Read{" "}
-														<i class="fa-solid fa-arrow-right" />
+														<h3
+															set:html={
+																story.title
+															}
+														/>
 													</a>
+													<div class="card-meta-bottom">
+														<img
+															src={
+																recAuthorAvatar
+															}
+															alt={recAuthorName}
+															class="card-author-avatar"
+														/>
+														<span>
+															{recAuthorName} • 10
+															min read
+														</span>
+													</div>
 												</div>
 											</div>
-										</div>
-									)
-								})}
+										)
+									})}
+								</div>
+							</div>
+
+							<div class="discovery-right-col">
+								<h2 class="discovery-section-title">
+									Discover our blogs
+								</h2>
+								<div class="discover-blogs-list">
+									{blogPosts.map((blogPost: any) => {
+										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+										let relativeUri = blogPost.uri
+											? blogPost.uri.replace(
+													/https?:\/\/[^\/]+/g,
+													"",
+												)
+											: "/"
+										const cleanSlug = relativeUri.replace(
+											/^\/|\/$/g,
+											"",
+										)
+										const blogLink = `/${cleanSlug}/`
+
+										const blogDate = new Date(
+											blogPost.date,
+										).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})
+
+										let blogImage =
+											blogPost.featuredImage?.node
+												?.sourceUrl ||
+											"https://via.placeholder.com/150"
+
+										// 🚨 BULLETPROOF FIX: Use JS URL object to force the Cloudways domain
+										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+										try {
+											const parsedUrl = new URL(blogImage)
+											blogImage = parsedUrl.pathname
+										} catch (e) {}
+
+										const authorObj = blogPost.author?.node
+										const blogAuthorName = authorObj
+											? authorObj.firstName &&
+												authorObj.lastName
+												? `${authorObj.firstName} ${authorObj.lastName}`
+												: authorObj.name
+											: "Editorial Team"
+										let blogAuthorAvatar =
+											authorObj?.avatar?.url ||
+											`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+										return (
+											<div class="blog-post-card">
+												<div class="blog-post-image">
+													<a href={blogLink}>
+														<img
+															src={blogImage}
+															alt={
+																blogPost
+																	.featuredImage
+																	?.node
+																	?.altText ||
+																blogPost.title
+															}
+															loading="lazy"
+															referrerpolicy="no-referrer"
+														/>
+													</a>
+												</div>
+												<div class="blog-post-content">
+													<a
+														href={blogLink}
+														class="blog-title-link"
+													>
+														<h3
+															set:html={
+																blogPost.title
+															}
+														/>
+													</a>
+													<div class="blog-meta">
+														<div class="blog-meta-author">
+															<img
+																src={
+																	blogAuthorAvatar
+																}
+																alt={
+																	blogAuthorName
+																}
+																class="blog-author-avatar"
+															/>
+															<span>
+																{blogAuthorName}{" "}
+																• {blogDate}
+															</span>
+														</div>
+														<a
+															href={blogLink}
+															class="blog-read-more"
+														>
+															Read{" "}
+															<i class="fa-solid fa-arrow-right" />
+														</a>
+													</div>
+												</div>
+											</div>
+										)
+									})}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-		)
-	}
+				</section>
+			)
+		}
 	</main>
 </Layout>
 
@@ -717,6 +777,10 @@ function stripWp(input = "") {
 	/* =========================================
        HERO DISCLAIMER BOX
     ========================================= */
+
+
+
+
 
 	.hero-disclaimer-box .disclaimer-cl {
 		max-width: 100%;
@@ -1000,6 +1064,9 @@ function stripWp(input = "") {
 	.hero-disclaimer-box strong {
 		color: #fff;
 	}
+
+
+
 
 	/* Custom Table inside the Hero */
 	.table-responsive {
@@ -1883,6 +1950,10 @@ function stripWp(input = "") {
 			margin-bottom: 1.5rem;
 		}
 	}
+/* 
+	.hero-r-mobile {
+    display: none;
+} */
 
 	.page_header {
 		display: none !important;
@@ -3993,47 +4064,45 @@ function stripWp(input = "") {
 		margin-bottom: 0.5rem;
 	}
 
-
 	/* Mobile Styles (Max-width usually 768px or 991px depending on your design) */
-@media (max-width: 991px) {
-  
-  /* 1. Ensure the parent container stacks elements vertically */
-  .hero-columns {
-    display: flex;
-    flex-direction: column;
-  }
+	@media (max-width: 991px) {
+		/* 1. Ensure the parent container stacks elements vertically */
+		.hero-columns {
+			display: flex;
+			flex-direction: column;
+		}
 
-  /* 2. Ensure the left side is also a flex container so we can reorder its children */
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-  }
+		/* 2. Ensure the left side is also a flex container so we can reorder its children */
+		.hero-left {
+			display: flex;
+			flex-direction: column;
+		}
 
-  /* 3. Assign the display order for the mobile layout */
-  
-  .hero-left > h1 {
-    order: 1; /* H1 stays at the top */
-  }
+		/* 3. Assign the display order for the mobile layout */
 
-  /* 4. Pull the Right Column (Bonus Card) UP into the second position */
-  .hero-right {
-    order: 2;
-    margin-bottom: 20px; /* Add some space below the card */
-  }
+		.hero-left > h1 {
+			order: 1; /* H1 stays at the top */
+		}
 
-  /* 5. Push the rest of the left column content down */
-  .hero-left > .hero-intro-box {
-    order: 3;
-  }
+		/* 4. Pull the Right Column (Bonus Card) UP into the second position */
+		.hero-right {
+			order: 2;
+			margin-bottom: 20px; /* Add some space below the card */
+		}
 
-  .hero-left > .hero-category-cards {
-    order: 4;
-  }
+		/* 5. Push the rest of the left column content down */
+		.hero-left > .hero-intro-box {
+			order: 3;
+		}
 
-  .hero-left > .hero-search-wrapper {
-    order: 5;
-  }
-}
+		.hero-left > .hero-category-cards {
+			order: 4;
+		}
+
+		.hero-left > .hero-search-wrapper {
+			order: 5;
+		}
+	}
 </style>
 
 <script>
