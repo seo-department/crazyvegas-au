@@ -272,11 +272,6 @@
       "permanent": false
     },
     {
-      "source": "/en/",
-      "destination": "https://www.privecity.com/",
-      "permanent": false
-    },
-    {
       "source": "/play/royal-rabbit-casino/",
       "destination": "https://record.gngaffiliates.com/_quIGHmKnJgRutv7iXV6HvmNd7ZgqdRLk/1/",
       "permanent": false
@@ -309,6 +304,11 @@
     {
       "source": "/play/planet7-oz-casino/",
       "destination": "https://www.planet7ozlinks.com/click/712/10166/19387/1/crazyvegas",
+      "permanent": false
+    },
+    {
+      "source": "/play/ozwin-casino/",
+      "destination": "https://link.ozwinaffiliates.com/c/469343",
       "permanent": false
     },
     {
@@ -357,16 +357,6 @@
       "permanent": false
     },
     {
-      "source": "/play/lucky-luke-casino/",
-      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgShWoqmOk2VLGNd7ZgqdRLk/1/",
-      "permanent": false
-    },
-    {
-      "source": "/play/ozwin-casino/",
-      "destination": "https://link.ozwinaffiliates.com/c/469343",
-      "permanent": false
-    },
-    {
       "source": "/play/oshi-casino/",
       "destination": "https://oshilinks.com/afa4867c9",
       "permanent": false
@@ -394,6 +384,11 @@
     {
       "source": "/play/national-casino/",
       "destination": "https://media.toxtren.com/redirect.aspx?pid=170902&bid=2036&lpid=1310",
+      "permanent": false
+    },
+    {
+      "source": "/play/lucky-luke-casino/",
+      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgShWoqmOk2VLGNd7ZgqdRLk/1/",
       "permanent": false
     },
     {
@@ -633,8 +628,8 @@
     },
     {
       "source": "/play/crownplay-casino/",
-      "destination": "https://crp.xarvilo.com/?mid=291724_1815779",
-      "permanent": false
+      "destination": "https://crwnpl.fynkelto.com/?mid=373983_2166596",
+      "permanent": true
     },
     {
       "source": "/play/sg-casino/",
