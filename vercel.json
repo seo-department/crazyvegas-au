@@ -12,56 +12,6 @@
       "permanent": false
     },
     {
-      "source": "/play/bizzo-casino/",
-      "destination": "https://media.playamopartners.com/redirect.aspx?pid=139632&bid=2058&lpid=911",
-      "permanent": false
-    },
-    {
-      "source": "/play/black-diamond-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469347",
-      "permanent": false
-    },
-    {
-      "source": "/play/blue-leo-casino/",
-      "destination": "https://record.thebluepartners.com/_4Ywf16I95BjUOsjNOfgKeWNd7ZgqdRLk/15/",
-      "permanent": false
-    },
-    {
-      "source": "/play/boomerang-casino/",
-      "destination": "https://boomerang11.com/?serial=2852&creative_id=1&anid=#popup-reg",
-      "permanent": false
-    },
-    {
-      "source": "/play/bovegas-casino/",
-      "destination": "https://go.affalliance.com/visit/?bta=38292&nci=23765&campaign=101272=CVC",
-      "permanent": false
-    },
-    {
-      "source": "/play/box24-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469348",
-      "permanent": false
-    },
-    {
-      "source": "/play/casino-chan/",
-      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1938&lpid=110",
-      "permanent": false
-    },
-    {
-      "source": "/play/casino-empire/",
-      "destination": "https://casinoempire.postaffiliatepro.com/scripts/6lwy6hq8yc?a_aid=5ff4876b5062f&a_bid=64604b3b&chan=crazyvegas",
-      "permanent": false
-    },
-    {
-      "source": "/play/bit-kingz-casino/",
-      "destination": "https://www.bitkingzmedia.com/a3d397ee5",
-      "permanent": false
-    },
-    {
-      "source": "/play/beem-casino/",
-      "destination": "https://beemaffiliates2.com/a47c161c0",
-      "permanent": false
-    },
-    {
       "source": "/play/24-casino-bet/",
       "destination": "https://go.24casinopartners.com/visit/?bta=35164&nci=5355&utm_campaign=CVC",
       "permanent": false
@@ -102,68 +52,53 @@
       "permanent": false
     },
     {
-      "source": "/play/hell-spin-casino/",
-      "destination": "https://media.hellpartners.com/redirect.aspx?pid=2284&bid=1466&lpid=10",
+      "source": "/play/beem-casino/",
+      "destination": "https://beemaffiliates2.com/a47c161c0",
       "permanent": false
     },
     {
-      "source": "/play/high-country-casino/",
-      "destination": "https://downloads.highcountrycasino.com/affiliate/remote/aiddownload.asp?casinoID=938&gAID=101375&subGid=54&bannerID=0",
+      "source": "/play/bit-kingz-casino/",
+      "destination": "https://www.bitkingzmedia.com/a3d397ee5",
       "permanent": false
     },
     {
-      "source": "/play/ignition-casino/",
-      "destination": "https://record.revenuenetwork.com/_migLxGgDjGfSO0TzfeJh32Nd7ZgqdRLk/15/",
+      "source": "/play/bizzo-casino/",
+      "destination": "https://media.playamopartners.com/redirect.aspx?pid=139632&bid=2058&lpid=911",
       "permanent": false
     },
     {
-      "source": "/play/jack21-casino/",
-      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgSwVhdeTu4fZWNd7ZgqdRLk/1/",
+      "source": "/play/black-diamond-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469347",
       "permanent": false
     },
     {
-      "source": "/play/jackpot-jill-casino/",
-      "destination": "https://record.jackpotjill.com/_uAcNRrxJURHiFUAaTMnmeGNd7ZgqdRLk/1/",
+      "source": "/play/blue-leo-casino/",
+      "destination": "https://record.thebluepartners.com/_4Ywf16I95BjUOsjNOfgKeWNd7ZgqdRLk/15/",
       "permanent": false
     },
     {
-      "source": "/play/joe-fortune-casino/",
-      "destination": "https://record.revenuenetwork.com/_migLxGgDjGd8WpmLHFImAmNd7ZgqdRLk/15/",
+      "source": "/play/boomerang-casino/",
+      "destination": "https://boomerang11.com/?serial=2852&creative_id=1&anid=#popup-reg",
       "permanent": false
     },
     {
-      "source": "/play/joo-casino/",
-      "destination": "https://joopartners.com/acb2b842d",
+      "source": "/play/bovegas-casino/",
+      "destination": "https://go.affalliance.com/visit/?bta=38292&nci=23765&campaign=101272=CVC",
       "permanent": false
     },
     {
-      "source": "/play/kahuna-casino/",
-      "destination": "https://record.playapartners.com/_aghnFDC01MgWqcfzuvZcQGNd7ZgqdRLk/5/",
+      "source": "/play/box24-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469348",
       "permanent": false
     },
     {
-      "source": "/play/katsubet-casino/",
-      "destination": "https://katsubet.partners/a562af386",
+      "source": "/play/casino-chan/",
+      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1938&lpid=110",
       "permanent": false
     },
     {
-      "source": "/play/kim-vegas-casino/",
-      "destination": "https://kimvegaspartners.net/a0c3225a6",
-      "permanent": false
-    },
-    {
-      "source": "/play/goodman-casino/",
-      "destination": "https://click.gypsyaff.com/?serial=4046&creative_id=27&anid",
-      "permanent": false
-    },
-    {
-      "source": "/play/get-slots-casino/",
-      "destination": "https://getslotsnow.com/a1a321c28",
-      "permanent": false
-    },
-    {
-      "source": "/play/fair-go-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469344",
+      "source": "/play/casino-empire/",
+      "destination": "https://casinoempire.postaffiliatepro.com/scripts/6lwy6hq8yc?a_aid=5ff4876b5062f&a_bid=64604b3b&chan=crazyvegas",
       "permanent": false
     },
     {
@@ -217,98 +152,68 @@
       "permanent": false
     },
     {
-      "source": "/play/red-stag-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469346",
+      "source": "/play/fair-go-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469344",
       "permanent": false
     },
     {
-      "source": "/play/red-dog-casino/",
-      "destination": "https://record.toponepartners.com/_hgDCSFCRmCxr_ND_YXyCpWNd7ZgqdRLk/15/",
+      "source": "/play/get-slots-casino/",
+      "destination": "https://getslotsnow.com/a1a321c28",
       "permanent": false
     },
     {
-      "source": "/play/raging-bull-casino/",
-      "destination": "https://www.ragingbulllinks.com/click/28/384/4492/1/CVC-AU",
+      "source": "/play/goodman-casino/",
+      "destination": "https://click.gypsyaff.com/?serial=4046&creative_id=27&anid",
       "permanent": false
     },
     {
-      "source": "/play/prive-city-casino/",
-      "destination": "https://www.privecity.com/",
+      "source": "/play/hell-spin-casino/",
+      "destination": "https://media.hellpartners.com/redirect.aspx?pid=2284&bid=1466&lpid=10",
       "permanent": false
     },
     {
-      "source": "/play/powbet-casino/",
-      "destination": "https://media.strongaffiliates.com/redirect.aspx?pid=1355280&bid=6963",
+      "source": "/play/high-country-casino/",
+      "destination": "https://downloads.highcountrycasino.com/affiliate/remote/aiddownload.asp?casinoID=938&gAID=101375&subGid=54&bannerID=0",
       "permanent": false
     },
     {
-      "source": "/play/pokies-parlour-casino/",
-      "destination": "https://record.parlouraffiliates.com/v2/text/1/1/d936ea4b-7509-11eb-9ed0-360f3553523c/7",
+      "source": "/play/ignition-casino/",
+      "destination": "https://record.revenuenetwork.com/_migLxGgDjGfSO0TzfeJh32Nd7ZgqdRLk/15/",
       "permanent": false
     },
     {
-      "source": "/play/play-croco-casino/",
-      "destination": "https://link.slotsvendor.eu/c/11305",
+      "source": "/play/jack21-casino/",
+      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgSwVhdeTu4fZWNd7ZgqdRLk/1/",
       "permanent": false
     },
     {
-      "source": "/play/reels-of-joy-casino/",
-      "destination": "https://record.rivierarewards.com/_c7DW82zpUPsWqcfzuvZcQGNd7ZgqdRLk/6/",
+      "source": "/play/jackpot-jill-casino/",
+      "destination": "https://record.jackpotjill.com/_uAcNRrxJURHiFUAaTMnmeGNd7ZgqdRLk/1/",
       "permanent": false
     },
     {
-      "source": "/play/ricky-casino/",
-      "destination": "https://mediarickycasino.com/a7859aab3",
+      "source": "/play/joe-fortune-casino/",
+      "destination": "https://record.revenuenetwork.com/_migLxGgDjGd8WpmLHFImAmNd7ZgqdRLk/15/",
       "permanent": false
     },
     {
-      "source": "/play/rolling-slots-casino/",
-      "destination": "https://rlsredirect.com/dec4c57ae",
+      "source": "/play/joo-casino/",
+      "destination": "https://joopartners.com/acb2b842d",
       "permanent": false
     },
     {
-      "source": "/play/rouge-casino/",
-      "destination": "https://go.rougecasinopartners.com/visit/?bta=35093&nci=5342&utm_campaign=CVC",
+      "source": "/play/kahuna-casino/",
+      "destination": "https://record.playapartners.com/_aghnFDC01MgWqcfzuvZcQGNd7ZgqdRLk/5/",
       "permanent": false
     },
     {
-      "source": "/play/royal-rabbit-casino/",
-      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgRutv7iXV6HvmNd7ZgqdRLk/1/",
+      "source": "/play/katsubet-casino/",
+      "destination": "https://katsubet.partners/a562af386",
       "permanent": false
     },
     {
-      "source": "/play/skycrown-casino/",
-      "destination": "https://skycrownlink.com/o859bfd71",
-      "permanent": false
-    },
-    {
-      "source": "/play/slots-empire-casino/",
-      "destination": "https://record.toponepartners.com/_hgDCSFCRmCwOMRDMpvVHzmNd7ZgqdRLk/15/",
-      "permanent": false
-    },
-    {
-      "source": "/play/slots-gallery-casino/",
-      "destination": "https://slotsaff.com/af95848d0",
-      "permanent": false
-    },
-    {
-      "source": "/play/slots-plus-casino/",
-      "destination": "http://www.slotsplus.eu/Remote/SmartDownload.php?casinoID=237&gAid=101375&subGid=5",
-      "permanent": false
-    },
-    {
-      "source": "/play/playamo-casino/",
-      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1988&lpid=6",
-      "permanent": false
-    },
-    {
-      "source": "/play/planet7-oz-casino/",
-      "destination": "https://www.planet7ozlinks.com/click/712/10166/19387/1/crazyvegas",
-      "permanent": false
-    },
-    {
-      "source": "/play/ozwin-casino/",
-      "destination": "https://link.ozwinaffiliates.com/c/469343",
+      "source": "/play/kim-vegas-casino/",
+      "destination": "https://kimvegaspartners.net/a0c3225a6",
       "permanent": false
     },
     {
@@ -357,28 +262,8 @@
       "permanent": false
     },
     {
-      "source": "/play/oshi-casino/",
-      "destination": "https://oshilinks.com/afa4867c9",
-      "permanent": false
-    },
-    {
-      "source": "/play/olympia-casino/",
-      "destination": "https://protrckit.com/a77c86901",
-      "permanent": false
-    },
-    {
-      "source": "/play/old-havana-casino/",
-      "destination": "http://downloads.oldhavanacasino.eu/affiliate/remote/aiddownload.asp?casinoID=715&gAID=101375&subGid=5",
-      "permanent": false
-    },
-    {
-      "source": "/play/north-casino/",
-      "destination": "https://northafflnk.com/a237f7adb",
-      "permanent": false
-    },
-    {
-      "source": "/play/nine-casino/",
-      "destination": "https://track.chillipartners.com/visit/?bta=35758&brand=ninecasino&afp=CVC",
+      "source": "/play/lucky-luke-casino/",
+      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgShWoqmOk2VLGNd7ZgqdRLk/1/",
       "permanent": false
     },
     {
@@ -387,73 +272,123 @@
       "permanent": false
     },
     {
-      "source": "/play/lucky-luke-casino/",
-      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgShWoqmOk2VLGNd7ZgqdRLk/1/",
+      "source": "/play/nine-casino/",
+      "destination": "https://track.chillipartners.com/visit/?bta=35758&brand=ninecasino&afp=CVC",
       "permanent": false
     },
     {
-      "source": "/play/dundee-slots-casino/",
-      "destination": "https://mediadundeeslots.com/a7398dc42",
+      "source": "/play/north-casino/",
+      "destination": "https://northafflnk.com/a237f7adb",
       "permanent": false
     },
     {
-      "source": "/play/amunra-casino/",
-      "destination": "https://amr.servclick1move.com/?mid=30089_370933",
+      "source": "/play/old-havana-casino/",
+      "destination": "http://downloads.oldhavanacasino.eu/affiliate/remote/aiddownload.asp?casinoID=715&gAID=101375&subGid=5",
       "permanent": false
     },
     {
-      "source": "/play/slots-palace-casino/",
-      "destination": "https://slp.servclick1move.com/?mid=2721_200757",
+      "source": "/play/olympia-casino/",
+      "destination": "https://protrckit.com/a77c86901",
       "permanent": false
     },
     {
-      "source": "/play/neon54-casino/",
-      "destination": "https://n54.servclick1move.com/?mid=2721_200761",
+      "source": "/play/oshi-casino/",
+      "destination": "https://oshilinks.com/afa4867c9",
       "permanent": false
     },
     {
-      "source": "/play/n1-bet-casino/",
-      "destination": "https://n1betpartners.com/ac17f3458",
+      "source": "/play/ozwin-casino/",
+      "destination": "https://link.ozwinaffiliates.com/c/469343",
       "permanent": false
     },
     {
-      "source": "/play/5gringos-casino/",
-      "destination": "https://fgr.servclick1move.com/?mid=30089_363529",
+      "source": "/play/planet7-oz-casino/",
+      "destination": "https://www.planet7ozlinks.com/click/712/10166/19387/1/crazyvegas",
       "permanent": false
     },
     {
-      "source": "/play/wazamba-casino/",
-      "destination": "https://wzb.servclick1move.com/?mid=53653_610457",
+      "source": "/play/playamo-casino/",
+      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1988&lpid=6",
       "permanent": false
     },
     {
-      "source": "/play/pure-casino/",
-      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5523&utm_campaign=au.crazyvegas.com",
+      "source": "/play/play-croco-casino/",
+      "destination": "https://link.slotsvendor.eu/c/11305",
       "permanent": false
     },
     {
-      "source": "/play/playzilla-casino/",
-      "destination": "https://media.partnerzilla.com/redirect.aspx?pid=3268&bid=1504",
+      "source": "/play/pokies-parlour-casino/",
+      "destination": "https://record.parlouraffiliates.com/v2/text/1/1/d936ea4b-7509-11eb-9ed0-360f3553523c/7",
       "permanent": false
     },
     {
-      "source": "/play/bitspin-casino/",
-      "destination": "https://bitspinaffiliates.com/a649f5657",
+      "source": "/play/powbet-casino/",
+      "destination": "https://media.strongaffiliates.com/redirect.aspx?pid=1355280&bid=6963",
       "permanent": false
     },
     {
-      "source": "/play/inet-bet-casino/",
-      "destination": "https://record.income-network.com/_y5qu-K-dPJ3Kto_EPcZApGNd7ZgqdRLk/9/",
+      "source": "/play/prive-city-casino/",
+      "destination": "https://www.privecity.com/",
       "permanent": false
     },
     {
-      "source": "/play/triple-7-casino/",
-      "destination": "https://record.income-network.com/_y5qu-K-dPJ3Kto_EPcZApGNd7ZgqdRLk/9/",
+      "source": "/play/raging-bull-casino/",
+      "destination": "https://www.ragingbulllinks.com/click/28/384/4492/1/CVC-AU",
       "permanent": false
     },
     {
-      "source": "/play/ladyluck-casino/",
-      "destination": "https://record.income-network.com/_y5qu-K-dPJ36PBA04iUMN2Nd7ZgqdRLk/8/",
+      "source": "/play/red-dog-casino/",
+      "destination": "https://record.toponepartners.com/_hgDCSFCRmCxr_ND_YXyCpWNd7ZgqdRLk/15/",
+      "permanent": false
+    },
+    {
+      "source": "/play/red-stag-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469346",
+      "permanent": false
+    },
+    {
+      "source": "/play/reels-of-joy-casino/",
+      "destination": "https://record.rivierarewards.com/_c7DW82zpUPsWqcfzuvZcQGNd7ZgqdRLk/6/",
+      "permanent": false
+    },
+    {
+      "source": "/play/ricky-casino/",
+      "destination": "https://mediarickycasino.com/a7859aab3",
+      "permanent": false
+    },
+    {
+      "source": "/play/rolling-slots-casino/",
+      "destination": "https://rlsredirect.com/dec4c57ae",
+      "permanent": false
+    },
+    {
+      "source": "/play/rouge-casino/",
+      "destination": "https://go.rougecasinopartners.com/visit/?bta=35093&nci=5342&utm_campaign=CVC",
+      "permanent": false
+    },
+    {
+      "source": "/play/royal-rabbit-casino/",
+      "destination": "https://record.gngaffiliates.com/_quIGHmKnJgRutv7iXV6HvmNd7ZgqdRLk/1/",
+      "permanent": false
+    },
+    {
+      "source": "/play/skycrown-casino/",
+      "destination": "https://skycrownlink.com/o859bfd71",
+      "permanent": false
+    },
+    {
+      "source": "/play/slots-empire-casino/",
+      "destination": "https://record.toponepartners.com/_hgDCSFCRmCwOMRDMpvVHzmNd7ZgqdRLk/15/",
+      "permanent": false
+    },
+    {
+      "source": "/play/slots-gallery-casino/",
+      "destination": "https://slotsaff.com/af95848d0",
+      "permanent": false
+    },
+    {
+      "source": "/play/slots-plus-casino/",
+      "destination": "http://www.slotsplus.eu/Remote/SmartDownload.php?casinoID=237&gAid=101375&subGid=5",
       "permanent": false
     },
     {
@@ -462,63 +397,23 @@
       "permanent": false
     },
     {
-      "source": "/play/sector777-casino/",
-      "destination": "https://www.spinsgaming.com/tag/Yz02Mi90PTE3MS9hPTEwNDYvej0xL2s9Q3JhenktVmVnYXM=",
+      "source": "/play/ladyluck-casino/",
+      "destination": "https://record.income-network.com/_y5qu-K-dPJ36PBA04iUMN2Nd7ZgqdRLk/8/",
       "permanent": false
     },
     {
-      "source": "/play/playfina-casino/",
-      "destination": "https://media.playfinapartners.com/redirect.aspx?pid=10865&lpid=19&bid=1496",
+      "source": "/play/triple-7-casino/",
+      "destination": "https://record.income-network.com/_y5qu-K-dPJ3Kto_EPcZApGNd7ZgqdRLk/9/",
       "permanent": false
     },
     {
-      "source": "/play/velvet-spin-casino/",
-      "destination": "https://www.spinsgaming.com/tag/Yz03MTIvdD0xODMvYT0xMjI2L3o9MS9rPUNyYXp5LVZlZ2Fz",
+      "source": "/play/inet-bet-casino/",
+      "destination": "https://record.income-network.com/_y5qu-K-dPJ3Kto_EPcZApGNd7ZgqdRLk/9/",
       "permanent": false
     },
     {
-      "source": "/play/heaps-o-wins-casino/",
-      "destination": "https://www.spinsgaming.com/tag/Yz01MC90PTE1My9hPTEyMjYvej0xL2s9Q3JhenktVmVnYXM=",
-      "permanent": false
-    },
-    {
-      "source": "/play/avantgarde-casino/",
-      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5518&utm_campaign=au.crazyvegas.com",
-      "permanent": false
-    },
-    {
-      "source": "/play/true-fortune-casino/",
-      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5518&utm_campaign=au.crazyvegas.com",
-      "permanent": false
-    },
-    {
-      "source": "/play/joka-casino/",
-      "destination": "https://record.jokaffiliates.com/_uAcNRrxJURGu11z-n_bVh2Nd7ZgqdRLk/1/",
-      "permanent": false
-    },
-    {
-      "source": "/play/vegas-casino-online/",
-      "destination": "http://www.vegascasinoonline.eu/Remote/SmartDownload.php?casinoID=234&gAid=101375&subGid=5",
-      "permanent": false
-    },
-    {
-      "source": "/play/uptown-pokies-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469345",
-      "permanent": false
-    },
-    {
-      "source": "/play/sun-palace-casino/",
-      "destination": "http://www.sunpalacecasino.eu/Remote/SmartDownload.php?casinoID=236&gAid=101375&subGid=5",
-      "permanent": false
-    },
-    {
-      "source": "/play/stellar-spins-casino/",
-      "destination": "https://record.stellarspaffiliates.com/_uAcNRrxJURGmIplh4Hfp_2Nd7ZgqdRLk/1",
-      "permanent": false
-    },
-    {
-      "source": "/play/spin-samurai-casino/",
-      "destination": "https://partnersredirect.com/ae8f43e7c",
+      "source": "/play/spartan-slots-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469349",
       "permanent": false
     },
     {
@@ -527,8 +422,33 @@
       "permanent": false
     },
     {
-      "source": "/play/spartan-slots-casino/",
-      "destination": "https://link.totalaffiliates.com/c/469349",
+      "source": "/play/spin-samurai-casino/",
+      "destination": "https://partnersredirect.com/ae8f43e7c",
+      "permanent": false
+    },
+    {
+      "source": "/play/stellar-spins-casino/",
+      "destination": "https://record.stellarspaffiliates.com/_uAcNRrxJURGmIplh4Hfp_2Nd7ZgqdRLk/1",
+      "permanent": false
+    },
+    {
+      "source": "/play/sun-palace-casino/",
+      "destination": "http://www.sunpalacecasino.eu/Remote/SmartDownload.php?casinoID=236&gAid=101375&subGid=5",
+      "permanent": false
+    },
+    {
+      "source": "/play/uptown-pokies-casino/",
+      "destination": "https://link.totalaffiliates.com/c/469345",
+      "permanent": false
+    },
+    {
+      "source": "/play/vegas-casino-online/",
+      "destination": "http://www.vegascasinoonline.eu/Remote/SmartDownload.php?casinoID=234&gAid=101375&subGid=5",
+      "permanent": false
+    },
+    {
+      "source": "/play/joka-casino/",
+      "destination": "https://record.jokaffiliates.com/_uAcNRrxJURGu11z-n_bVh2Nd7ZgqdRLk/1/",
       "permanent": false
     },
     {
@@ -542,33 +462,8 @@
       "permanent": false
     },
     {
-      "source": "/play/dazard-casino/",
-      "destination": "https://bftraff.com/a3abe948d",
-      "permanent": false
-    },
-    {
-      "source": "/play/zotabet-casino/",
-      "destination": "https://zotatraff.com/g95bb9496",
-      "permanent": false
-    },
-    {
-      "source": "/play/yoju-casino/",
-      "destination": "https://partneringames.com/ab86b2189?utm_source=122045&utm_medium=affiliate&utm_campaign=191442",
-      "permanent": false
-    },
-    {
-      "source": "/play/boho-casino/",
-      "destination": "https://bohoaff.com/a7e066234",
-      "permanent": false
-    },
-    {
-      "source": "/play/woo-casino/",
-      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1964&lpid=236",
-      "permanent": false
-    },
-    {
-      "source": "/play/neo-spins-casino/",
-      "destination": "https://neospinlink.com/hc1c9a1d6",
+      "source": "/play/wild-tornado-casino/",
+      "destination": "https://wildtornado.online/a06e98705",
       "permanent": false
     },
     {
@@ -577,88 +472,113 @@
       "permanent": false
     },
     {
-      "source": "/play/wild-tornado-casino/",
-      "destination": "https://wildtornado.online/a06e98705",
-      "permanent": false
-    },
-    {
-      "source": "/play/neospins-casino/",
+      "source": "/play/neo-spins-casino/",
       "destination": "https://neospinlink.com/hc1c9a1d6",
       "permanent": false
     },
     {
-      "source": "/play/richard-casino/",
-      "destination": "https://track.stay.partners/h11PyMvY",
+      "source": "/play/woo-casino/",
+      "destination": "https://media.playamopartners.com/redirect.aspx?pid=125725&bid=1964&lpid=236",
       "permanent": false
     },
     {
-      "source": "/play/lucky-hunter-casino/",
-      "destination": "https://luckyhunter.media/n1e9a7803f",
+      "source": "/play/boho-casino/",
+      "destination": "https://bohoaff.com/a7e066234",
       "permanent": false
     },
     {
-      "source": "/play/1red-casino/",
-      "destination": "https://1redlink.com/h9b16c670",
+      "source": "/play/yoju-casino/",
+      "destination": "https://partneringames.com/ab86b2189?utm_source=122045&utm_medium=affiliate&utm_campaign=191442",
       "permanent": false
     },
     {
-      "source": "/play/telegram/",
-      "destination": "https://t.me/aucrazyvegas",
+      "source": "/play/zotabet-casino/",
+      "destination": "https://zotatraff.com/g95bb9496",
       "permanent": false
     },
     {
-      "source": "/play/golden-crown-casino/",
-      "destination": "https://goldencrownlink.com/utpdnxoki",
+      "source": "/play/dazard-casino/",
+      "destination": "https://bftraff.com/a3abe948d",
       "permanent": false
     },
     {
-      "source": "/play/spinanga-casino/",
-      "destination": "https://spng.servclick1move.com/?mid=53653_723485",
+      "source": "/play/true-fortune-casino/",
+      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5518&utm_campaign=au.crazyvegas.com",
       "permanent": false
     },
     {
-      "source": "/play/twitter/",
-      "destination": "https://x.com/aucrazyvegas",
+      "source": "/play/avantgarde-casino/",
+      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5518&utm_campaign=au.crazyvegas.com",
       "permanent": false
     },
     {
-      "source": "/play/golden-reels-casino/",
-      "destination": "https://take-now.co/?apkpop=0&partner=p32602p3175440pa0dd",
+      "source": "/play/pure-casino/",
+      "destination": "https://go.truebetaffiliates.com/visit/?bta=35340&nci=5523&utm_campaign=au.crazyvegas.com",
       "permanent": false
     },
     {
-      "source": "/play/crownplay-casino/",
-      "destination": "https://crwnpl.fynkelto.com/?mid=373983_2166596",
-      "permanent": true
-    },
-    {
-      "source": "/play/sg-casino/",
-      "destination": "https://sgc.servclick1move.com/?mid=123097_1000257",
+      "source": "/play/wazamba-casino/",
+      "destination": "https://wzb.servclick1move.com/?mid=53653_610457",
       "permanent": false
     },
     {
-      "source": "/rouge-casino-review/",
-      "destination": "https://au.crazyvegas.com/casino-reviews/rouge/",
+      "source": "/play/5gringos-casino/",
+      "destination": "https://fgr.servclick1move.com/?mid=30089_363529",
       "permanent": false
     },
     {
-      "source": "/play/lucky-wins-casino/",
-      "destination": "https://playluckywins.com/j40dcbe9e",
+      "source": "/play/n1-bet-casino/",
+      "destination": "https://n1betpartners.com/ac17f3458",
       "permanent": false
     },
     {
-      "source": "/play/rooster-bet-casino/",
-      "destination": "https://roosterpartner.media/aatewfdgeg",
-      "permanent": true
-    },
-    {
-      "source": "/play/croco-slots-casino/",
-      "destination": "https://crocoslotsmedia.com/a827119dc",
+      "source": "/play/neon54-casino/",
+      "destination": "https://n54.servclick1move.com/?mid=2721_200761",
       "permanent": false
     },
     {
-      "source": "/play/viggo-slots-casino/",
-      "destination": "https://aff-ads.viggoaffiliates.com/v2/text/157/8/0c22dcce-2ba9-11ee-9df4-2e52976c9711/1",
+      "source": "/play/slots-palace-casino/",
+      "destination": "https://slp.servclick1move.com/?mid=2721_200757",
+      "permanent": false
+    },
+    {
+      "source": "/play/amunra-casino/",
+      "destination": "https://amr.servclick1move.com/?mid=30089_370933",
+      "permanent": false
+    },
+    {
+      "source": "/play/dundee-slots-casino/",
+      "destination": "https://mediadundeeslots.com/a7398dc42",
+      "permanent": false
+    },
+    {
+      "source": "/play/playzilla-casino/",
+      "destination": "https://media.partnerzilla.com/redirect.aspx?pid=3268&bid=1504",
+      "permanent": false
+    },
+    {
+      "source": "/play/bitspin-casino/",
+      "destination": "https://bitspinaffiliates.com/a649f5657",
+      "permanent": false
+    },
+    {
+      "source": "/play/heaps-o-wins-casino/",
+      "destination": "https://www.spinsgaming.com/tag/Yz01MC90PTE1My9hPTEyMjYvej0xL2s9Q3JhenktVmVnYXM=",
+      "permanent": false
+    },
+    {
+      "source": "/play/velvet-spin-casino/",
+      "destination": "https://www.spinsgaming.com/tag/Yz03MTIvdD0xODMvYT0xMjI2L3o9MS9rPUNyYXp5LVZlZ2Fz",
+      "permanent": false
+    },
+    {
+      "source": "/play/playfina-casino/",
+      "destination": "https://media.playfinapartners.com/redirect.aspx?pid=10865&lpid=19&bid=1496",
+      "permanent": false
+    },
+    {
+      "source": "/play/sector777-casino/",
+      "destination": "https://www.spinsgaming.com/tag/Yz02Mi90PTE3MS9hPTEwNDYvej0xL2s9Q3JhenktVmVnYXM=",
       "permanent": false
     },
     {
@@ -727,73 +647,83 @@
       "permanent": false
     },
     {
-      "source": "/play/sun-palace-ndb/",
-      "destination": "https://www.sunpalacecasino.eu/Remote/AidDownload.php?casinoID=236&gAID=101375&subGid=148&bannerID=25850",
+      "source": "/play/viggo-slots-casino/",
+      "destination": "https://aff-ads.viggoaffiliates.com/v2/text/157/8/0c22dcce-2ba9-11ee-9df4-2e52976c9711/1",
       "permanent": false
     },
     {
-      "source": "/play/vegas-casino-online-ndb/",
-      "destination": "https://www.vegascasinoonline.eu/Remote/AidDownload.php?casinoID=234&gAID=101375&subGid=148&bannerID=25853",
+      "source": "/play/croco-slots-casino/",
+      "destination": "https://crocoslotsmedia.com/a827119dc",
       "permanent": false
     },
     {
-      "source": "/play/slots-plus-ndb/",
-      "destination": "https://www.slotsplus.eu/Remote/AidDownload.php?casinoID=237&gAID=101375&subGid=148&bannerID=25852",
+      "source": "/play/rooster-bet-casino/",
+      "destination": "https://roosterpartner.media/aatewfdgeg",
+      "permanent": true
+    },
+    {
+      "source": "/play/telegram/",
+      "destination": "https://t.me/aucrazyvegas",
       "permanent": false
     },
     {
-      "source": "/play/las-vegas-usa-ndb/",
-      "destination": "https://www.lasvegasusa.eu/Remote/AidDownload.php?casinoID=235&gAID=101375&subGid=148&bannerID=25849",
+      "source": "/play/1red-casino/",
+      "destination": "https://1redlink.com/h9b16c670",
       "permanent": false
     },
     {
-      "source": "/play/lucky-hippo-ndb/",
-      "destination": "https://affiliates.luckyhippocasino.eu/affiliate/remote/aiddownload.asp?casinoID=949&gAID=101375&subGid=148&bannerID=25855",
+      "source": "/play/lucky-hunter-casino/",
+      "destination": "https://luckyhunter.media/n1e9a7803f",
       "permanent": false
     },
     {
-      "source": "/play/old-havana-ndb/",
-      "destination": "https://downloads.oldhavanacasino.eu/affiliate/remote/aiddownload.asp?casinoID=715&gAID=101375&subGid=148&bannerID=25854",
+      "source": "/play/richard-casino/",
+      "destination": "https://track.stay.partners/h11PyMvY",
       "permanent": false
     },
     {
-      "source": "/play/rooli-casino/",
-      "destination": "https://rooli.live/n1bef8ef24",
+      "source": "/play/neospins-casino/",
+      "destination": "https://neospinlink.com/hc1c9a1d6",
       "permanent": false
     },
     {
-      "source": "/play/king-billy-casino/",
-      "destination": "https://track.kingtraf.com/click.php?key=anqv7fmd966b8ldtbjsv",
+      "source": "/play/golden-crown-casino/",
+      "destination": "https://goldencrownlink.com/utpdnxoki",
       "permanent": false
     },
     {
-      "source": "/play/spin-fever-casino/",
-      "destination": "https://deeplogic.media/n114e95ad7",
+      "source": "/play/spinanga-casino/",
+      "destination": "https://spng.servclick1move.com/?mid=53653_723485",
       "permanent": false
     },
     {
-      "source": "/play/stellar-spins-ndb/",
-      "destination": "https://record.stellarspaffiliates.com/_1dWO9__VvcAetnaJQvos_GNd7ZgqdRLk/8",
+      "source": "/play/twitter/",
+      "destination": "https://x.com/aucrazyvegas",
       "permanent": false
     },
     {
-      "source": "/play/jackpot-jill-ndb/",
-      "destination": "https://record.jackpotjillaffiliates.com/_1dWO9__VvcBCILpp_s5LA2Nd7ZgqdRLk/8/",
+      "source": "/play/golden-reels-casino/",
+      "destination": "https://take-now.co/?apkpop=0&partner=p32602p3175440pa0dd",
       "permanent": false
     },
     {
-      "source": "/play/wolf-winner-ndb/",
-      "destination": "https://record.wolfwinaffiliates.com/_1dWO9__VvcDTleLMribxAGNd7ZgqdRLk/8/",
+      "source": "/play/crownplay-casino/",
+      "destination": "https://crwnpl.fynkelto.com/?mid=373983_2166596",
+      "permanent": true
+    },
+    {
+      "source": "/play/sg-casino/",
+      "destination": "https://sgc.servclick1move.com/?mid=123097_1000257",
       "permanent": false
     },
     {
-      "source": "/play/mirax-ndb/",
-      "destination": "https://mirax.partners/pe3f1caf8",
+      "source": "/rouge-casino-review/",
+      "destination": "https://au.crazyvegas.com/casino-reviews/rouge/",
       "permanent": false
     },
     {
-      "source": "/play/katsubet-ndb/",
-      "destination": "https://katsubet.partners/pa91f0590",
+      "source": "/play/lucky-wins-casino/",
+      "destination": "https://playluckywins.com/j40dcbe9e",
       "permanent": false
     },
     {
@@ -832,18 +762,8 @@
       "permanent": false
     },
     {
-      "source": "/play/7bit-ndb/",
-      "destination": "https://7bit.partners/pc3ee9a64",
-      "permanent": false
-    },
-    {
-      "source": "/play/bizzo-ndb/",
-      "destination": "https://media.toxtren.com/redirect.aspx?pid=281753&bid=2058&lpid=906",
-      "permanent": false
-    },
-    {
-      "source": "/play/hellspin-ndb/",
-      "destination": "https://top.aglobally.com/redirect.aspx?pid=28955&lpid=614&bid=1466",
+      "source": "/play/slots-gallery-ndb/",
+      "destination": "https://slotsaff.com/afa397a9e",
       "permanent": false
     },
     {
@@ -852,68 +772,88 @@
       "permanent": false
     },
     {
-      "source": "/play/slots-gallery-ndb/",
-      "destination": "https://slotsaff.com/afa397a9e",
+      "source": "/play/hellspin-ndb/",
+      "destination": "https://top.aglobally.com/redirect.aspx?pid=28955&lpid=614&bid=1466",
       "permanent": false
     },
     {
-      "source": "/play/winmaker-casino/",
-      "destination": "https://playwinmaker.com/jc90bfcbe",
+      "source": "/play/bizzo-ndb/",
+      "destination": "https://media.toxtren.com/redirect.aspx?pid=281753&bid=2058&lpid=906",
       "permanent": false
     },
     {
-      "source": "/play/rocket-play-casino/",
-      "destination": "https://rocketplaypartners.net/a9a67824b",
+      "source": "/play/7bit-ndb/",
+      "destination": "https://7bit.partners/pc3ee9a64",
       "permanent": false
     },
     {
-      "source": "/play/betandplay-casino/",
-      "destination": "https://betandplay.partners/j306f5f0a",
+      "source": "/play/katsubet-ndb/",
+      "destination": "https://katsubet.partners/pa91f0590",
       "permanent": false
     },
     {
-      "source": "/play/win-spirit-casino/",
-      "destination": "https://record.winspiritaffiliates.com/_BZcSglg5Gw_UOsjNOfgKeWNd7ZgqdRLk/1/?pg=2",
+      "source": "/play/mirax-ndb/",
+      "destination": "https://mirax.partners/pe3f1caf8",
       "permanent": false
     },
     {
-      "source": "/play/robycasino/",
-      "destination": "https://rbyc.servclick1move.com/?mid=230163_1371013",
+      "source": "/play/lucky-hippo-ndb/",
+      "destination": "https://affiliates.luckyhippocasino.eu/affiliate/remote/aiddownload.asp?casinoID=949&gAID=101375&subGid=148&bannerID=25855",
       "permanent": false
     },
     {
-      "source": "/play/legianocasino/",
-      "destination": "https://lgno.servclick1move.com/?mid=103949_1364330",
+      "source": "/play/las-vegas-usa-ndb/",
+      "destination": "https://www.lasvegasusa.eu/Remote/AidDownload.php?casinoID=235&gAID=101375&subGid=148&bannerID=25849",
       "permanent": false
     },
     {
-      "source": "/play/moon-win-casino/",
-      "destination": "https://clickmoonpart.com/a04541305",
+      "source": "/play/slots-plus-ndb/",
+      "destination": "https://www.slotsplus.eu/Remote/AidDownload.php?casinoID=237&gAID=101375&subGid=148&bannerID=25852",
       "permanent": false
     },
     {
-      "source": "/play/jeet-city-casino/",
-      "destination": "https://clickjeetcitypartners.com/abf58d4b7",
+      "source": "/play/vegas-casino-online-ndb/",
+      "destination": "https://www.vegascasinoonline.eu/Remote/AidDownload.php?casinoID=234&gAID=101375&subGid=148&bannerID=25853",
       "permanent": false
     },
     {
-      "source": "/play/wild-sino-casino/",
-      "destination": "https://wldsn.servclick1move.com/?mid=230981_1376421",
+      "source": "/play/sun-palace-ndb/",
+      "destination": "https://www.sunpalacecasino.eu/Remote/AidDownload.php?casinoID=236&gAID=101375&subGid=148&bannerID=25850",
       "permanent": false
     },
     {
-      "source": "/play/crown-slots-casino/",
-      "destination": "https://crownslotslink.com/hbd261a1c",
+      "source": "/play/old-havana-ndb/",
+      "destination": "https://downloads.oldhavanacasino.eu/affiliate/remote/aiddownload.asp?casinoID=715&gAID=101375&subGid=148&bannerID=25854",
       "permanent": false
     },
     {
-      "source": "/play/rockwin-casino/",
-      "destination": "https://rockwinlink.com/o3a492f78",
+      "source": "/play/rooli-casino/",
+      "destination": "https://rooli.live/n1bef8ef24",
       "permanent": false
     },
     {
-      "source": "/play/slotexo-casino/",
-      "destination": "https://sxo.servclick1move.com/?mid=212745_1377347",
+      "source": "/play/king-billy-casino/",
+      "destination": "https://track.kingtraf.com/click.php?key=anqv7fmd966b8ldtbjsv",
+      "permanent": false
+    },
+    {
+      "source": "/play/spin-fever-casino/",
+      "destination": "https://deeplogic.media/n114e95ad7",
+      "permanent": false
+    },
+    {
+      "source": "/play/stellar-spins-ndb/",
+      "destination": "https://record.stellarspaffiliates.com/_1dWO9__VvcAetnaJQvos_GNd7ZgqdRLk/8",
+      "permanent": false
+    },
+    {
+      "source": "/play/jackpot-jill-ndb/",
+      "destination": "https://record.jackpotjillaffiliates.com/_1dWO9__VvcBCILpp_s5LA2Nd7ZgqdRLk/8/",
+      "permanent": false
+    },
+    {
+      "source": "/play/wolf-winner-ndb/",
+      "destination": "https://record.wolfwinaffiliates.com/_1dWO9__VvcDTleLMribxAGNd7ZgqdRLk/8/",
       "permanent": false
     },
     {
@@ -967,73 +907,63 @@
       "permanent": false
     },
     {
-      "source": "/play/fatfruit-casino/",
-      "destination": "https://fatfruit.live/n161f751b3",
+      "source": "/play/slotexo-casino/",
+      "destination": "https://sxo.servclick1move.com/?mid=212745_1377347",
       "permanent": false
     },
     {
-      "source": "/play/slotmonster-casino/",
-      "destination": "https://record.epcaffiliates.com/_3864cAUqinP6PBA04iUMN2Nd7ZgqdRLk/1?pg=5",
+      "source": "/play/rockwin-casino/",
+      "destination": "https://rockwinlink.com/o3a492f78",
       "permanent": false
     },
     {
-      "source": "/play/fairgo-ndb/",
-      "destination": "https://link.totalaffiliates.com/c/551497",
+      "source": "/play/winmaker-casino/",
+      "destination": "https://playwinmaker.com/jc90bfcbe",
       "permanent": false
     },
     {
-      "source": "/play/uptown-pokies-ndb/",
-      "destination": "https://link.totalaffiliates.com/c/551458",
+      "source": "/play/rocket-play-casino/",
+      "destination": "https://rocketplaypartners.net/a9a67824b",
       "permanent": false
     },
     {
-      "source": "/play/ripper-ndb/",
-      "destination": "https://link.totalaffiliates.com/c/551441",
+      "source": "/play/betandplay-casino/",
+      "destination": "https://betandplay.partners/j306f5f0a",
       "permanent": false
     },
     {
-      "source": "/play/skycrown-ndb/",
-      "destination": "https://skycrownlink.com/ofcf8390d",
+      "source": "/play/win-spirit-casino/",
+      "destination": "https://record.winspiritaffiliates.com/_BZcSglg5Gw_UOsjNOfgKeWNd7ZgqdRLk/1/?pg=2",
       "permanent": false
     },
     {
-      "source": "/play/rollero-casino/",
-      "destination": "https://rooster-partner.com/n1bc8f7cb4",
+      "source": "/play/robycasino/",
+      "destination": "https://rbyc.servclick1move.com/?mid=230163_1371013",
       "permanent": false
     },
     {
-      "source": "/play/allyspin-casino/",
-      "destination": "https://all.monvaki.com/?mid=103949_1510500",
+      "source": "/play/legianocasino/",
+      "destination": "https://lgno.servclick1move.com/?mid=103949_1364330",
       "permanent": false
     },
     {
-      "source": "/play/rioace-casino/",
-      "destination": "https://record.joinaff.com/_KqJ1CgrEoXT43OyqCFI9gGNd7ZgqdRLk/1/",
+      "source": "/play/moon-win-casino/",
+      "destination": "https://clickmoonpart.com/a04541305",
       "permanent": false
     },
     {
-      "source": "/play/jet4bet-casino/",
-      "destination": "https://jet4betmedia.com/n15c5df360",
+      "source": "/play/jeet-city-casino/",
+      "destination": "https://clickjeetcitypartners.com/abf58d4b7",
       "permanent": false
     },
     {
-      "source": "/play/lucky-vibe-casino/",
-      "destination": "https://roosters-partner.com/n1e9cab786",
+      "source": "/play/wild-sino-casino/",
+      "destination": "https://wldsn.servclick1move.com/?mid=230981_1376421",
       "permanent": false
     },
     {
-      "source": "/play/dolly-casino/",
-      "destination": "https://doll.fynkelto.com/?mid=220241_1529026",
-      "permanent": false
-    },
-    {
-      "source": "/play/ozwin-ndb/",
-      "destination": "https://link.totalaffiliates.com/c/551524",
-      "permanent": false
-    },
-    {
-      "source": "/play/gold-spin-casino/",
-      "destination": "https://gdspn.fynkelto.com/?mid=242310_1444907",
+      "source": "/play/crown-slots-casino/",
+      "destination": "https://crownslotslink.com/hbd261a1c",
       "permanent": false
     },
     {
@@ -1072,18 +1002,8 @@
       "permanent": false
     },
     {
-      "source": "/play/vegasnow-casino/",
-      "destination": "https://vegasnow.info/k0c57bb13",
-      "permanent": false
-    },
-    {
-      "source": "/casino-reviews/jackpoty/",
-      "destination": "/casino-reviews/",
-      "permanent": false
-    },
-    {
-      "source": "/casino-reviews/cobra/",
-      "destination": "/casino-reviews/",
+      "source": "/play/slotmafia-casino/",
+      "destination": "https://slotmafia.io/n1qekkr5yu",
       "permanent": false
     },
     {
@@ -1092,37 +1012,192 @@
       "permanent": false
     },
     {
-      "source": "/play/slotmafia-casino/",
-      "destination": "https://slotmafia.io/n1qekkr5yu",
+      "source": "/casino-reviews/cobra/",
+      "destination": "/casino-reviews/",
       "permanent": false
     },
     {
-      "source": "/skycrowns-game-of-crowns-tournament/",
+      "source": "/casino-reviews/jackpoty/",
+      "destination": "/casino-reviews/",
+      "permanent": false
+    },
+    {
+      "source": "/play/vegasnow-casino/",
+      "destination": "https://vegasnow.info/k0c57bb13",
+      "permanent": false
+    },
+    {
+      "source": "/play/gold-spin-casino/",
+      "destination": "https://gdspn.fynkelto.com/?mid=242310_1444907",
+      "permanent": false
+    },
+    {
+      "source": "/play/ozwin-ndb/",
+      "destination": "https://link.totalaffiliates.com/c/551524",
+      "permanent": false
+    },
+    {
+      "source": "/play/ripper-ndb/",
+      "destination": "https://link.totalaffiliates.com/c/551441",
+      "permanent": false
+    },
+    {
+      "source": "/play/uptown-pokies-ndb/",
+      "destination": "https://link.totalaffiliates.com/c/551458",
+      "permanent": false
+    },
+    {
+      "source": "/play/fairgo-ndb/",
+      "destination": "https://link.totalaffiliates.com/c/551497",
+      "permanent": false
+    },
+    {
+      "source": "/play/slotmonster-casino/",
+      "destination": "https://record.epcaffiliates.com/_3864cAUqinP6PBA04iUMN2Nd7ZgqdRLk/1?pg=5",
+      "permanent": false
+    },
+    {
+      "source": "/play/fatfruit-casino/",
+      "destination": "https://fatfruit.live/n161f751b3",
+      "permanent": false
+    },
+    {
+      "source": "/play/skycrown-ndb/",
+      "destination": "https://skycrownlink.com/ofcf8390d",
+      "permanent": false
+    },
+    {
+      "source": "/play/rollero-casino/",
+      "destination": "https://rooster-partner.com/n1bc8f7cb4",
+      "permanent": false
+    },
+    {
+      "source": "/play/allyspin-casino/",
+      "destination": "https://all.monvaki.com/?mid=103949_1510500",
+      "permanent": false
+    },
+    {
+      "source": "/play/rioace-casino/",
+      "destination": "https://record.joinaff.com/_KqJ1CgrEoXT43OyqCFI9gGNd7ZgqdRLk/1/",
+      "permanent": false
+    },
+    {
+      "source": "/play/jet4bet-casino/",
+      "destination": "https://jet4betmedia.com/n15c5df360",
+      "permanent": false
+    },
+    {
+      "source": "/play/lucky-vibe-casino/",
+      "destination": "https://roosters-partner.com/n1e9cab786",
+      "permanent": false
+    },
+    {
+      "source": "/play/dolly-casino/",
+      "destination": "https://doll.fynkelto.com/?mid=220241_1529026",
+      "permanent": false
+    },
+    {
+      "source": "/play/winshark-casino/",
+      "destination": "https://winshark.link/dgpcbcn8r",
+      "permanent": false
+    },
+    {
+      "source": "/play/slotlounge-casino/",
+      "destination": "https://slotloungemedia.com/n1ef714103",
+      "permanent": false
+    },
+    {
+      "source": "/play/goldex-casino/",
+      "destination": "https://goldexcasino.media/n126655f22",
+      "permanent": false
+    },
+    {
+      "source": "/play/casino-sites-transfer/",
+      "destination": "https://toponlinecasinosites.io/",
+      "permanent": false
+    },
+    {
+      "source": "/how-bonus-crab-casinos-work/",
+      "destination": "https://au.crazyvegas.com/casino-bonuses/bonus-crab/",
+      "permanent": false
+    },
+    {
+      "source": "/play/flappy-casino/",
+      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4JeSeUTkJsCumNd7ZgqdRLk/1/",
+      "permanent": false
+    },
+    {
+      "source": "/play/allspins-casino/",
+      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4LjiPWJ9pQO92Nd7ZgqdRLk/1/",
+      "permanent": false
+    },
+    {
+      "source": "/play/wintopia-casino/",
+      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4KWOx4zHaEN5WNd7ZgqdRLk/1/",
+      "permanent": false
+    },
+    {
+      "source": "/play/caswino-casino/",
+      "destination": "https://go.caswino.co/2u6F?extid=182751&p=%2F%3Fmodal%3Dregister",
+      "permanent": false
+    },
+    {
+      "source": "/play/betalice-casino/",
+      "destination": "https://bal.allsetro.com/?mid=269489_1828516",
+      "permanent": false
+    },
+    {
+      "source": "/play/spinando-casino/",
+      "destination": "https://mu.fastmui.com/redirect.aspx?pid=389152&lpid=2589&bid=2167",
+      "permanent": false
+    },
+    {
+      "source": "/play/dragonslots-casino/",
+      "destination": "https://mu.fastmui.com/redirect.aspx?pid=389153&lpid=2419&bid=2159",
+      "permanent": false
+    },
+    {
+      "source": "/play/spinrise-casino/",
+      "destination": "https://clickspinrise.com/adzqk3syf",
+      "permanent": false
+    },
+    {
+      "source": "/play/betsio-casino/",
+      "destination": "https://bts-links.com/h2hwmwf7e",
+      "permanent": false
+    },
+    {
+      "source": "/goldex-referral-bonus/",
+      "destination": "https://au.crazyvegas.com/goldex-casino-referral-bonus/",
+      "permanent": false
+    },
+    {
+      "source": "/skycrown-casinos-crown-race-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/skycrown-love-rush-promotion/",
+      "source": "/stellar-spins-flatdog-cash-drop-promotion/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/rollxo-extra-gold-tournament/",
+      "source": "/book-of-billionaire-tournament-at-luckywins/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/neospins-big-money-bang-cupids-edition-tournament/",
+      "source": "/slotexo-cashcrab-monthly-race-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/lucky-hunters-wazdan-love-drop-tournament/",
+      "source": "/2-million-flatdog-cash-drop-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/lucky-hunters-rich-life-rich-live-tournament/",
+      "source": "/bgaming-summer-drops-promotion/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1132,7 +1207,32 @@
       "permanent": false
     },
     {
-      "source": "/bgaming-summer-drops-promotion/",
+      "source": "/lucky-hunters-rich-life-rich-live-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/lucky-hunters-wazdan-love-drop-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/neospins-big-money-bang-cupids-edition-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/rollxo-extra-gold-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/skycrown-love-rush-promotion/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/skycrowns-game-of-crowns-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1147,32 +1247,7 @@
       "permanent": false
     },
     {
-      "source": "/golden-reels-novelty-slot-blitz-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/crop-chase-tournament-at-skycrown-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/wealth-seekers-tournament-at-skycrown-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/wazdan-mystery-drop-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/treasures-of-the-realm-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/spin-into-skycrowns-summer-spins-tournament/",
+      "source": "/slotexos-slot-of-the-week-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1182,167 +1257,32 @@
       "permanent": false
     },
     {
-      "source": "/slotexos-slot-of-the-week-tournament/",
+      "source": "/spin-into-skycrowns-summer-spins-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/2-million-flatdog-cash-drop-tournament/",
+      "source": "/treasures-of-the-realm-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/slotexo-cashcrab-monthly-race-tournament/",
+      "source": "/wazdan-mystery-drop-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/play/wintopia-casino/",
-      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4KWOx4zHaEN5WNd7ZgqdRLk/1/",
-      "permanent": false
-    },
-    {
-      "source": "/play/allspins-casino/",
-      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4LjiPWJ9pQO92Nd7ZgqdRLk/1/",
-      "permanent": false
-    },
-    {
-      "source": "/play/flappy-casino/",
-      "destination": "https://record.winmaniacs.com/_lMYuy2xZk4JeSeUTkJsCumNd7ZgqdRLk/1/",
-      "permanent": false
-    },
-    {
-      "source": "/how-bonus-crab-casinos-work/",
-      "destination": "https://au.crazyvegas.com/casino-bonuses/bonus-crab/",
-      "permanent": false
-    },
-    {
-      "source": "/play/casino-sites-transfer/",
-      "destination": "https://toponlinecasinosites.io/",
-      "permanent": false
-    },
-    {
-      "source": "/play/goldex-casino/",
-      "destination": "https://goldexcasino.media/n126655f22",
-      "permanent": false
-    },
-    {
-      "source": "/play/slotlounge-casino/",
-      "destination": "https://slotloungemedia.com/n1ef714103",
-      "permanent": false
-    },
-    {
-      "source": "/play/winshark-casino/",
-      "destination": "https://winshark.link/dgpcbcn8r",
-      "permanent": false
-    },
-    {
-      "source": "/play/caswino-casino/",
-      "destination": "https://go.caswino.co/2u6F?extid=182751&p=%2F%3Fmodal%3Dregister",
-      "permanent": false
-    },
-    {
-      "source": "/play/betalice-casino/",
-      "destination": "https://bal.allsetro.com/?mid=269489_1828516",
-      "permanent": false
-    },
-    {
-      "source": "/book-of-billionaire-tournament-at-luckywins/",
+      "source": "/wealth-seekers-tournament-at-skycrown-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/stellar-spins-flatdog-cash-drop-promotion/",
+      "source": "/crop-chase-tournament-at-skycrown-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/skycrown-casinos-crown-race-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/goldex-referral-bonus/",
-      "destination": "https://au.crazyvegas.com/goldex-casino-referral-bonus/",
-      "permanent": false
-    },
-    {
-      "source": "/play/betsio-casino/",
-      "destination": "https://bts-links.com/h2hwmwf7e",
-      "permanent": false
-    },
-    {
-      "source": "/play/spinrise-casino/",
-      "destination": "https://clickspinrise.com/adzqk3syf",
-      "permanent": false
-    },
-    {
-      "source": "/play/dragonslots-casino/",
-      "destination": "https://mu.fastmui.com/redirect.aspx?pid=389153&lpid=2419&bid=2159",
-      "permanent": false
-    },
-    {
-      "source": "/play/spinando-casino/",
-      "destination": "https://mu.fastmui.com/redirect.aspx?pid=389152&lpid=2589&bid=2167",
-      "permanent": false
-    },
-    {
-      "source": "/1spin4win-oktoberfest-fortune-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/booongo-playson-summer-santa-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/moonwins-daily-reel-run-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/igtech-january-free-spins-promotion/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/roby-casinos-elamania-2-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/bgaming-phantom-drops-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/voltent-volt-boost-promotion/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/lightning-race-week-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/fury-elements-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/winspirit-casinos-oktoberfest-slot-festival/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/trip2vip-kings-mania-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/flatdog-cash-drop-tournament-at-stellar-spins-casino/",
+      "source": "/golden-reels-novelty-slot-blitz-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1392,72 +1332,62 @@
       "permanent": false
     },
     {
-      "source": "/lucky-free-spins-slot-tournament-at-luckywins-casino/",
+      "source": "/flatdog-cash-drop-tournament-at-stellar-spins-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/winspirits-santas-gift-shop-promotion/",
+      "source": "/trip2vip-kings-mania-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/sweetheart-jackpots-cupids-charm-tournament/",
+      "source": "/winspirit-casinos-oktoberfest-slot-festival/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/slotexo-slot-of-the-week-tournament/",
+      "source": "/1spin4win-oktoberfest-fortune-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/neospins-book-of-billionaire-tournament/",
+      "source": "/booongo-playson-summer-santa-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/fiery-duels-tournament/",
+      "source": "/moonwins-daily-reel-run-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/santas-reindeers-race-at-skycrown/",
+      "source": "/igtech-january-free-spins-promotion/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/boomerangs-cashcrab-monthly-race/",
+      "source": "/roby-casinos-elamania-2-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/booming-games-hold-and-win-tournament/",
+      "source": "/bgaming-phantom-drops-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/sparkly-xmas-drop-tournament/",
+      "source": "/voltent-volt-boost-promotion/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/igtech-20k-tournament/",
+      "source": "/lightning-race-week-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/the-masters-tournament-at-wazamba-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/lucky-wins-jackpots-of-wizard-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/halloween-tournament/",
+      "source": "/fury-elements-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1497,17 +1427,7 @@
       "permanent": false
     },
     {
-      "source": "/crown-slots-royal-monthly-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/wazdans-mystery-drop-tournament-at-slot-lords-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/the-kings-tournament-at-king-billy-casino/",
+      "source": "/moonwin-spin-o-mania-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1517,72 +1437,87 @@
       "permanent": false
     },
     {
-      "source": "/moonwin-spin-o-mania-tournament/",
+      "source": "/the-kings-tournament-at-king-billy-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/drops-wins-slots-at-crocoslots-casino/",
+      "source": "/wazdans-mystery-drop-tournament-at-slot-lords-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/stellar-spins-black-friday-bonus/",
+      "source": "/crown-slots-royal-monthly-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/skycrown-80k-free-spins-showdown/",
+      "source": "/halloween-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/slots-palaces-the-masters-tournament/",
+      "source": "/lucky-wins-jackpots-of-wizard-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/chill-wins-tournament-sky-crown/",
+      "source": "/neospins-book-of-billionaire-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/playmojos-weekly-slot-tournament/",
+      "source": "/slotexo-slot-of-the-week-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/the-pirates-code-tournament/",
+      "source": "/sweetheart-jackpots-cupids-charm-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/slotmafias-weekly-heist-tournament/",
+      "source": "/winspirits-santas-gift-shop-promotion/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/25k-cash-race-tournament-win-big-at-winmaker-casino/",
+      "source": "/lucky-free-spins-slot-tournament-at-luckywins-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/slot-mafias-mad-joker-tournament/",
+      "source": "/fiery-duels-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/st-valentines-drops-at-playmojo/",
+      "source": "/santas-reindeers-race-at-skycrown/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/drops-wins-at-level-up-casino/",
+      "source": "/boomerangs-cashcrab-monthly-race/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/neon54s-million-frostival-spins/",
+      "source": "/booming-games-hold-and-win-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/sparkly-xmas-drop-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/igtech-20k-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/the-masters-tournament-at-wazamba-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1642,92 +1577,67 @@
       "permanent": false
     },
     {
-      "source": "/dolly-casino-drop-and-wins/",
+      "source": "/neon54s-million-frostival-spins/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/frenzy-fest-tournament/",
+      "source": "/drops-wins-at-level-up-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/take-me-fishin-tournament/",
+      "source": "/drops-wins-slots-at-crocoslots-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/grand-mondays-vegasnow/",
+      "source": "/stellar-spins-black-friday-bonus/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/jokers-gambit-tournament-at-casinobello/",
+      "source": "/skycrown-80k-free-spins-showdown/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/lucky-gold-promotion-at-slots-mines-casino/",
+      "source": "/slots-palaces-the-masters-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/10-years-of-platipus-tournament/",
+      "source": "/chill-wins-tournament-sky-crown/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/weekly-blockbuster-tournament-at-vegas-now/",
+      "source": "/playmojos-weekly-slot-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/rollero-drops-and-wins-2025/",
+      "source": "/the-pirates-code-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/may-riorace-2/",
+      "source": "/slotmafias-weekly-heist-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/sparkling-20k-pragmatic-tournament-at-vegas-now/",
+      "source": "/25k-cash-race-tournament-win-big-at-winmaker-casino/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/spinoleague-tournament-at-winspirit-casino/",
+      "source": "/slot-mafias-mad-joker-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
     {
-      "source": "/spinoleague-tournament-goldspin-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/super-boost-weekend/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/winshark-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/casinobellos-holiday-rush-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/rainbow-drops-tournament-at-goldspin-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/casino-weekly-challenge/",
+      "source": "/st-valentines-drops-at-playmojo/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1777,22 +1687,7 @@
       "permanent": false
     },
     {
-      "source": "/first-class-fortune-at-jet4bet/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/st-patricks-gold-hunt/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/igtech-raffle-promotion/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/flatdog-cash-drop-network-promotion-at-select-casinos/",
+      "source": "/joka-casinos-cupids-dash-promo-race/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1802,7 +1697,137 @@
       "permanent": false
     },
     {
-      "source": "/joka-casinos-cupids-dash-promo-race/",
+      "source": "/flatdog-cash-drop-network-promotion-at-select-casinos/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/igtech-raffle-promotion/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/st-patricks-gold-hunt/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/first-class-fortune-at-jet4bet/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/casino-weekly-challenge/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/rainbow-drops-tournament-at-goldspin-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/casinobellos-holiday-rush-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/lucky-gold-promotion-at-slots-mines-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/jokers-gambit-tournament-at-casinobello/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/grand-mondays-vegasnow/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/take-me-fishin-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/frenzy-fest-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/dolly-casino-drop-and-wins/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/10-years-of-platipus-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/weekly-blockbuster-tournament-at-vegas-now/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/rollero-drops-and-wins-2025/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/may-riorace-2/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/sparkling-20k-pragmatic-tournament-at-vegas-now/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/spinoleague-tournament-at-winspirit-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/spinoleague-tournament-goldspin-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/super-boost-weekend/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/winshark-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/lucky-hunter-welcome-tournament/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": true
+    },
+    {
+      "source": "/the-weekly-tournament-at-roosterbet-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/wild-spring-tournament-at-abo-casino/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": false
+    },
+    {
+      "source": "/marathon-stake-race/",
+      "destination": "https://au.crazyvegas.com/category/promos/",
+      "permanent": true
+    },
+    {
+      "source": "/neospins-big-money-bang-tournament/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
     },
@@ -1852,21 +1877,6 @@
       "permanent": false
     },
     {
-      "source": "/neospins-big-money-bang-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
-      "source": "/marathon-stake-race/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": true
-    },
-    {
-      "source": "/wild-spring-tournament-at-abo-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
-    },
-    {
       "source": "/weekly-reload-spectacular-at-roby/",
       "destination": "https://au.crazyvegas.com/category/promos/",
       "permanent": false
@@ -1902,23 +1912,13 @@
       "permanent": false
     },
     {
-      "source": "/lucky-hunter-welcome-tournament/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
+      "source": "/play/spin-jo-casino/",
+      "destination": "https://roosterspartners.com/aaszysazps",
       "permanent": true
-    },
-    {
-      "source": "/the-weekly-tournament-at-roosterbet-casino/",
-      "destination": "https://au.crazyvegas.com/category/promos/",
-      "permanent": false
     },
     {
       "source": "/play/spins-up-casino/",
       "destination": "https://roosterspartners.media/aajix0r3zd",
-      "permanent": true
-    },
-    {
-      "source": "/play/spin-jo-casino/",
-      "destination": "https://roosterspartners.com/aaszysazps",
       "permanent": true
     },
     {
@@ -2023,6 +2023,11 @@
     },
     {
       "source": "/play/betya-casino/",
+      "destination": "https://record.betyaaffiliates.com/_lgFeyxRFeplcYQOhlOPu9mNd7ZgqdRLk/6/",
+      "permanent": true
+    },
+    {
+      "source": "/play/betya-casino/-casino",
       "destination": "https://record.betyaaffiliates.com/_lgFeyxRFeplcYQOhlOPu9mNd7ZgqdRLk/6/",
       "permanent": false
     }
