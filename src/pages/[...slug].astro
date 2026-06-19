@@ -557,6 +557,21 @@ if (tocItems.length > 0) {
 
 const displayTitle = (post.title || "").replaceAll("[year]", currentYear)
 
+// Strip every Cloudways host variant -> root-relative path
+function stripWp(input = "") {
+  const hosts = [
+    "https://wordpress-1164434-6467266.cloudwaysapps.com",
+    "http://wordpress-1164434-6467266.cloudwaysapps.com",
+    "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+    "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+    "//wordpress-1164434-6467266.cloudwaysapps.com",
+  ];
+  let out = input;
+  for (const h of hosts) out = out.split(h).join("");
+  return out;
+}
+
+
 // --- 7. FINAL CONTENT REPLACEMENTS ---
 let fixedContent = contentWithIds
     .replaceAll("[casino_toc]", tocHTML)
@@ -600,22 +615,10 @@ if (!isHomepage) {
         .replaceAll("<p>[author_reviewer]</p>", "")
         .replaceAll("[author_reviewer]", ""); 
 }
+// 🚨 FINAL SWEEP: remove every Cloudways host variant from anchor hrefs etc.
+fixedContent = stripWp(fixedContent);
 
-const WP_HOSTS = [
-  "https://wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://wordpress-1164434-6467266.cloudwaysapps.com",
-  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "//wordpress-1164434-6467266.cloudwaysapps.com",
-];
 
-// Strip the origin host from any string (HTML, JSON-LD, a single URL).
-// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
-function stripWp(input = "") {
-  let out = input;
-  for (const h of WP_HOSTS) out = out.split(h).join("");
-  return out;
-}
 
 ---
 
@@ -924,10 +927,9 @@ function stripWp(input = "") {
                 )
             }
 
-            {/* 🚨 NEW: RENDER THE EXCERPT (PROS & CONS) */}
             {isReview && post.excerpt && (
-                <div class="review-excerpt wp-content" set:html={post.excerpt} />
-            )}
+    <div class="review-excerpt wp-content" set:html={stripWp(post.excerpt)} />
+)}
 
             <div class="wp-content" set:html={fixedContent} />
         </article>
