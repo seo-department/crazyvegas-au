@@ -2315,6 +2315,86 @@
       "source": "/snoop-dogg-enters-the-game-death-row-games-takes-fortnite-by-storm/",
       "destination": "/news/",
       "permanent": true
+    },
+    {
+      "source": "/bloodlines-2-finally-launches-strong-atmosphere-mixed-reactions/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/metroid-prime-4-beyond/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/cd-projekt-red-witcher-4-cyberpunk-2/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/australian-online-casinos/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/stardew-valley-playstation-plus/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/casino-reviews/slots-of-vegas/",
+      "destination": "/casino-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/call-of-duty-mw3/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/xenoblade-chronicles-nintendo-switch-review/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/the-last-of-us-cast-spotlight-hbo-tv-series/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/rockstar-gta-6-future-pipeline/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/why-gamers-are-trying-online-casinos/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/luckyvibe-casino/",
+      "destination": "/casino-reviews/lucky-vibe/",
+      "permanent": true
+    },
+    {
+      "source": "/casino-reviews/kaulana/",
+      "destination": "/casino-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/casino-reviews/casinobello/",
+      "destination": "/casino-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/casino-reviews/drake/",
+      "destination": "/casino-reviews/",
+      "permanent": true
+    },
+    {
+      "source": "/elden-ring-nightreign-patch-the-storm-ruler-is-back-in-action/",
+      "destination": "/news/",
+      "permanent": true
     }
   ]
 }
