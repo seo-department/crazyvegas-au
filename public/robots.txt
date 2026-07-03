@@ -1,3 +1,7 @@
 User-agent: *
+
+Disallow: /*?btag=*
+Disallow: /*&btag=*
+
 Disallow: /play/
 Sitemap: https://au.crazyvegas.com/sitemap.xml

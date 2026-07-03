@@ -1,0 +1,120 @@
+---
+import { getPrimaryMenu } from "../lib/menu.js"
+
+const menuTree = await getPrimaryMenu()
+
+// Splits a flat array into N even chunks
+function chunkArray(arr, size) {
+    const out = []
+    for (let i = 0; i < arr.length; i += size) {
+        out.push(arr.slice(i, i + size))
+    }
+    return out
+}
+
+const MAX_PER_COLUMN = 8   // items before we start splitting
+const MAX_COLUMNS = 4      // never generate more than this many columns
+
+// A parent's "weight" includes itself + all its nested children
+function itemWeight(child) {
+    return 1 + (child.children?.length || 0)
+}
+
+function buildColumns(children) {
+    const hasExplicitColumns = children.some(c => c.meta?.column != null)
+    const totalWeight = children.reduce((sum, c) => sum + itemWeight(c), 0)
+
+    // Only respect explicit columns for lists that are short by weight
+    if (hasExplicitColumns && totalWeight <= MAX_PER_COLUMN) {
+        const columns = new Map()
+        for (const child of children) {
+            const colKey = child.meta?.column ?? 1
+            if (!columns.has(colKey)) columns.set(colKey, [])
+            columns.get(colKey).push(child)
+        }
+        return [...columns.entries()].sort((a, b) => a[0] - b[0])
+    }
+
+    // Auto-balance by weight (accounts for grandchildren height)
+    if (totalWeight > MAX_PER_COLUMN) {
+        const numColumns = Math.min(MAX_COLUMNS, Math.ceil(totalWeight / MAX_PER_COLUMN))
+        const columns = Array.from({ length: numColumns }, () => [])
+        const weights = new Array(numColumns).fill(0)
+
+        // Sort heaviest-first so big items get placed before the greedy fill
+        // has already committed to an uneven distribution
+        const sorted = [...children].sort((a, b) => itemWeight(b) - itemWeight(a))
+
+        for (const child of sorted) {
+            const lightest = weights.indexOf(Math.min(...weights))
+            columns[lightest].push(child)
+            weights[lightest] += itemWeight(child)
+        }
+
+        // Re-sort each column back to original menu order so items don't look shuffled
+        for (const col of columns) {
+            col.sort((a, b) => children.indexOf(a) - children.indexOf(b))
+        }
+
+        return columns.map((chunk, idx) => [idx + 1, chunk]).filter(([, c]) => c.length > 0)
+    }
+
+    // Short list, no need to split
+    return [[1, children]]
+}
+---
+
+<nav class="header-nav" id="primary-nav" aria-label="Primary">
+    {menuTree.map((top) => {
+        const icon = top.meta?.icon
+        const color = top.meta?.color
+
+        if (top.children.length === 0) {
+            return (
+                <div class="nav-dropdown">
+                    <a class="nav-link" href={top.url}>
+                        {icon && <i class={icon} style={color ? `color: ${color};` : undefined} />}
+                        <span set:html={top.label} />
+                    </a>
+                </div>
+            )
+        }
+
+        const sortedColumns = buildColumns(top.children)
+        const isMega = sortedColumns.length > 1
+
+        return (
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">
+                    <a href={top.url}>
+                        {icon && <i class={icon} style={color ? `color: ${color};` : undefined} />}
+                        <span set:html={top.label} />
+                        <i class="fa-solid fa-chevron-down" />
+                    </a>
+                </button>
+
+                <div class:list={["nav-dropdown-menu", { "mega-menu": isMega }]}
+    style={isMega ? `--mega-columns: ${sortedColumns.length}` : undefined}>
+                    {sortedColumns.map(([colKey, children]) => (
+                        <div class="mega-column" data-column={colKey}>
+                            {children.map((child) => (
+                                <>
+                                    <a href={child.url}>
+                                        {child.meta?.icon && <i class={child.meta.icon} />}
+                                        <span set:html={child.label} />
+                                    </a>
+                                    {child.children.length > 0 &&
+                                        child.children.map((grandchild) => (
+                                            <a href={grandchild.url} style="padding-left: 2rem; font-size: 0.85rem;">
+                                                <span set:html={grandchild.label} />
+                                            </a>
+                                        ))}
+                                </>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
+    })}
+</nav>

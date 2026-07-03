@@ -1,4 +1,6 @@
 ---
+import MegaMenu from "../components/MegaMenu.astro"
+
 interface Props {
     title: string
     description?: string
@@ -65,79 +67,7 @@ function swapWpHost(input = "") {
 const wpGraphQLEndpoint =
     "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
 
-// --- DYNAMIC HEADER NAV ---
-const navQuery = `
-  query HeaderNav {
-    menu(id: "primary-menu", idType: SLUG) {
-      menuItems(first: 200) {
-        nodes {
-          id
-          parentId
-          label
-          path
-          url
-          order
-        }
-      }
-    }
-  }
-`
 
-type WpNavItem = {
-  id: string
-  parentId: string | null
-  label: string
-  path: string | null
-  url: string | null
-  order: number | null
-  children: WpNavItem[]
-}
-
-let navTree: WpNavItem[] = []
-
-try {
-  const res = await fetch(wpGraphQLEndpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: navQuery }),
-  })
-  const { data } = await res.json()
-  const nodes = (data?.menu?.menuItems?.nodes ?? []) as WpNavItem[]
-
-  const byId = new Map<string, WpNavItem>()
-  nodes.forEach((n) => byId.set(n.id, { ...n, children: [] }))
-  nodes.forEach((n) => {
-    if (n.parentId && byId.has(n.parentId)) {
-      byId.get(n.parentId)!.children.push(byId.get(n.id)!)
-    }
-  })
-
-  const byOrder = (a: WpNavItem, b: WpNavItem) => (a.order ?? 0) - (b.order ?? 0)
-  byId.forEach((node) => node.children.sort(byOrder))
-  navTree = nodes
-    .filter((n) => !n.parentId)
-    .map((n) => byId.get(n.id)!)
-    .sort(byOrder)
-} catch (error) {
-  console.error("Error fetching WP header nav:", error)
-}
-
-// Resolve a menu item to a clean relative URL on your domain
-function navHref(item: { path?: string | null; url?: string | null }) {
-  return stripWp(item.path || item.url || "/")
-}
-
-// Icons stay in code (presentation), keyed by top-level label so it matches exactly
-const NAV_ICONS: Record<string, { icon: string; color: string }> = {
-  "online casinos": { icon: "fa-solid fa-building-columns", color: "#cbd5e1" },
-  "recommended casinos": { icon: "fa-solid fa-star", color: "#facc15" },
-  "casino bonuses": { icon: "fa-solid fa-gift", color: "#fbbf24" },
-  "casino games": { icon: "fa-solid fa-dice", color: "#f43f5e" },
-  "online pokies": { icon: "fa-solid fa-coins", color: "#a855f7" },
-}
-function navIcon(label: string) {
-  return NAV_ICONS[label.trim().toLowerCase()] ?? null
-}
 
 // --- DYNAMIC FOOTER DATA FETCHING ---
 // (wpGraphQLEndpoint is already declared above)
@@ -424,45 +354,7 @@ function timeAgo(dateString: string) {
                 </button>
 
                 <div class="header-right">
-                    <nav class="header-nav" id="primary-nav">
-                        {
-                            navTree.map((top) => {
-                                const ic = navIcon(top.label)
-                                // No children → plain link, not a dropdown
-                                if (top.children.length === 0) {
-                                    return (
-                                        <div class="nav-dropdown">
-                                            <a class="nav-link" href={navHref(top)}>
-                                                {ic && (
-                                                    <i class={ic.icon} style={`color: ${ic.color};`} />
-                                                )}{" "}
-                                                {top.label}
-                                            </a>
-                                        </div>
-                                    )
-                                }
-                                // Has children → dropdown with the sub-items as plain links
-                                return (
-                                    <div class="nav-dropdown">
-                                        <button class="nav-dropdown-toggle">
-                                            <a href={navHref(top)}>
-                                                {ic && (
-                                                    <i class={ic.icon} style={`color: ${ic.color};`} />
-                                                )}{" "}
-                                                {top.label}
-                                                <i class="fa-solid fa-chevron-down" />
-                                            </a>
-                                        </button>
-                                        <div class="nav-dropdown-menu">
-                                            {top.children.map((child) => (
-                                                <a href={navHref(child)}>{child.label}</a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                    </nav>
+                    <MegaMenu />
                 </div>
             </div>
         </header>
@@ -747,7 +639,8 @@ function timeAgo(dateString: string) {
                 >
                     <img
                         src="https://images.dmca.com/Badges/_dmca_premi_badge_4.png?ID=87c7839b-6721-4862-b9b7-19da4d99b484"
-                        alt="DMCA compliant image" title="DMCA Compliance information for au.crazyvegas.com"
+                        alt="DMCA compliant image"
+                        title="DMCA Compliance information for au.crazyvegas.com"
                         height="30"
                         loading="lazy"
                     />
@@ -779,7 +672,13 @@ function timeAgo(dateString: string) {
             </button>
 
             <!-- Cookie consent popup -->
-            <div id="cookie-consent" class="cookie-consent" role="dialog" aria-live="polite" aria-label="Cookie consent">
+            <div
+                id="cookie-consent"
+                class="cookie-consent"
+                role="dialog"
+                aria-live="polite"
+                aria-label="Cookie consent"
+            >
                 <div class="cookie-consent__icon">
                     <i class="fa-solid fa-cookie-bite"></i>
                 </div>
@@ -787,16 +686,22 @@ function timeAgo(dateString: string) {
                     <strong>We value your privacy</strong>
                     <p>
                         We use cookies to enhance your browsing experience and
-                        analyse our traffic. By clicking "Accept", you consent to
-                        our use of cookies. Read our
+                        analyse our traffic. By clicking "Accept", you consent
+                        to our use of cookies. Read our
                         <a href="/privacy-policy/">Privacy Policy</a>.
                     </p>
                 </div>
                 <div class="cookie-consent__actions">
-                    <button id="cookie-decline" class="cookie-btn cookie-btn--ghost">
+                    <button
+                        id="cookie-decline"
+                        class="cookie-btn cookie-btn--ghost"
+                    >
                         Decline
                     </button>
-                    <button id="cookie-accept" class="cookie-btn cookie-btn--primary">
+                    <button
+                        id="cookie-accept"
+                        class="cookie-btn cookie-btn--primary"
+                    >
                         Accept
                     </button>
                 </div>
@@ -806,166 +711,196 @@ function timeAgo(dateString: string) {
 </html>
 
 <style is:global>
-
-    		/* Mobile H1 - hidden on desktop */
-.home-hero-title-us {
-    display: none;
-}
-
-/* Desktop heading (div) - hidden on mobile */
-.home-hero-title {
-    display: block;
-}
-
-@media (max-width: 768px) {
+    /* Mobile H1 - hidden on desktop */
     .home-hero-title-us {
-        display: block;
-    }
-    .home-hero-title {
         display: none;
     }
-	.hero-r-mobile {
-    display: block !important;
-}
 
-h1.home-hero-title-us {
-    margin-top: -46px !important;
-}
-.hero-right {
-    display: none !important;
-}
+    /* Desktop heading (div) - hidden on mobile */
+    .home-hero-title {
+        display: block;
+    }
 
-.hero-r-mobile .hero-right {
-    display: block !important;
-}
+    @media (max-width: 768px) {
+        .home-hero-title-us {
+            display: block;
+        }
+        .home-hero-title {
+            display: none;
+        }
+        .hero-r-mobile {
+            display: block !important;
+        }
 
-}
+        h1.home-hero-title-us {
+            margin-top: -46px !important;
+        }
+        .hero-right {
+            display: none !important;
+        }
 
-.hero-r-mobile {
-    display: none;
-}
+        .hero-r-mobile .hero-right {
+            display: block !important;
+        }
+    }
 
-/* ===== Casino card grid — scoped to .space-shortcode-2 ===== */
+    .hero-r-mobile {
+        display: none;
+    }
 
-.space-shortcode-2 {
-    --brand: #dc2626;
-    --gold: #f5b301;
-    --ink: #0f172a;
-    --muted: #64748b;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-}
+    /* ===== Casino card grid — scoped to .space-shortcode-2 ===== */
 
-/* Grid container */
-.space-shortcode-2 .space-companies-2-archive-items {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    width: 100%;
-    float: none;       /* kill legacy float layout */
-}
-@media (max-width: 1100px) { .space-shortcode-2 .space-companies-2-archive-items { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 768px)  { .space-shortcode-2 .space-companies-2-archive-items { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px)  { .space-shortcode-2 .space-companies-2-archive-items { grid-template-columns: 1fr; } }
+    .space-shortcode-2 {
+        --brand: #dc2626;
+        --gold: #f5b301;
+        --ink: #0f172a;
+        --muted: #64748b;
+        font-family:
+            system-ui,
+            -apple-system,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
 
-/* Card */
-.space-shortcode-2 .space-companies-2-archive-item {
-    width: auto !important;   /* override box-25 width */
-    float: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-.space-shortcode-2 .space-companies-2-archive-item-ins {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    height: 100%;
-    background: #fff;
-    border: 1px solid #eef0f3;
-    border-radius: 14px;
-    padding: 0.9rem;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-}
-.space-shortcode-2 .space-companies-2-archive-item-ins:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
-    border-color: #e2e8f0;
-}
+    /* Grid container */
+    .space-shortcode-2 .space-companies-2-archive-items {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        width: 100%;
+        float: none; /* kill legacy float layout */
+    }
+    @media (max-width: 1100px) {
+        .space-shortcode-2 .space-companies-2-archive-items {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media (max-width: 768px) {
+        .space-shortcode-2 .space-companies-2-archive-items {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 480px) {
+        .space-shortcode-2 .space-companies-2-archive-items {
+            grid-template-columns: 1fr;
+        }
+    }
 
-/* Logo */
-.space-shortcode-2 .space-companies-2-archive-item-img {
-    float: none !important;
-    flex: 0 0 auto;
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
-}
-.space-shortcode-2 .space-companies-2-archive-item-img a,
-.space-shortcode-2 .space-companies-2-archive-item-img img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+    /* Card */
+    .space-shortcode-2 .space-companies-2-archive-item {
+        width: auto !important; /* override box-25 width */
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .space-shortcode-2 .space-companies-2-archive-item-ins {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        height: 100%;
+        background: #fff;
+        border: 1px solid #eef0f3;
+        border-radius: 14px;
+        padding: 0.9rem;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        transition:
+            transform 0.18s ease,
+            box-shadow 0.18s ease,
+            border-color 0.18s ease;
+    }
+    .space-shortcode-2 .space-companies-2-archive-item-ins:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+        border-color: #e2e8f0;
+    }
 
-/* Text column */
-.space-shortcode-2 .space-companies-2-archive-item-title-box {
-    float: none !important;
-    flex: 1 1 auto;
-    min-width: 0;   /* allows text truncation */
-}
+    /* Logo */
+    .space-shortcode-2 .space-companies-2-archive-item-img {
+        float: none !important;
+        flex: 0 0 auto;
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+    }
+    .space-shortcode-2 .space-companies-2-archive-item-img a,
+    .space-shortcode-2 .space-companies-2-archive-item-img img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
-/* Title */
-.space-shortcode-2 .space-companies-2-archive-item-title a {
-    display: block;
-    font-size: 0.92rem;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--ink);
-    text-decoration: none;
-    /* clamp to 2 lines */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    transition: color 0.15s ease;
-}
-.space-shortcode-2 .space-companies-2-archive-item-title a:hover { color: var(--brand); }
+    /* Text column */
+    .space-shortcode-2 .space-companies-2-archive-item-title-box {
+        float: none !important;
+        flex: 1 1 auto;
+        min-width: 0; /* allows text truncation */
+    }
 
-/* Bonus / description */
-.space-shortcode-2 .space-companies-2-archive-item-desc {
-    margin-top: 0.35rem;
-    font-size: 0.8rem;
-    color: var(--muted);
-    line-height: 1.35;
-}
-.space-shortcode-2 .space-companies-2-archive-item-desc div:empty { display: none; } /* hide stray empty divs */
+    /* Title */
+    .space-shortcode-2 .space-companies-2-archive-item-title a {
+        display: block;
+        font-size: 0.92rem;
+        font-weight: 700;
+        line-height: 1.25;
+        color: var(--ink);
+        text-decoration: none;
+        /* clamp to 2 lines */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.15s ease;
+    }
+    .space-shortcode-2 .space-companies-2-archive-item-title a:hover {
+        color: var(--brand);
+    }
 
-/* ===== Star rating (drawn entirely in CSS) ===== */
-.space-shortcode-2 .space-companies-2-archive-item-rating { margin-top: 0.4rem; }
-.space-shortcode-2 .star-rating {
-    display: inline-flex;
-    gap: 2px;
-    line-height: 1;
-}
-.space-shortcode-2 .star {
-    width: 15px;
-    height: 15px;
-    font-size: 15px;
-    line-height: 1;
-}
-.space-shortcode-2 .star::before { content: "★"; }
-.space-shortcode-2 .star-empty::before { color: #d8dde3; }
-.space-shortcode-2 .star-full::before  { color: var(--gold); }
-.space-shortcode-2 .star-half::before {
-    background: linear-gradient(90deg, var(--gold) 50%, #d8dde3 50%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
+    /* Bonus / description */
+    .space-shortcode-2 .space-companies-2-archive-item-desc {
+        margin-top: 0.35rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.35;
+    }
+    .space-shortcode-2 .space-companies-2-archive-item-desc div:empty {
+        display: none;
+    } /* hide stray empty divs */
+
+    /* ===== Star rating (drawn entirely in CSS) ===== */
+    .space-shortcode-2 .space-companies-2-archive-item-rating {
+        margin-top: 0.4rem;
+    }
+    .space-shortcode-2 .star-rating {
+        display: inline-flex;
+        gap: 2px;
+        line-height: 1;
+    }
+    .space-shortcode-2 .star {
+        width: 15px;
+        height: 15px;
+        font-size: 15px;
+        line-height: 1;
+    }
+    .space-shortcode-2 .star::before {
+        content: "★";
+    }
+    .space-shortcode-2 .star-empty::before {
+        color: #d8dde3;
+    }
+    .space-shortcode-2 .star-full::before {
+        color: var(--gold);
+    }
+    .space-shortcode-2 .star-half::before {
+        background: linear-gradient(90deg, var(--gold) 50%, #d8dde3 50%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
 
     .cus-vote-btn {
         transition: all 0.2s ease !important;
@@ -1165,169 +1100,193 @@ h1.home-hero-title-us {
         color: #fbbf24;
     }
 
-
     /* ===== Back to top button ===== */
-.scroll-top-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 998;
-    width: 48px;
-    height: 48px;
-    border: none;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: #fff;
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(16px);
-    transition:
-        opacity 0.3s ease,
-        transform 0.3s ease,
-        visibility 0.3s ease,
-        box-shadow 0.2s ease;
-}
-.scroll-top-btn.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-.scroll-top-btn:hover {
-    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.6);
-    transform: translateY(-3px);
-}
-
-/* ===== Cookie consent popup ===== */
-.cookie-consent {
-    position: fixed;
-    bottom: 24px;
-    left: 24px;
-    z-index: 999;
-    max-width: 420px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 14px;
-    background: rgba(15, 23, 42, 0.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 20px 22px;
-    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
-    transform: translateY(140%);
-    opacity: 0;
-    transition:
-        transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
-        opacity 0.45s ease;
-}
-.cookie-consent.visible {
-    transform: translateY(0);
-    opacity: 1;
-}
-.cookie-consent__icon {
-    flex-shrink: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: rgba(251, 191, 36, 0.12);
-    color: #fbbf24;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.3rem;
-}
-.cookie-consent__text {
-    flex: 1 1 220px;
-    min-width: 0;
-}
-.cookie-consent__text strong {
-    display: block;
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-.cookie-consent__text p {
-    margin: 0;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    color: #cbd5e1;
-    padding: 0;
-}
-.cookie-consent__text a {
-    color: #60a5fa;
-    text-decoration: underline;
-    font-weight: 600;
-}
-.cookie-consent__text a:hover {
-    color: #93c5fd;
-}
-.cookie-consent__actions {
-    display: flex;
-    gap: 10px;
-    width: 100%;
-    margin-top: 4px;
-}
-.cookie-btn {
-    flex: 1;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-}
-.cookie-btn--primary {
-    border: none;
-    color: #fff;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-}
-.cookie-btn--primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.55);
-}
-.cookie-btn--ghost {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #cbd5e1;
-}
-.cookie-btn--ghost:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.35);
-}
-
-/* Mobile: full-width banner, keep scroll button clear of it */
-@media (max-width: 600px) {
-    .cookie-consent {
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        max-width: none;
-        padding: 16px 18px;
-    }
     .scroll-top-btn {
-        bottom: 16px;
-        right: 16px;
-        width: 44px;
-        height: 44px;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 998;
+        width: 48px;
+        height: 48px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: #fff;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(16px);
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease,
+            visibility 0.3s ease,
+            box-shadow 0.2s ease;
     }
-    /* When the cookie banner is showing on mobile, lift the scroll button above it */
-    .cookie-consent.visible ~ .scroll-top-btn.visible,
-    body:has(.cookie-consent.visible) .scroll-top-btn.visible {
-        bottom: 180px;
+    .scroll-top-btn.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    .scroll-top-btn:hover {
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.6);
+        transform: translateY(-3px);
+    }
+
+    .nav-dropdown-menu.mega-menu {
+    display: grid !important;
+    grid-template-columns: repeat(var(--mega-columns, 2), 1fr) !important;
+    gap: 0 1.5rem !important;
+    width: max-content !important;
+    max-width: 90vw !important;
+}
+.mega-column {
+    margin-bottom: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important; /* lets long labels wrap instead of overflowing the column */
+}
+.mega-column a {
+    padding: 8px 0;
+    color: #ccc;
+    text-decoration: none;
+}
+
+@media (max-width: 420px) {
+    /* Too narrow for 2 columns — fall back to single column */
+    .nav-dropdown-menu.mega-menu {
+        grid-template-columns: 1fr !important;
     }
 }
 
+    /* ===== Cookie consent popup ===== */
+    .cookie-consent {
+        position: fixed;
+        bottom: 24px;
+        left: 24px;
+        z-index: 999;
+        max-width: 420px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 14px;
+        background: rgba(15, 23, 42, 0.96);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px 22px;
+        box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
+        transform: translateY(140%);
+        opacity: 0;
+        transition:
+            transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+            opacity 0.45s ease;
+    }
+    .cookie-consent.visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    .cookie-consent__icon {
+        flex-shrink: 0;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(251, 191, 36, 0.12);
+        color: #fbbf24;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+    }
+    .cookie-consent__text {
+        flex: 1 1 220px;
+        min-width: 0;
+    }
+    .cookie-consent__text strong {
+        display: block;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    .cookie-consent__text p {
+        margin: 0;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        color: #cbd5e1;
+        padding: 0;
+    }
+    .cookie-consent__text a {
+        color: #60a5fa;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+    .cookie-consent__text a:hover {
+        color: #93c5fd;
+    }
+    .cookie-consent__actions {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        margin-top: 4px;
+    }
+    .cookie-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+    }
+    .cookie-btn--primary {
+        border: none;
+        color: #fff;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    .cookie-btn--primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.55);
+    }
+    .cookie-btn--ghost {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #cbd5e1;
+    }
+    .cookie-btn--ghost:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Mobile: full-width banner, keep scroll button clear of it */
+    @media (max-width: 600px) {
+        .cookie-consent {
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            max-width: none;
+            padding: 16px 18px;
+        }
+        .scroll-top-btn {
+            bottom: 16px;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+        }
+        /* When the cookie banner is showing on mobile, lift the scroll button above it */
+        .cookie-consent.visible ~ .scroll-top-btn.visible,
+        body:has(.cookie-consent.visible) .scroll-top-btn.visible {
+            bottom: 180px;
+        }
+    }
 
     .read-more-btn {
         display: inline-flex;
@@ -1425,10 +1384,10 @@ h1.home-hero-title-us {
     }
 
     .hero-cta-content strong {
-    font-size: 30px;
-    display: block;
-    margin-bottom: 10px !important;
-}
+        font-size: 30px;
+        display: block;
+        margin-bottom: 10px !important;
+    }
 
     .cus-stat-label {
         color: #000;
@@ -10291,10 +10250,10 @@ h1.home-hero-title-us {
     }
 
     @media (max-width: 991px) {
-    .nav-dropdown-menu.mega-menu {
-        background: aliceblue;
-    }   
-}
+        .nav-dropdown-menu.mega-menu {
+            background: aliceblue;
+        }
+    }
 
     @media (max-width: 600px) {
         .cus-guide-wrapper h1,
@@ -11376,11 +11335,7 @@ h1.home-hero-title-us {
 
     /* --- Main Banner Container --- */
     .cus-banner {
-        background: linear-gradient(
-            180deg,
-            #e2e8f0,
-            #f8fafc
-        ) !important; /* Modern, rich blue gradient */
+        
         color: #f8fafc; /* Crisp, off-white text for high contrast */
         border-radius: 16px;
         padding: 32px;
@@ -11432,9 +11387,7 @@ h1.home-hero-title-us {
 
     /* --- Main Disclaimer Box --- */
     .desktop-dis .disclaimer-cl {
-        background-color: #f8fafc; /* Very soft, cool gray background */
-        border: 1px solid #e2e8f0; /* Subtle outer border */
-        border-left: 4px solid #94a3b8; /* Heavier left border for an "info box" feel */
+
         border-radius: 8px; /* Modern rounded corners */
         padding: 16px 24px;
         margin: 24px 0;
@@ -11946,11 +11899,11 @@ h1.home-hero-title-us {
     }
 
     /* Force the text inside the banner to be white, overriding the theme defaults */
-    .cus-banner,
+    /* .cus-banner,
     .cus-banner p,
     .cus-banner span.cus-teaser {
         color: #334155 !important;
-    }
+    } */
 
     a#cus-toggle-1 {
         color: #ffffff !important;
@@ -13214,7 +13167,7 @@ h1.home-hero-title-us {
 
     /* 1. Setup the Responsive Grid */
 
-.wp-block-cover__inner-container > div:has(.space-units-archive-item-2) {
+    .wp-block-cover__inner-container > div:has(.space-units-archive-item-2) {
         display: grid !important;
         /* Auto-scales: fits as many 160px wide cards as possible per row */
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -15591,7 +15544,7 @@ h1.home-hero-title-us {
             setTimeout(() => banner.classList.add("visible"), 600)
         }
 
-        const close = (value) => {
+        const close = value => {
             try {
                 localStorage.setItem("cookie_consent", value)
             } catch (e) {}
