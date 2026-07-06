@@ -742,6 +742,53 @@ fixedContent = stripWp(fixedContent);
                         <span class="action-terms">T&Cs Apply. 18+ Only.</span>
                     </div>
                 </div>
+
+                <div class="review-hero-author">
+                    <div class="meta-author">
+                        
+                            <a href={authorLink}
+                            class="author-image-link"
+                            aria-label={`View ${authorName}'s profile`}
+                        >
+                            <img
+                                src={authorAvatar}
+                                alt={authorName}
+                                class="meta-avatar"
+                                referrerpolicy="no-referrer"
+                            />
+                        </a>
+                        <div>
+                            <span class="meta-name">By <a href={authorLink} class="author-text-link"
+                                    ><strong>{authorName}</strong></a>
+                                </span>
+                            
+                            <span class="meta-date">Updated: {formattedDate}</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-share">
+                        {twitterLink && (
+                            <a href={twitterLink} target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Twitter">
+                                <i class="fa-brands fa-twitter" />
+                            </a>
+                        )}
+                        {facebookLink && (
+                            <a href={facebookLink} target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f" />
+                            </a>
+                        )}
+                        {instagramLink && (
+                            <a href={instagramLink} target="_blank" rel="noopener noreferrer" class="share-btn instagram" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram" />
+                            </a>
+                        )}
+                        {linkedinLink && (
+                            <a href={linkedinLink} target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in" />
+                            </a>
+                        )}
+                    </div>
+                </div>
             </div>
         </header>
     ) : (
@@ -1742,6 +1789,9 @@ table.offers {
   color: #0f172a; /* Slate 900 */
 }
 
+
+
+
 /* 5. Typography: Lists */
 .space-pros-description ul, 
 .space-cons-description ul {
@@ -2398,6 +2448,39 @@ ol li {
 .game-hero .post-breadcrumbs a {
   text-decoration: none;
 }
+
+
+/* --- REVIEW HERO AUTHOR BAR --- */
+.review-hero-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+.review-hero-author .meta-name {
+  color: #cbd5e1;
+}
+
+.review-hero-author .meta-date {
+  color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+  .review-hero-author {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+
 .game-hero .game-hero-img {
   max-width: 300px;
   border-radius: 12px;
