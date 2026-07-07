@@ -9,10 +9,11 @@ export async function getStaticPaths() {
     const wpUrl = `${wpDomain}/graphql`
 
     // MUST INCLUDE THIS TO BYPASS CLOUDWAYS BOT PROTECTION
-    const safeHeaders = { 
+    const safeHeaders = {
         "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    };
+        "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    }
 
     let allNodes: any[] = []
     let allPostsList: any[] = []
@@ -49,17 +50,27 @@ export async function getStaticPaths() {
             }),
         })
 
-        const contentType = response.headers.get("content-type");
-        if (!response.ok || !contentType || !contentType.includes("application/json")) {
-            const errText = await response.text();
-            console.error("❌ CLOUDWAYS BLOCKED POSTS REQUEST.", errText.substring(0, 200));
-            throw new Error("Cloudways blocked the Posts fetch request.");
+        const contentType = response.headers.get("content-type")
+        if (
+            !response.ok ||
+            !contentType ||
+            !contentType.includes("application/json")
+        ) {
+            const errText = await response.text()
+            console.error(
+                "❌ CLOUDWAYS BLOCKED POSTS REQUEST.",
+                errText.substring(0, 200),
+            )
+            throw new Error("Cloudways blocked the Posts fetch request.")
         }
 
         const result = await response.json()
 
         if (result.errors) {
-            console.error("❌ GRAPHQL POSTS ERROR:", JSON.stringify(result.errors, null, 2))
+            console.error(
+                "❌ GRAPHQL POSTS ERROR:",
+                JSON.stringify(result.errors, null, 2),
+            )
             throw new Error("WordPress rejected the GraphQL query for posts.")
         }
 
@@ -110,17 +121,27 @@ export async function getStaticPaths() {
             }),
         })
 
-        const contentType = response.headers.get("content-type");
-        if (!response.ok || !contentType || !contentType.includes("application/json")) {
-            const errText = await response.text();
-            console.error("❌ CLOUDWAYS BLOCKED PAGES REQUEST.", errText.substring(0, 200));
-            throw new Error("Cloudways blocked the Pages fetch request.");
+        const contentType = response.headers.get("content-type")
+        if (
+            !response.ok ||
+            !contentType ||
+            !contentType.includes("application/json")
+        ) {
+            const errText = await response.text()
+            console.error(
+                "❌ CLOUDWAYS BLOCKED PAGES REQUEST.",
+                errText.substring(0, 200),
+            )
+            throw new Error("Cloudways blocked the Pages fetch request.")
         }
 
         const result = await response.json()
 
         if (result.errors) {
-            console.error("❌ GRAPHQL PAGES ERROR:", JSON.stringify(result.errors, null, 2))
+            console.error(
+                "❌ GRAPHQL PAGES ERROR:",
+                JSON.stringify(result.errors, null, 2),
+            )
             throw new Error("WordPress rejected the GraphQL query for pages.")
         }
 
@@ -154,14 +175,15 @@ export async function getStaticPaths() {
                             nodes {
                                 uri title content excerpt date modified
                                 playNowUrl
+                                ratingLicensing
+                                ratingGames
+                                ratingBonuses
+                                ratingCustomer
                                 featuredImage { node { sourceUrl altText } }
                                 author { node { name firstName lastName uri url avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
                                     title metaDesc focuskw canonical metaRobotsNoindex metaRobotsNofollow schema { raw } 
-                                    breadcrumbs {
-                                        text
-                                        url
-                                    }
+                                    breadcrumbs { text url }
                                 }
                             }
                         }
@@ -171,31 +193,37 @@ export async function getStaticPaths() {
             }),
         })
 
-        const contentType = response.headers.get("content-type");
-        if (!response.ok || !contentType || !contentType.includes("application/json")) {
-            console.error("❌ CLOUDWAYS BLOCKED REVIEWS REQUEST.");
-            break; 
+        const contentType = response.headers.get("content-type")
+        if (
+            !response.ok ||
+            !contentType ||
+            !contentType.includes("application/json")
+        ) {
+            console.error("❌ CLOUDWAYS BLOCKED REVIEWS REQUEST.")
+            break
         }
 
         const result = await response.json()
 
         if (result.errors) {
             console.warn("⚠️ GRAPHQL REVIEWS ERROR:", result.errors[0].message)
-            break;
+            break
         }
 
         if (result?.data?.casinoReviews?.nodes) {
-            const reviewsData = result.data.casinoReviews.nodes.map((node: any) => ({
-                ...node,
-                contentType: "post", 
-            }))
+            const reviewsData = result.data.casinoReviews.nodes.map(
+                (node: any) => ({
+                    ...node,
+                    contentType: "post",
+                }),
+            )
             allNodes.push(...reviewsData)
-            allPostsList.push(...reviewsData) 
+            allPostsList.push(...reviewsData)
 
             hasNextReviews = result.data.casinoReviews.pageInfo.hasNextPage
             reviewsCursor = result.data.casinoReviews.pageInfo.endCursor
         } else {
-            hasNextReviews = false;
+            hasNextReviews = false
         }
     }
 
@@ -231,17 +259,21 @@ export async function getStaticPaths() {
             }),
         })
 
-        const contentType = response.headers.get("content-type");
-        if (!response.ok || !contentType || !contentType.includes("application/json")) {
-            console.error("❌ CLOUDWAYS BLOCKED GAMES REQUEST.");
-            break; 
+        const contentType = response.headers.get("content-type")
+        if (
+            !response.ok ||
+            !contentType ||
+            !contentType.includes("application/json")
+        ) {
+            console.error("❌ CLOUDWAYS BLOCKED GAMES REQUEST.")
+            break
         }
 
         const result = await response.json()
 
         if (result.errors) {
             console.warn("⚠️ GRAPHQL GAMES ERROR:", result.errors[0].message)
-            break;
+            break
         }
 
         if (result?.data?.games?.nodes) {
@@ -250,11 +282,11 @@ export async function getStaticPaths() {
                 contentType: "game", // Make it unique!
             }))
             allNodes.push(...gamesData)
-            
+
             hasNextGames = result.data.games.pageInfo.hasNextPage
             gamesCursor = result.data.games.pageInfo.endCursor
         } else {
-            hasNextGames = false;
+            hasNextGames = false
         }
     }
 
@@ -263,7 +295,10 @@ export async function getStaticPaths() {
         if (!uri) return ""
         let clean = uri.replace(/https?:\/\/(www\.)?casinous\.com/gi, "")
         clean = clean.replace(/https?:\/\/(www\.)?au\.crazyvegas\.com/gi, "")
-        clean = clean.replace(/https?:\/+wordpress-[a-zA-Z0-9-]+\.cloudwaysapps\.com/gi, "")
+        clean = clean.replace(
+            /https?:\/+wordpress-[a-zA-Z0-9-]+\.cloudwaysapps\.com/gi,
+            "",
+        )
         clean = clean.replace(/https?:[\/]+/gi, "")
         clean = clean.replace(/[:\\]/g, "")
         clean = clean.replace(/\/+/g, "/")
@@ -306,6 +341,23 @@ interface Props {
 const { post, contentType, relatedPosts } = Astro.props
 const { slug } = Astro.params
 
+// --- Dynamic Ratings Calculation ---
+const rLicensing = post.ratingLicensing || 0
+const rGames = post.ratingGames || 0
+const rBonuses = post.ratingBonuses || 0
+const rCustomer = post.ratingCustomer || 0
+
+// Calculate average out of 5, fallback to 4.9 (9.8/10) if unrated
+const averageFive = (rLicensing + rGames + rBonuses + rCustomer) / 4
+const rating = averageFive > 0 ? averageFive : 4.9
+const overallScore = (rating * 2).toFixed(1)
+
+// Generate an array of 5 values representing the percentage fill for each star slot
+const starFills = Array.from({ length: 5 }, (_, index) => {
+    const fillValue = (rating - index) * 100
+    return Math.max(0, Math.min(100, fillValue)) // Clamp between 0% and 100%
+})
+
 // 🚨 SPLIT THE POSTS FOR THE FOOTER LAYOUT
 const breakingStories = relatedPosts.slice(0, 3)
 const blogPosts = relatedPosts.slice(3, 7)
@@ -320,9 +372,7 @@ const isReviewIndex =
     post.uri === "/casino-reviews/" || slug === "casino-reviews"
 
 const isReview =
-    post.uri &&
-    post.uri.startsWith("/casino-reviews/") &&
-    !isReviewIndex
+    post.uri && post.uri.startsWith("/casino-reviews/") && !isReviewIndex
 
 // --- 🚨 CLAIM BONUS / PLAY NOW URL ---
 // Individual reviews pull the WP "External URL for the Play Now button" field.
@@ -359,18 +409,18 @@ const yoastDesc = (post.seo?.metaDesc || "").replaceAll("[year]", currentYear)
 let yoastSchema = post.seo?.schema?.raw || undefined
 if (yoastSchema) {
     yoastSchema = yoastSchema.replaceAll(
-        "https://wordpress-1164434-6467266.cloudwaysapps.com", 
-        "https://au.crazyvegas.com"
+        "https://wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://au.crazyvegas.com",
     )
 }
 
 // 🚨 FIX: Force the Yoast canonical URL to use the live domain
-let canonicalUrl = post.seo?.canonical || undefined;
+let canonicalUrl = post.seo?.canonical || undefined
 if (canonicalUrl) {
     canonicalUrl = canonicalUrl.replace(
-        "https://wordpress-1164434-6467266.cloudwaysapps.com", 
-        "https://au.crazyvegas.com"
-    );
+        "https://wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://au.crazyvegas.com",
+    )
 }
 const focusKeyword = post.seo?.focuskw || undefined
 
@@ -378,26 +428,30 @@ const focusKeyword = post.seo?.focuskw || undefined
 const rawBreadcrumbs = post.seo?.breadcrumbs || []
 const yoastBreadcrumbs = rawBreadcrumbs.map((crumb: any, index: number) => {
     let cleanUrl = crumb.url || "/"
-    
+
     // Strip both the live domain and the Cloudways domain to make links relative
     cleanUrl = cleanUrl.replace(/https?:\/\/(www\.)?casinous\.com/gi, "")
     cleanUrl = cleanUrl.replace(/https?:\/\/(www\.)?au\.crazyvegas\.com/gi, "")
-    cleanUrl = cleanUrl.replace(/https?:\/+wordpress-[a-zA-Z0-9-]+\.cloudwaysapps\.com/gi, "")
-    
+    cleanUrl = cleanUrl.replace(
+        /https?:\/+wordpress-[a-zA-Z0-9-]+\.cloudwaysapps\.com/gi,
+        "",
+    )
+
     if (cleanUrl === "") cleanUrl = "/"
 
-    const isLastItem = index === rawBreadcrumbs.length - 1;
+    const isLastItem = index === rawBreadcrumbs.length - 1
 
     // 🚨 Override the text with the Focus Keyword if it is the last item in the chain
-    let displayText = crumb.text;
+    let displayText = crumb.text
     if (isLastItem && focusKeyword) {
-        displayText = focusKeyword.charAt(0).toUpperCase() + focusKeyword.slice(1);
+        displayText =
+            focusKeyword.charAt(0).toUpperCase() + focusKeyword.slice(1)
     }
 
     return {
         text: displayText,
         url: cleanUrl,
-        isLast: isLastItem
+        isLast: isLastItem,
     }
 })
 
@@ -433,9 +487,9 @@ const manualAvatars: Record<string, string> = {
 const DEFAULT_AVATAR = "/wp-content/uploads/2026/03/mason-j.png"
 
 let authorAvatar =
-    manualAvatars[authorSlug] ||                     // 1. manual override (real photo)
-    authorNode?.avatar?.url ||                        // 2. dynamic WP gravatar
-    DEFAULT_AVATAR                                    // 3. relevant default (real image)
+    manualAvatars[authorSlug] || // 1. manual override (real photo)
+    authorNode?.avatar?.url || // 2. dynamic WP gravatar
+    DEFAULT_AVATAR // 3. relevant default (real image)
 authorAvatar = authorAvatar.replace(
     /https?:\/\/(www\.)?casinous\.com/gi,
     wpDomain,
@@ -509,7 +563,7 @@ let featuredImageUrl = post.featuredImage?.node?.sourceUrl
 if (featuredImageUrl) {
     try {
         const parsedUrl = new URL(featuredImageUrl)
-        featuredImageUrl = parsedUrl.pathname 
+        featuredImageUrl = parsedUrl.pathname
     } catch (e) {}
 }
 
@@ -559,18 +613,17 @@ const displayTitle = (post.title || "").replaceAll("[year]", currentYear)
 
 // Strip every Cloudways host variant -> root-relative path
 function stripWp(input = "") {
-  const hosts = [
-    "https://wordpress-1164434-6467266.cloudwaysapps.com",
-    "http://wordpress-1164434-6467266.cloudwaysapps.com",
-    "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-    "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-    "//wordpress-1164434-6467266.cloudwaysapps.com",
-  ];
-  let out = input;
-  for (const h of hosts) out = out.split(h).join("");
-  return out;
+    const hosts = [
+        "https://wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "//wordpress-1164434-6467266.cloudwaysapps.com",
+    ]
+    let out = input
+    for (const h of hosts) out = out.split(h).join("")
+    return out
 }
-
 
 // --- 7. FINAL CONTENT REPLACEMENTS ---
 let fixedContent = contentWithIds
@@ -591,35 +644,39 @@ let fixedContent = contentWithIds
 
     .replaceAll("<img ", '<img referrerpolicy="no-referrer" ')
     .replaceAll("<p>&nbsp;</p>", "")
-    .replace(/<p>\s*<(strong|b)>\s*Accepts players from:\s*<\/(strong|b)>.*?<\/p>/gi, "")
-    .replace(/<p[^>]*>\s*<(strong|b)[^>]*>\s*Last Update:\s*<\/(strong|b)>[\s\S]*?<\/p>/gi, "")
-    .replace(/<p>\s*<(strong|b)>.*?Reviews and Ratings\s*<\/(strong|b)>\s*<\/p>/gi, "")
+    .replace(
+        /<p>\s*<(strong|b)>\s*Accepts players from:\s*<\/(strong|b)>.*?<\/p>/gi,
+        "",
+    )
+    .replace(
+        /<p[^>]*>\s*<(strong|b)[^>]*>\s*Last Update:\s*<\/(strong|b)>[\s\S]*?<\/p>/gi,
+        "",
+    )
+    .replace(
+        /<p>\s*<(strong|b)>.*?Reviews and Ratings\s*<\/(strong|b)>\s*<\/p>/gi,
+        "",
+    )
     .replace(/<p>\s*\[casino_toc\]\s*<\/p>/gi, "")
     .replaceAll("[casino_toc]", "")
     .replace(/<p>\s*<(strong|b)>\s*Updated:\s*<\/(strong|b)>.*?<\/p>/gi, "")
     .replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "")
-    
+
     .replace(
         /(<div[^>]*id="demo"[^>]*>\s*)<table>/i,
-        '$1<table class="offers">'
+        '$1<table class="offers">',
     )
-    .replaceAll("[year]", currentYear);
-
-    
+    .replaceAll("[year]", currentYear)
 
 // 🚨 CONDITIONAL LOGIC FOR [author_reviewer]
-const isHomepage = !slug || slug === "/";
+const isHomepage = !slug || slug === "/"
 
 if (!isHomepage) {
     fixedContent = fixedContent
         .replaceAll("<p>[author_reviewer]</p>", "")
-        .replaceAll("[author_reviewer]", ""); 
+        .replaceAll("[author_reviewer]", "")
 }
 // 🚨 FINAL SWEEP: remove every Cloudways host variant from anchor hrefs etc.
-fixedContent = stripWp(fixedContent);
-
-
-
+fixedContent = stripWp(fixedContent)
 ---
 
 <Layout
@@ -633,176 +690,76 @@ fixedContent = stripWp(fixedContent);
     author={authorName}
 >
     {/* UNIQUE LAYOUT FOR GAMES */}
-    {isGame ? (
-        <header class="game-hero">
-            <div class="game-hero-inner">
-                <nav class="post-breadcrumbs dark-breadcrumbs" aria-label="breadcrumb">
-                    {yoastBreadcrumbs.length > 0 ? (
-                        yoastBreadcrumbs.map((crumb: any) =>
-                            crumb.isLast ? (
-                                <span class="current" set:html={crumb.text} />
-                            ) : (
-                                <>
-                                    <a href={crumb.url} set:html={crumb.text} />
-                                    <span class="separator">›</span>
-                                </>
-                            )
-                        )
-                    ) : (
-                        <>
-                            <a href="/">Home</a>
-                            <span class="separator">›</span>
-                            <span class="current" set:html={displayTitle} />
-                        </>
-                    )}
-                </nav>
-
-                {featuredImageUrl && (
-                    <img 
-                        src={featuredImageUrl} 
-                        alt={post.title} 
-                        class="game-hero-img" 
-                        referrerpolicy="no-referrer" 
-                    />
-                )}
-                
-                <h1 class="game-hero-title" set:html={displayTitle} />
-                
-                <a href="#play-now" class="game-hero-cta">
-                    Play {post.title} Now
-                </a>
-            </div>
-        </header>
-    ) : isReview ? (
-        <header class="modern-review-hero">
-            <div class="review-hero-inner">
-                <nav class="post-breadcrumbs dark-breadcrumbs" aria-label="breadcrumb">
-                    {yoastBreadcrumbs.length > 0 ? (
-                        yoastBreadcrumbs.map((crumb: any) =>
-                            crumb.isLast ? (
-                                <span class="current" set:html={crumb.text} />
-                            ) : (
-                                <>
-                                    <a href={crumb.url} set:html={crumb.text} />
-                                    <span class="separator">›</span>
-                                </>
-                            )
-                        )
-                    ) : (
-                        <>
-                            <a href="/">Home</a>
-                            <span class="separator">›</span>
-                            <span
-                                class="current"
-                                set:html={
-                                    focusKeyword
-                                        ? focusKeyword.charAt(0).toUpperCase() +
-                                          focusKeyword.slice(1)
-                                        : displayTitle
-                                }
-                            />
-                        </>
-                    )}
-                </nav>
-
-                <div class="review-hero-card flexbox">
-                    <div class="review-hero-logo">
-                        {featuredImageUrl ? (
-                            <img src={featuredImageUrl} alt={post.title} referrerpolicy="no-referrer" />
-                        ) : (
-                            <div class="logo-placeholder" set:html={displayTitle} />
-                        )}
-                    </div>
-                    
-                    <div class="review-hero-content">
-                        <div class="review-hero-rating">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <span class="score-text"><strong>9.8/10</strong> Editor's Choice</span>
-                        </div>
-                        
-                        <h1 class="review-title" set:html={displayTitle} />
-                        
-                        <div class="review-badges flexbox">
-                            <span class="badge"><i class="fa-solid fa-bolt"></i> Instant Payouts</span>
-                            <span class="badge"><i class="fa-solid fa-shield-check"></i> Licensed & Verified</span>
-                            <span class="badge"><i class="fa-brands fa-bitcoin"></i> Crypto Friendly</span>
-                        </div>
-                    </div>
-
-                    <div class="review-hero-action">
-                        <div class="action-price">Exclusive Bonus</div>
-                        <a
-                            href={claimUrl}
-                            class="btn-claim-massive"
-                            target={claimIsExternal ? "_blank" : undefined}
-                            rel={claimIsExternal ? "nofollow sponsored noopener" : undefined}
-                        >
-                            Claim Bonus <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-                        <span class="action-terms">T&Cs Apply. 18+ Only.</span>
-                    </div>
-                </div>
-
-                <div class="review-hero-author">
-                    <div class="meta-author">
-                        
-                            <a href={authorLink}
-                            class="author-image-link"
-                            aria-label={`View ${authorName}'s profile`}
-                        >
-                            <img
-                                src={authorAvatar}
-                                alt={authorName}
-                                class="meta-avatar"
-                                referrerpolicy="no-referrer"
-                            />
-                        </a>
-                        <div>
-                            <span class="meta-name">By <a href={authorLink} class="author-text-link"
-                                    ><strong>{authorName}</strong></a>
-                                </span>
-                            
-                            <span class="meta-date">Updated: {formattedDate}</span>
-                        </div>
-                    </div>
-
-                    <div class="meta-share">
-                        {twitterLink && (
-                            <a href={twitterLink} target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Twitter">
-                                <i class="fa-brands fa-twitter" />
-                            </a>
-                        )}
-                        {facebookLink && (
-                            <a href={facebookLink} target="_blank" rel="noopener noreferrer" class="share-btn facebook" aria-label="Facebook">
-                                <i class="fa-brands fa-facebook-f" />
-                            </a>
-                        )}
-                        {instagramLink && (
-                            <a href={instagramLink} target="_blank" rel="noopener noreferrer" class="share-btn instagram" aria-label="Instagram">
-                                <i class="fa-brands fa-instagram" />
-                            </a>
-                        )}
-                        {linkedinLink && (
-                            <a href={linkedinLink} target="_blank" rel="noopener noreferrer" class="share-btn linkedin" aria-label="LinkedIn">
-                                <i class="fa-brands fa-linkedin-in" />
-                            </a>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </header>
-    ) : (
-        <header class={isPost ? "post-hero" : "page-hero"}>
-            <div class={isPost ? "post-hero-container" : "page-hero-container"}>
-                <nav class="post-breadcrumbs" aria-label="breadcrumb">
-                    {
-                        yoastBreadcrumbs.length > 0 ? (
+    {
+        isGame ? (
+            <header class="game-hero">
+                <div class="game-hero-inner">
+                    <nav
+                        class="post-breadcrumbs dark-breadcrumbs"
+                        aria-label="breadcrumb"
+                    >
+                        {yoastBreadcrumbs.length > 0 ? (
                             yoastBreadcrumbs.map((crumb: any) =>
                                 crumb.isLast ? (
-                                    <span class="current" set:html={crumb.text} />
+                                    <span
+                                        class="current"
+                                        set:html={crumb.text}
+                                    />
                                 ) : (
                                     <>
-                                        <a href={crumb.url} set:html={crumb.text} />
+                                        <a
+                                            href={crumb.url}
+                                            set:html={crumb.text}
+                                        />
+                                        <span class="separator">›</span>
+                                    </>
+                                ),
+                            )
+                        ) : (
+                            <>
+                                <a href="/">Home</a>
+                                <span class="separator">›</span>
+                                <span class="current" set:html={displayTitle} />
+                            </>
+                        )}
+                    </nav>
+
+                    {featuredImageUrl && (
+                        <img
+                            src={featuredImageUrl}
+                            alt={post.title}
+                            class="game-hero-img"
+                            referrerpolicy="no-referrer"
+                        />
+                    )}
+
+                    <h1 class="game-hero-title" set:html={displayTitle} />
+
+                    <a href="#play-now" class="game-hero-cta">
+                        Play {post.title} Now
+                    </a>
+                </div>
+            </header>
+        ) : isReview ? (
+            <header class="modern-review-hero">
+                <div class="review-hero-inner">
+                    <nav
+                        class="post-breadcrumbs dark-breadcrumbs"
+                        aria-label="breadcrumb"
+                    >
+                        {yoastBreadcrumbs.length > 0 ? (
+                            yoastBreadcrumbs.map((crumb: any) =>
+                                crumb.isLast ? (
+                                    <span
+                                        class="current"
+                                        set:html={crumb.text}
+                                    />
+                                ) : (
+                                    <>
+                                        <a
+                                            href={crumb.url}
+                                            set:html={crumb.text}
+                                        />
                                         <span class="separator">›</span>
                                     </>
                                 ),
@@ -815,48 +772,145 @@ fixedContent = stripWp(fixedContent);
                                     class="current"
                                     set:html={
                                         focusKeyword
-                                            ? focusKeyword.charAt(0).toUpperCase() +
+                                            ? focusKeyword
+                                                  .charAt(0)
+                                                  .toUpperCase() +
                                               focusKeyword.slice(1)
                                             : displayTitle
                                     }
                                 />
                             </>
-                        )
-                    }
-                </nav>
+                        )}
+                    </nav>
 
-                <h1
-                    class={isPost ? "post-title" : "page-title"}
-                    set:html={displayTitle}
-                />
+                    <div class="review-hero-card flexbox">
+                        <div class="review-hero-logo">
+                            {featuredImageUrl ? (
+                                <img
+                                    src={featuredImageUrl}
+                                    alt={post.title}
+                                    referrerpolicy="no-referrer"
+                                />
+                            ) : (
+                                <div
+                                    class="logo-placeholder"
+                                    set:html={displayTitle}
+                                />
+                            )}
+                        </div>
 
-                <div class="post-meta-bar">
-                    <div class="meta-author">
-                        <a
-                            href={authorLink}
-                            class="author-image-link"
-                            aria-label={`View ${authorName}'s profile`}
-                        >
-                            <img
-                                src={authorAvatar}
-                                alt={authorName}
-                                class="meta-avatar"
-                                referrerpolicy="no-referrer"
-                            />
-                        </a>
-                        <div>
-                            <span class="meta-name"
-                                >By <a href={authorLink} class="author-text-link"
-                                    ><strong>{authorName}</strong></a
-                                ></span
+                        <div class="review-hero-content">
+                            <div class="review-hero-rating">
+                                <div
+                                    class="stars-container"
+                                    style="display: flex; gap: 4px; align-items: center;"
+                                >
+                                    {starFills.map(fill => (
+                                        <div
+                                            class="star-slot"
+                                            style="position: relative; inline-size: 20px; block-size: 20px; color: #d1d5db;"
+                                        >
+                                            {/* Background Empty Star */}
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                                style="position: absolute; inset: 0; inline-size: 100%; block-size: 100%;"
+                                            >
+                                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                            </svg>
+                                            {/* Foreground Filled Star (Width controlled dynamically) */}
+                                            <div
+                                                style={`position: absolute; inset-block-start: 0; inset-inline-start: 0; block-size: 100%; inline-size: ${fill}%; overflow: hidden; color: #d97706;`}
+                                            >
+                                                <svg
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                    style="inline-size: 20px; block-size: 20px;"
+                                                >
+                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <span class="score-text">
+                                    <strong>{overallScore}/10</strong> Editor's
+                                    Choice
+                                </span>
+                            </div>
+
+                            <h1 class="review-title" set:html={displayTitle} />
+
+                            <div class="review-badges flexbox">
+                                <span class="badge">
+                                    <i class="fa-solid fa-bolt" /> Instant
+                                    Payouts
+                                </span>
+                                <span class="badge">
+                                    <i class="fa-solid fa-shield-check" />{" "}
+                                    Licensed & Verified
+                                </span>
+                                <span class="badge">
+                                    <i class="fa-brands fa-bitcoin" /> Crypto
+                                    Friendly
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="review-hero-action">
+                            <div class="action-price">Exclusive Bonus</div>
+                            <a
+                                href={claimUrl}
+                                class="btn-claim-massive"
+                                target={claimIsExternal ? "_blank" : undefined}
+                                rel={
+                                    claimIsExternal
+                                        ? "nofollow sponsored noopener"
+                                        : undefined
+                                }
                             >
-                            <span class="meta-date">Updated: {formattedDate}</span>
+                                Claim Bonus{" "}
+                                <i class="fa-solid fa-arrow-right" />
+                            </a>
+                            <span class="action-terms">
+                                T&Cs Apply. 18+ Only.
+                            </span>
                         </div>
                     </div>
 
-                    <div class="meta-share">
-                        {
-                            twitterLink && (
+                    <div class="review-hero-author">
+                        <div class="meta-author">
+                            <a
+                                href={authorLink}
+                                class="author-image-link"
+                                aria-label={`View ${authorName}'s profile`}
+                            >
+                                <img
+                                    src={authorAvatar}
+                                    alt={authorName}
+                                    class="meta-avatar"
+                                    referrerpolicy="no-referrer"
+                                />
+                            </a>
+                            <div>
+                                <span class="meta-name">
+                                    By{" "}
+                                    <a
+                                        href={authorLink}
+                                        class="author-text-link"
+                                    >
+                                        <strong>{authorName}</strong>
+                                    </a>
+                                </span>
+
+                                <span class="meta-date">
+                                    Updated: {formattedDate}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="meta-share">
+                            {twitterLink && (
                                 <a
                                     href={twitterLink}
                                     target="_blank"
@@ -866,10 +920,8 @@ fixedContent = stripWp(fixedContent);
                                 >
                                     <i class="fa-brands fa-twitter" />
                                 </a>
-                            )
-                        }
-                        {
-                            facebookLink && (
+                            )}
+                            {facebookLink && (
                                 <a
                                     href={facebookLink}
                                     target="_blank"
@@ -879,10 +931,8 @@ fixedContent = stripWp(fixedContent);
                                 >
                                     <i class="fa-brands fa-facebook-f" />
                                 </a>
-                            )
-                        }
-                        {
-                            instagramLink && (
+                            )}
+                            {instagramLink && (
                                 <a
                                     href={instagramLink}
                                     target="_blank"
@@ -892,10 +942,8 @@ fixedContent = stripWp(fixedContent);
                                 >
                                     <i class="fa-brands fa-instagram" />
                                 </a>
-                            )
-                        }
-                        {
-                            linkedinLink && (
+                            )}
+                            {linkedinLink && (
                                 <a
                                     href={linkedinLink}
                                     target="_blank"
@@ -905,13 +953,141 @@ fixedContent = stripWp(fixedContent);
                                 >
                                     <i class="fa-brands fa-linkedin-in" />
                                 </a>
-                            )
-                        }
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
-    )}
+            </header>
+        ) : (
+            <header class={isPost ? "post-hero" : "page-hero"}>
+                <div
+                    class={
+                        isPost ? "post-hero-container" : "page-hero-container"
+                    }
+                >
+                    <nav class="post-breadcrumbs" aria-label="breadcrumb">
+                        {yoastBreadcrumbs.length > 0 ? (
+                            yoastBreadcrumbs.map((crumb: any) =>
+                                crumb.isLast ? (
+                                    <span
+                                        class="current"
+                                        set:html={crumb.text}
+                                    />
+                                ) : (
+                                    <>
+                                        <a
+                                            href={crumb.url}
+                                            set:html={crumb.text}
+                                        />
+                                        <span class="separator">›</span>
+                                    </>
+                                ),
+                            )
+                        ) : (
+                            <>
+                                <a href="/">Home</a>
+                                <span class="separator">›</span>
+                                <span
+                                    class="current"
+                                    set:html={
+                                        focusKeyword
+                                            ? focusKeyword
+                                                  .charAt(0)
+                                                  .toUpperCase() +
+                                              focusKeyword.slice(1)
+                                            : displayTitle
+                                    }
+                                />
+                            </>
+                        )}
+                    </nav>
+
+                    <h1
+                        class={isPost ? "post-title" : "page-title"}
+                        set:html={displayTitle}
+                    />
+
+                    <div class="post-meta-bar">
+                        <div class="meta-author">
+                            <a
+                                href={authorLink}
+                                class="author-image-link"
+                                aria-label={`View ${authorName}'s profile`}
+                            >
+                                <img
+                                    src={authorAvatar}
+                                    alt={authorName}
+                                    class="meta-avatar"
+                                    referrerpolicy="no-referrer"
+                                />
+                            </a>
+                            <div>
+                                <span class="meta-name">
+                                    By{" "}
+                                    <a
+                                        href={authorLink}
+                                        class="author-text-link"
+                                    >
+                                        <strong>{authorName}</strong>
+                                    </a>
+                                </span>
+                                <span class="meta-date">
+                                    Updated: {formattedDate}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="meta-share">
+                            {twitterLink && (
+                                <a
+                                    href={twitterLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="share-btn twitter"
+                                    aria-label="Twitter"
+                                >
+                                    <i class="fa-brands fa-twitter" />
+                                </a>
+                            )}
+                            {facebookLink && (
+                                <a
+                                    href={facebookLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="share-btn facebook"
+                                    aria-label="Facebook"
+                                >
+                                    <i class="fa-brands fa-facebook-f" />
+                                </a>
+                            )}
+                            {instagramLink && (
+                                <a
+                                    href={instagramLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="share-btn instagram"
+                                    aria-label="Instagram"
+                                >
+                                    <i class="fa-brands fa-instagram" />
+                                </a>
+                            )}
+                            {linkedinLink && (
+                                <a
+                                    href={linkedinLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="share-btn linkedin"
+                                    aria-label="LinkedIn"
+                                >
+                                    <i class="fa-brands fa-linkedin-in" />
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </header>
+        )
+    }
 
     <main class={isPost || isGame ? "post-wrapper" : "page-wrapper"}>
         <article
@@ -974,9 +1150,14 @@ fixedContent = stripWp(fixedContent);
                 )
             }
 
-            {isReview && post.excerpt && (
-    <div class="review-excerpt wp-content" set:html={stripWp(post.excerpt)} />
-)}
+            {
+                isReview && post.excerpt && (
+                    <div
+                        class="review-excerpt wp-content"
+                        set:html={stripWp(post.excerpt)}
+                    />
+                )
+            }
 
             <div class="wp-content" set:html={fixedContent} />
         </article>
@@ -985,7 +1166,10 @@ fixedContent = stripWp(fixedContent);
     {/* RELATED POSTS - Moved OUTSIDE the main tag to allow full width */}
     {
         (isPost || isGame) && relatedPosts.length > 0 && (
-            <section class="full-width-discovery-section" aria-label="Related articles and latest news">
+            <section
+                class="full-width-discovery-section"
+                aria-label="Related articles and latest news"
+            >
                 <div class="discovery-container">
                     <div class="discovery-columns">
                         <div class="discovery-left-col">
@@ -1279,573 +1463,595 @@ fixedContent = stripWp(fixedContent);
     /* ----------------------------------------------------
    1. TABLE RESET & WRAPPER
 ---------------------------------------------------- */
-.offers {
-  width: 100%;
-  border-collapse: collapse;
-  display: flex;
-  flex-direction: column;
-  gap: 24px; /* Space between each card */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+    .offers {
+        width: 100%;
+        border-collapse: collapse;
+        display: flex;
+        flex-direction: column;
+        gap: 24px; /* Space between each card */
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
 
-/* Hide the table headers. Modern card UIs are self-explanatory 
+    /* Hide the table headers. Modern card UIs are self-explanatory 
    and look much cleaner without rigid column headers. */
-.offers thead {
-  display: none; 
-}
+    .offers thead {
+        display: none;
+    }
 
-.offers tbody {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-  counter-reset: casino-rank; /* Prepares our automatic numbering system */
-}
+    .offers tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        width: 100%;
+        counter-reset: casino-rank; /* Prepares our automatic numbering system */
+    }
 
-/* Override rigid table cell behaviors */
-.offers td {
-  display: block;
-  padding: 0;
-  border: none;
-}
+    /* Override rigid table cell behaviors */
+    .offers td {
+        display: block;
+        padding: 0;
+        border: none;
+    }
 
-/* ----------------------------------------------------
+    /* ----------------------------------------------------
    2. THE CARD (Desktop Layout)
 ---------------------------------------------------- */
-.offers tr.card {
-  position: relative;
-  counter-increment: casino-rank;
-  
-  /* The Grid Magic: Maps the 5 HTML columns into a sleek layout */
-  display: grid;
-  grid-template-columns: 200px 1fr 140px 220px;
-  grid-template-areas:
-    "logo bonus rating play"
-    "logo desc desc play";
-  gap: 16px;
-  align-items: center;
-  
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .offers tr.card {
+        position: relative;
+        counter-increment: casino-rank;
 
-.offers tr.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
-  border-color: #cbd5e1;
-}
+        /* The Grid Magic: Maps the 5 HTML columns into a sleek layout */
+        display: grid;
+        grid-template-columns: 200px 1fr 140px 220px;
+        grid-template-areas:
+            "logo bonus rating play"
+            "logo desc desc play";
+        gap: 16px;
+        align-items: center;
 
-table.offers {
-    border: unset;
-    box-shadow: unset;
-}
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
 
-/* --- MODERN MINI CASINO CARDS (Layout 4) --- */
+    .offers tr.card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
 
-/* 1. Setup the Responsive Grid */
-.space-organizations-4-archive-items {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin: 32px 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+    table.offers {
+        border: unset;
+        box-shadow: unset;
+    }
 
-/* Strip legacy floats */
-.space-organizations-4-archive-items .box-25,
-.space-organizations-4-archive-items .box-50,
-.space-organizations-4-archive-items .box-100 {
-  width: auto !important;
-  float: none !important;
-  margin: 0 !important;
-}
+    /* --- MODERN MINI CASINO CARDS (Layout 4) --- */
 
-/* 2. The Card Container */
-.space-organizations-4-archive-item-ins {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-sizing: border-box;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
+    /* 1. Setup the Responsive Grid */
+    .space-organizations-4-archive-items {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin: 32px 0;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
 
-.space-organizations-4-archive-item-ins:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
-  border-color: #cbd5e1;
-}
+    /* Strip legacy floats */
+    .space-organizations-4-archive-items .box-25,
+    .space-organizations-4-archive-items .box-50,
+    .space-organizations-4-archive-items .box-100 {
+        width: auto !important;
+        float: none !important;
+        margin: 0 !important;
+    }
 
-/* 3. Top Header (Logo + Title/Stars) */
-.space-organizations-4-archive-item-top {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f1f5f9;
-}
+    /* 2. The Card Container */
+    .space-organizations-4-archive-item-ins {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-sizing: border-box;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            border-color 0.2s ease;
+    }
 
-/* Logo styling */
-.space-organizations-4-archive-item-logo img {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  display: block;
-}
+    .space-organizations-4-archive-item-ins:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
 
-/* Title styling */
-.space-organizations-4-archive-item-title {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+    /* 3. Top Header (Logo + Title/Stars) */
+    .space-organizations-4-archive-item-top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
 
-.space-organizations-4-archive-item-title a {
-  font-weight: 800;
-  font-size: 15px;
-  color: #0f172a;
-  text-decoration: none;
-  line-height: 1.2;
-  transition: color 0.2s ease;
-}
+    /* Logo styling */
+    .space-organizations-4-archive-item-logo img {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        display: block;
+    }
 
-.space-organizations-4-archive-item-title a:hover {
-  color: #0ea5e9;
-}
+    /* Title styling */
+    .space-organizations-4-archive-item-title {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
 
-/* Stars cleanup */
-.star-rating {
-  display: flex;
-  gap: 2px;
-  color: #facc15; /* Vibrant gold for stars */
-  font-size: 12px;
-}
+    .space-organizations-4-archive-item-title a {
+        font-weight: 800;
+        font-size: 15px;
+        color: #0f172a;
+        text-decoration: none;
+        line-height: 1.2;
+        transition: color 0.2s ease;
+    }
 
-/* 4. The Bonus Description Badge */
-.space-organizations-4-archive-item-desc {
-  background: #f0fdf4; /* Very light green */
-  border: 1px dashed #bbf7d0;
-  color: #15803d; /* Dark green text */
-  font-weight: 800;
-  font-size: 14px;
-  text-align: center;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  flex-grow: 1; /* Pushes the buttons to the bottom of the card if text is short */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .space-organizations-4-archive-item-title a:hover {
+        color: #0ea5e9;
+    }
 
-/* 5. The Buttons Container */
-.space-organizations-4-archive-item-buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
+    /* Stars cleanup */
+    .star-rating {
+        display: flex;
+        gap: 2px;
+        color: #facc15; /* Vibrant gold for stars */
+        font-size: 12px;
+    }
 
-.space-organizations-4-archive-item-button-one,
-.space-organizations-4-archive-item-button-two {
-  flex: 1; /* Makes buttons equal width */
-}
+    /* 4. The Bonus Description Badge */
+    .space-organizations-4-archive-item-desc {
+        background: #f0fdf4; /* Very light green */
+        border: 1px dashed #bbf7d0;
+        color: #15803d; /* Dark green text */
+        font-weight: 800;
+        font-size: 14px;
+        text-align: center;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        flex-grow: 1; /* Pushes the buttons to the bottom of the card if text is short */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.space-organizations-4-archive-item-buttons a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 8px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: all 0.2s ease;
-  height: 100%;
-  box-sizing: border-box;
-}
+    /* 5. The Buttons Container */
+    .space-organizations-4-archive-item-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
 
-/* Secondary Button (Read Review) */
-.space-organizations-4-archive-item-button-one-ins a {
-  background: #f8fafc;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-}
+    .space-organizations-4-archive-item-button-one,
+    .space-organizations-4-archive-item-button-two {
+        flex: 1; /* Makes buttons equal width */
+    }
 
-.space-organizations-4-archive-item-button-one-ins a:hover {
-  background: #e2e8f0;
-  color: #0f172a;
-}
+    .space-organizations-4-archive-item-buttons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 8px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        height: 100%;
+        box-sizing: border-box;
+    }
 
-/* Primary Button (Get Bonus) */
-.space-organizations-4-archive-item-button-two-ins a {
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
-  color: #ffffff;
-  border: 1px solid transparent;
-  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
-}
+    /* Secondary Button (Read Review) */
+    .space-organizations-4-archive-item-button-one-ins a {
+        background: #f8fafc;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+    }
 
-.space-organizations-4-archive-item-button-two-ins a:hover {
-  background: linear-gradient(135deg, #0284c7, #0369a1);
-  box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
-  transform: translateY(-2px);
-}
+    .space-organizations-4-archive-item-button-one-ins a:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
 
-/* 6. Footer Notice */
-.space-organizations-archive-item-button-notice {
-  font-size: 11px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+    /* Primary Button (Get Bonus) */
+    .space-organizations-4-archive-item-button-two-ins a {
+        background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        color: #ffffff;
+        border: 1px solid transparent;
+        box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
 
-/* Mobile Tweak - Stack buttons on very small screens to avoid squishing text */
-@media (max-width: 400px) {
-  .space-organizations-4-archive-item-buttons {
-    flex-direction: column;
-  }
-}
+    .space-organizations-4-archive-item-button-two-ins a:hover {
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4);
+        transform: translateY(-2px);
+    }
 
-/* Custom CSS-Only Rank Badge (e.g., #1, #2) */
-.offers tr.card::before {
-  content: "#" counter(casino-rank);
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  background: #0ea5e9; /* Vibrant brand blue */
-  color: #ffffff;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-weight: 800;
-  font-size: 15px;
-  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
-  z-index: 10;
-}
+    /* 6. Footer Notice */
+    .space-organizations-archive-item-button-notice {
+        font-size: 11px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-/* ----------------------------------------------------
+    /* Mobile Tweak - Stack buttons on very small screens to avoid squishing text */
+    @media (max-width: 400px) {
+        .space-organizations-4-archive-item-buttons {
+            flex-direction: column;
+        }
+    }
+
+    /* Custom CSS-Only Rank Badge (e.g., #1, #2) */
+    .offers tr.card::before {
+        content: "#" counter(casino-rank);
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        background: #0ea5e9; /* Vibrant brand blue */
+        color: #ffffff;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 800;
+        font-size: 15px;
+        box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+        z-index: 10;
+    }
+
+    /* ----------------------------------------------------
    3. CARD COLUMNS & CONTENT
 ---------------------------------------------------- */
 
-/* Column 1: Logo Area */
-.card-logo {
-  grid-area: logo;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
+    /* Column 1: Logo Area */
+    .card-logo {
+        grid-area: logo;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
 
-.card-logo-link {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+    .card-logo-link {
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.card-logo picture {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%; /* Perfect circles for logos */
-  border: 2px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
+    .card-logo picture {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%; /* Perfect circles for logos */
+        border: 2px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-.card-logo img {
-  max-width: 80%;
-  height: auto;
-  object-fit: contain;
-}
+    .card-logo img {
+        max-width: 80%;
+        height: auto;
+        object-fit: contain;
+    }
 
-.card-name {
-  font-weight: 800;
-  color: #0f172a;
-  font-size: 16px;
-}
+    .card-name {
+        font-weight: 800;
+        color: #0f172a;
+        font-size: 16px;
+    }
 
-/* Mini Score Badge under Logo */
-.campaign-compact-table__offer-rating-text {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 800;
-  color: #334155;
-  margin-top: 8px;
-}
+    /* Mini Score Badge under Logo */
+    .campaign-compact-table__offer-rating-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 800;
+        color: #334155;
+        margin-top: 8px;
+    }
 
-.our-score {
-  color: #64748b;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+    .our-score {
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
 
-/* Column 2: Main Bonus Text */
-.card-bonus {
-  grid-area: bonus;
-  padding-right: 16px;
-}
+    /* Column 2: Main Bonus Text */
+    .card-bonus {
+        grid-area: bonus;
+        padding-right: 16px;
+    }
 
-.card-bonus .bonus {
-  font-size: 22px;
-  font-weight: 800;
-  color: #0f172a;
-  line-height: 1.3;
-}
+    .card-bonus .bonus {
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.3;
+    }
 
-/* Column 3: Rating */
-.card-rating {
-  grid-area: rating;
-  text-align: center;
-}
+    /* Column 3: Rating */
+    .card-rating {
+        grid-area: rating;
+        text-align: center;
+    }
 
-.card-rating .rating {
-  font-size: 14px;
-  font-weight: 700;
-  color: #64748b;
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-}
+    .card-rating .rating {
+        font-size: 14px;
+        font-weight: 700;
+        color: #64748b;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+    }
 
-.rating-total {
-  font-size: 32px;
-  font-weight: 900;
-  color: #0ea5e9;
-  line-height: 1;
-  margin-right: 2px;
-}
+    .rating-total {
+        font-size: 32px;
+        font-weight: 900;
+        color: #0ea5e9;
+        line-height: 1;
+        margin-right: 2px;
+    }
 
-/* Row 2: Bottom Description */
-.card_middle {
-  grid-area: desc;
-}
+    /* Row 2: Bottom Description */
+    .card_middle {
+        grid-area: desc;
+    }
 
-.card-update {
-  display: block;
-  color: #475569;
-  font-size: 13px;
-  line-height: 1.5;
-  background: #f8fafc;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border-left: 4px solid #0ea5e9; /* Adds an editorial touch */
-}
+    .card-update {
+        display: block;
+        color: #475569;
+        font-size: 13px;
+        line-height: 1.5;
+        background: #f8fafc;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border-left: 4px solid #0ea5e9; /* Adds an editorial touch */
+    }
 
-/* Column 4: Play Button & Payments */
-.card-play {
-  grid-area: play;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
+    /* Column 4: Play Button & Payments */
+    .card-play {
+        grid-area: play;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
 
-.btn_visit {
-  display: block;
-  width: 100%;
-  text-align: center;
-  background: #22c55e; /* High-converting green */
-  color: #ffffff;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 800;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-}
+    .btn_visit {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: #22c55e; /* High-converting green */
+        color: #ffffff;
+        padding: 14px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 800;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
 
-.btn_visit:hover {
-  background: #16a34a;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
-}
+    .btn_visit:hover {
+        background: #16a34a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    }
 
-.paymentmethods {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
+    .paymentmethods {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
 
-.paymentmethods__item img {
-  width: 40px;
-  height: 24px;
-  object-fit: contain;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  padding: 2px 4px;
-}
+    .paymentmethods__item img {
+        width: 40px;
+        height: 24px;
+        object-fit: contain;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        padding: 2px 4px;
+    }
 
-/* ----------------------------------------------------
+    /* ----------------------------------------------------
    4. MOBILE RESPONSIVENESS
 ---------------------------------------------------- */
-@media (max-width: 900px) {
-  .offers tr.card {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "logo"
-      "bonus"
-      "rating"
-      "desc"
-      "play";
-    text-align: center;
-    padding: 32px 20px 24px 20px; /* Extra top padding for the rank badge */
-  }
+    @media (max-width: 900px) {
+        .offers tr.card {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "logo"
+                "bonus"
+                "rating"
+                "desc"
+                "play";
+            text-align: center;
+            padding: 32px 20px 24px 20px; /* Extra top padding for the rank badge */
+        }
 
-  .card-logo {
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 20px;
-  }
+        .card-logo {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 20px;
+        }
 
-  .card-bonus {
-    padding-right: 0;
-    margin-top: 10px;
-  }
+        .card-bonus {
+            padding-right: 0;
+            margin-top: 10px;
+        }
 
-  .card-bonus .bonus {
-    font-size: 20px;
-  }
+        .card-bonus .bonus {
+            font-size: 20px;
+        }
 
-  .card_middle {
-    text-align: left;
-  }
-}
+        .card_middle {
+            text-align: left;
+        }
+    }
 
-/* 1. Main Layout Container */
-.flex-around-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  width: 100%;
-  margin: 32px 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+    /* 1. Main Layout Container */
+    .flex-around-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        width: 100%;
+        margin: 32px 0;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
 
-/* 2. Column Sizing */
-.half_box {
-  flex: 1 1 calc(50% - 12px); /* Takes up half the space minus the gap */
-  min-width: 280px; /* Forces cards to stack on mobile devices */
-  display: flex; /* Ensures both cards stretch to equal height */
-}
+    /* 2. Column Sizing */
+    .half_box {
+        flex: 1 1 calc(50% - 12px); /* Takes up half the space minus the gap */
+        min-width: 280px; /* Forces cards to stack on mobile devices */
+        display: flex; /* Ensures both cards stretch to equal height */
+    }
 
-/* 3. Base Card Styling */
-.space-pros, 
-.space-cons {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  padding: 24px;
-  width: 100%;
-  border: 1px solid #e2e8f0;
-}
+    /* 3. Base Card Styling */
+    .space-pros,
+    .space-cons {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        width: 100%;
+        border: 1px solid #e2e8f0;
+    }
 
-/* Add a colored accent line to the top of each card */
-.space-pros {
-  border-top: 4px solid #22c55e; /* Vibrant Green */
-}
+    /* Add a colored accent line to the top of each card */
+    .space-pros {
+        border-top: 4px solid #22c55e; /* Vibrant Green */
+    }
 
-.space-cons {
-  border-top: 4px solid #ef4444; /* Vibrant Red */
-}
+    .space-cons {
+        border-top: 4px solid #ef4444; /* Vibrant Red */
+    }
 
-/* 4. Typography: Titles */
-.space-pros-title h4, 
-.space-cons-title h4 {
-  margin: 0 0 20px 0 !important;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0f172a; /* Slate 900 */
-}
+    /* 4. Typography: Titles */
+    .space-pros-title h4,
+    .space-cons-title h4 {
+        margin: 0 0 20px 0 !important;
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a; /* Slate 900 */
+    }
 
+    /* 5. Typography: Lists */
+    .space-pros-description ul,
+    .space-cons-description ul {
+        list-style: none !important; /* Strips standard bullets */
+        padding: 0 !important;
+        margin: 0 !important;
+    }
 
+    .space-pros-description li,
+    .space-cons-description li {
+        position: relative;
+        padding: 0 0 16px 32px !important; /* Left padding makes room for custom icons */
+        margin: 0 !important;
+        font-size: 15px;
+        color: #475569; /* Slate 600 */
+        line-height: 1.5;
+    }
 
+    .space-pros-description li:last-child,
+    .space-cons-description li:last-child {
+        padding-bottom: 0 !important;
+    }
 
-/* 5. Typography: Lists */
-.space-pros-description ul, 
-.space-cons-description ul {
-  list-style: none !important; /* Strips standard bullets */
-  padding: 0 !important;
-  margin: 0 !important;
-}
+    /* 6. Custom CSS-Only Icons (Green Check & Red Cross) */
+    .space-pros-description li::before,
+    .space-cons-description li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px; /* Aligns the icon perfectly with the first line of text */
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
-.space-pros-description li, 
-.space-cons-description li {
-  position: relative;
-  padding: 0 0 16px 32px !important; /* Left padding makes room for custom icons */
-  margin: 0 !important;
-  font-size: 15px;
-  color: #475569; /* Slate 600 */
-  line-height: 1.5;
-}
+    /* SVG Green Checkmark */
+    .space-pros-description li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    }
 
-.space-pros-description li:last-child, 
-.space-cons-description li:last-child {
-  padding-bottom: 0 !important;
-}
+    /* SVG Red Cross */
+    .space-cons-description li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
+    }
 
-/* 6. Custom CSS-Only Icons (Green Check & Red Cross) */
-.space-pros-description li::before,
-.space-cons-description li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 2px; /* Aligns the icon perfectly with the first line of text */
-  width: 20px;
-  height: 20px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
+    ul li {
+        line-height: 30px;
+    }
 
-/* SVG Green Checkmark */
-.space-pros-description li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* SVG Red Cross */
-.space-cons-description li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
-}
-
-ul li {
-    line-height: 30px;
-}
-
-ol li {
-    line-height: 30px;
-}
+    ol li {
+        line-height: 30px;
+    }
 
     .toc-list {
         list-style: none !important;
@@ -2126,7 +2332,7 @@ ol li {
         padding-left: 1.5rem;
         font-size: 1.15rem;
     }
-    
+
     .wp-content img {
         max-width: 100%;
         height: auto;
@@ -2404,1170 +2610,1232 @@ ol li {
     }
 
     /* --- MODERN CASINO REVIEW HERO --- */
-.modern-review-hero {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  padding: 40px 20px 60px;
-  color: #f8fafc;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle background pattern/glow */
-.modern-review-hero::before {
-  content: "";
-  position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.review-hero-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
-.game-hero {
-  background: #0f172a;
-  color: white;
-  padding: 4rem 2rem;
-  text-align: center;
-}
-.game-hero .game-hero-inner {
-  max-width: 800px;
-  margin: 0 auto;
-}
-.game-hero .post-breadcrumbs {
-  margin-bottom: 2rem;
-}
-.game-hero .post-breadcrumbs .separator {
-  color: #475569;
-  margin: 0 0.5rem;
-}
-.game-hero .post-breadcrumbs a {
-  text-decoration: none;
-}
-
-
-/* --- REVIEW HERO AUTHOR BAR --- */
-.review-hero-author {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  padding: 16px 24px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-}
-
-.review-hero-author .meta-name {
-  color: #cbd5e1;
-}
-
-.review-hero-author .meta-date {
-  color: #94a3b8;
-}
-
-@media (max-width: 600px) {
-  .review-hero-author {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-}
-
-
-.game-hero .game-hero-img {
-  max-width: 300px;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-.game-hero .game-hero-title {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  font-weight: 800;
-}
-.game-hero .game-hero-cta {
-  display: inline-block;
-  background: #2563eb;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  margin-top: 1rem;
-}
-
-.dark-breadcrumbs, .dark-breadcrumbs a {
-  color: #94a3b8 !important;
-  margin-bottom: 2px;
-}
-
-.dark-breadcrumbs .current {
-  color: #f8fafc !important;
-}
-
-/* The Glassmorphism Card */
-.review-hero-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 32px;
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.review-hero-logo {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
-  width: 180px;
-  height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-
-.review-hero-logo img {
-  max-width: 100%;
-  height: auto;
-}
-
-.review-hero-content {
-  flex-grow: 1;
-}
-
-.review-hero-rating {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.stars {
-  font-size: 18px;
-  letter-spacing: 2px;
-}
-
-.score-text {
-  background: #0ea5e9;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.review-title {
-  font-size: 36px;
-  font-weight: 900;
-  margin: 0 0 16px 0;
-  line-height: 1.2;
-}
-
-.review-badges {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.review-hero-action {
-  text-align: center;
-  flex-shrink: 0;
-  min-width: 240px;
-  background: rgba(0, 0, 0, 0.2);
-  padding: 24px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.action-price {
-  font-size: 14px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-}
-
-.btn-claim-massive {
-  display: block;
-  background: #22c55e;
-  color: #ffffff;
-  padding: 18px 24px;
-  border-radius: 12px;
-  font-size: 20px;
-  font-weight: 900;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
-}
-
-.btn-claim-massive:hover {
-  background: #16a34a;
-  transform: translateY(-3px);
-  box-shadow: 0 12px 25px rgba(34, 197, 94, 0.5);
-  color: #ffffff;
-}
-
-.action-terms {
-  display: block;
-  margin-top: 12px;
-  font-size: 11px;
-  color: #64748b;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 900px) {
-  .review-hero-card {
-    flex-direction: column;
-    text-align: center;
-    padding: 24px;
-  }
-  
-  .review-hero-rating {
-    justify-content: center;
-  }
-  
-  .review-badges {
-    justify-content: center;
-  }
-  
-  .review-hero-action {
-    width: 100%;
-  }
-}
-
-/* --- REVIEW EXCERPT: PROS & CONS LAYOUT --- */
-.review-excerpt {
-  margin: 32px 0;
-  width: 100%;
-}
-
-/* Force WordPress Gutenberg columns to act as a side-by-side flex box */
-.review-excerpt .wp-block-columns {
-  display: flex !important;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin: 0 !important;
-}
-
-/* Make each column exactly 50% width */
-.review-excerpt .wp-block-column {
-  flex: 1 1 calc(50% - 12px) !important;
-  min-width: 280px; /* Snaps to full width on mobile automatically */
-  margin: 0 !important;
-  display: flex;
-}
-
-/* Base styling for the Pros & Cons containers */
-.space-pros, 
-.space-cons {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  padding: 24px;
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Colorful borders */
-.space-pros { border-top: 4px solid #22c55e; } /* Green */
-.space-cons { border-top: 4px solid #ef4444; } /* Red */
-
-/* Titles */
-.space-pros-title, 
-.space-cons-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-/* The Lists */
-.space-pros-description ul, 
-.space-cons-description ul {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.space-pros-description li, 
-.space-cons-description li {
-  position: relative;
-  padding: 0 0 16px 32px !important;
-  margin: 0 !important;
-  font-size: 15px;
-  color: #475569;
-  line-height: 1.5;
-}
-
-/* Remove bottom padding on last item */
-.space-pros-description li:last-child, 
-.space-cons-description li:last-child {
-  padding-bottom: 0 !important;
-}
-
-/* Custom Checkmark/Cross SVG Icons */
-.space-pros-description li::before, 
-.space-cons-description li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 20px;
-  height: 20px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* Green Checkmark */
-.space-pros-description li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* Red Cross */
-.space-cons-description li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
-}
-
-/* 1. Main Card Container */
-.flex-around-buttons .full_box {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-  overflow: hidden;
-  margin: 32px 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.flex-around-buttons .full_box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.flex-around-buttons .full_box .content {
-  padding: 32px;
-}
-
-/* 2. Card Header & Image Layout */
-.flex-around-buttons .full_box .content h3 {
-  display: flex;
-  flex-direction: column-reverse; /* Stacks image above text on mobile */
-  gap: 20px;
-  font-size: 24px;
-  font-weight: 800;
-  color: #0f172a;
-  margin-top: 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 20px;
-}
-
-/* Fix the WordPress default image float */
-.flex-around-buttons .full_box .content h3 img {
-  float: none !important;
-  margin: 0 !important;
-  max-width: 220px;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-/* Desktop Header Layout */
-@media (min-width: 600px) {
-  .flex-around-buttons .full_box .content h3 {
-    flex-direction: row; /* Text on left, image on right */
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-/* 3. Description Text */
-.flex-around-buttons .full_box .content p {
-  color: #475569;
-  font-size: 16px;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.flex-around-buttons .full_box .content p a {
-  color: #0ea5e9;
-  font-weight: 700;
-  text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.2s ease;
-}
-
-.flex-around-buttons .full_box .content p a:hover {
-  border-color: #0ea5e9;
-}
-
-/* 4. Specs Grid (Turns standard <ul> into data badges) */
-.flex-around-buttons .full_box .content ul {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 0 32px 0 !important;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-.flex-around-buttons .full_box .content ul li {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 12px 16px !important;
-  border-radius: 8px;
-  font-size: 15px;
-  color: #0f172a;
-  font-weight: 600;
-  margin: 0 !important;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Styles the bold label text */
-.flex-around-buttons .full_box .content ul li strong {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #64748b;
-  font-weight: 800;
-}
-
-/* 5. The Call to Action Button */
-.space-organizations-3-archive-item-button-ins {
-  margin-top: 16px;
-}
-
-.space-organizations-3-archive-item-button-ins a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); /* Brand blue gradient */
-  color: #ffffff !important;
-  text-decoration: none;
-  padding: 16px 32px;
-  font-size: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-  transition: all 0.2s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.space-organizations-3-archive-item-button-ins a:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
-  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-}
-
-.space-organizations-3-archive-item-button-ins a i {
-  font-size: 20px;
-}
-
-
-/* --- MODERN SIDE-BY-SIDE FEATURE CARDS --- */
-
-/* 1. Main Flex Container */
-.flex-around-buttons.box-100 {
-  display: flex !important;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin: 32px 0;
-  width: 100% !important;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* 2. The Individual Cards */
-.flex-around-buttons .half_box {
-  flex: 1 1 calc(50% - 12px) !important; /* 50% width minus the gap */
-  min-width: 280px; /* Forces cards to stack vertically on mobile */
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 24px;
-  box-sizing: border-box;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.flex-around-buttons .half_box:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
-}
-
-/* 3. Card Headers (Targeting both the <h4> in Box 1 and <p> in Box 2) */
-.flex-around-buttons .half_box h4.content,
-.flex-around-buttons .half_box .content p:first-child {
-  margin: 0 0 16px 0 !important;
-  border-bottom: 1px solid #f1f5f9;
-  padding-bottom: 12px;
-}
-
-.flex-around-buttons .half_box h4.content strong,
-.flex-around-buttons .half_box .content p:first-child strong {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-/* 4. Highlight the Bonus Amount (Box 1 specifically) */
-.flex-around-buttons .half_box:first-child > p {
-  margin: 0 0 20px 0;
-}
-
-.flex-around-buttons .half_box:first-child > p strong {
-  display: inline-block;
-  font-size: 15px;
-  font-weight: 800;
-  color: #15803d; /* Dark Green */
-  background: #f0fdf4; /* Soft Green background */
-  border: 1px dashed #bbf7d0;
-  padding: 10px 16px;
-  border-radius: 8px;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-/* 5. Clean up the Lists */
-.flex-around-buttons .half_box ul {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.flex-around-buttons .half_box ul li {
-  position: relative;
-  padding: 0 0 12px 28px !important;
-  margin: 0 !important;
-  font-size: 15px;
-  color: #475569;
-  line-height: 1.5;
-}
-
-/* Remove bottom padding on the last list item to keep spacing even */
-.flex-around-buttons .half_box ul li:last-child {
-  padding-bottom: 0 !important;
-}
-
-/* Set up the before pseudo-element for custom icons */
-.flex-around-buttons .half_box ul li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 18px;
-  height: 18px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* 6. Custom Icons */
-
-/* Box 1 Icon: Green Checkmarks for Features */
-.flex-around-buttons .half_box:first-child ul li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* Box 2 Icon: Blue Chevrons for Quick Facts */
-.flex-around-buttons .half_box:last-child ul li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
-  top: 3px; /* Slightly adjusted to align with text visually */
-}
-/* --- MODERN PAYMENT METHODS GRID --- */
-
-/* 1. The Main Grid Container */
-.flex-around-buttons {
-  display: grid !important;
-  /* Automatically fits as many 160px cards as possible per row */
-  /* grid-template-columns: repeat(auto-fill, minmax(387px, 1fr)); */
-  gap: 16px;
-  margin: 32px 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* 2. The Payment Cards */
-.flex-around-buttons .bs_btn {
-  position: relative; /* Required for the clickable link trick */
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 16px;
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-}
-
-/* Hover effect: lifts the card and deepens the shadow */
-.flex-around-buttons .bs_btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
-  border-color: #cbd5e1;
-}
-
-/* 3. The Icons */
-.flex-around-buttons .bs_btn img.icon {
-  width: 32px !important;
-  height: 32px !important;
-  object-fit: contain; /* Prevents logos from stretching */
-  margin: 0 !important; /* Overrides any default WordPress image margins */
-}
-
-/* 4. The Text / Link */
-.flex-around-buttons .bs_btn a.text {
-  font-size: 15px;
-  font-weight: 700;
-  color: #0f172a;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.flex-around-buttons .bs_btn:hover a.text {
-  color: #0ea5e9; /* Changes text to blue on hover */
-}
-
-/* 5. THE MAGIC TRICK: Make the whole card clickable */
-.flex-around-buttons .bs_btn a.text::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1;
-}
-
-/* --- MODERN FAQ ACCORDION --- */
-
-/* 1. Main Container */
-.panel-group {
-  display: flex !important;
-  flex-direction: column;
-  gap: 12px;
-  margin: 32px 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-/* 2. FAQ Card */
-.panel-group .panel {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 12px !important;
-  overflow: hidden !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
-  transition: all 0.3s ease !important;
-  margin: 0 !important;
-}
-
-/* When the FAQ is open */
-.panel-group .panel.active {
-  border-color: #0ea5e9 !important;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1) !important;
-}
-
-/* 3. The Question Button */
-.panel-group .panel-heading {
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-}
-
-.panel-group .panel-title {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  width: 100% !important;
-  padding: 20px 24px !important;
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: #0f172a !important;
-  text-decoration: none !important;
-  box-sizing: border-box !important;
-  cursor: pointer !important;
-  transition: background 0.2s ease, color 0.2s ease !important;
-}
-
-.panel-group .panel-title:hover {
-  background: #f8fafc !important;
-  color: #0ea5e9 !important;
-}
-
-/* Custom CSS Chevron Arrow */
-.panel-group .panel-title::after {
-  content: "";
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  transition: transform 0.3s ease;
-  flex-shrink: 0;
-  margin-left: 16px;
-}
-
-/* Change color and rotate arrow when open */
-.panel-group .panel.active .panel-title {
-  color: #0ea5e9 !important;
-}
-
-.panel-group .panel.active .panel-title::after {
-  transform: rotate(180deg);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* 4. The Answer Container (Overrides inline HTML height: 0px) */
-.panel-group .panel-collapse {
-  display: block !important; /* Forces it to ignore the old Bootstrap 'collapse' rule */
-  height: auto !important; 
-  max-height: 0;
-  overflow: hidden !important;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  border: none !important;
-}
-/* Opens the accordion */
-.panel-group .panel.active .panel-collapse {
-  max-height: 800px !important; /* High enough to fit the text */
-}
-
-/* 5. The Answer Text */
-.panel-group .panel-body {
-  padding: 0 24px 20px 24px !important;
-  color: #475569 !important;
-  font-size: 15px !important;
-  line-height: 1.6 !important;
-  border-top: none !important;
-  opacity: 0;
-  transition: opacity 0.3s ease 0.1s;
-}
-
-.panel-group .panel.active .panel-body {
-  opacity: 1;
-}
-
-/* Mobile Tweaks */
-@media (max-width: 768px) {
-  .panel-group .panel-title {
-    padding: 16px 20px !important;
-    font-size: 15px !important;
-  }
-  .panel-group .panel-body {
-    padding: 0 20px 16px 20px !important;
-    font-size: 14px !important;
-  }
-}
-
-/* Main Card Container */
-.space-organization-single-2 {
-    background-color: #ffffff !important;
-    border-radius: 16px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid #f1f5f9 !important;
-    padding: 24px !important;
-    margin-bottom: 30px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-}
-
-.space-organization-single-2:hover {
-    transform: translateY(-4px) !important;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08) !important;
-}
-
-/* Flex Layout */
-.space-style-2-organization-header-elements {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 20px !important;
-    flex-wrap: wrap !important;
-}
-
-/* Left Side Wrapper */
-.space-style-2-organization-header-left {
-    flex: 1 1 auto !important;
-}
-
-.space-organization-header-logo-title {
-    display: flex !important;
-    align-items: center !important;
-    gap: 24px !important;
-}
-
-/* Logo Box */
-.space-organization-header-logo-box {
-    position: relative !important;
-    flex-shrink: 0 !important;
-    width: 100px !important;
-    height: 100px !important;
-    border-radius: 16px !important;
-    background: #f8fafc !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: inset 0 0 0 1px #e2e8f0 !important;
-}
-
-.space-organization-header-logo-box img {
-    width: 100% !important;
-    height: auto !important;
-    max-width: 80px !important;
-    border-radius: 10px !important;
-    object-fit: contain !important;
-}
-
-/* Rating Badge (Overlapping Logo) */
-.space-organization-header-logo-rating {
-    position: absolute !important;
-    bottom: -10px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    background-color: #fbbf24 !important; /* Premium Gold */
-    color: #1e293b !important;
-    font-weight: 800 !important;
-    font-size: 13px !important;
-    padding: 4px 12px !important;
-    border-radius: 20px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-    white-space: nowrap !important;
-    z-index: 2 !important;
-}
-
-/* Text Content Area */
-.space-organization-header-title-box {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-}
-
-.organization-title-2 {
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-    line-height: 1.2 !important;
-    margin: 0 !important;
-    display: block !important;
-}
-
-/* Bonus Description Badge */
-.space-organization-header-short-desc {
-    font-size: 15px !important;
-    color: #16a34a !important; /* Green for bonus */
-    font-weight: 700 !important;
-    background: #dcfce7 !important;
-    padding: 6px 14px !important;
-    border-radius: 8px !important;
-    display: inline-block !important;
-    width: fit-content !important;
-}
-
-/* Right Side (CTA Button Area) */
-.space-style-2-organization-header-right {
-    flex: 0 0 260px !important;
-}
-
-.space-organization-header-button {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-/* Call to Action Button */
-.space-style-2-button {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important; /* Bright Blue */
-    color: #ffffff !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    padding: 16px 24px !important;
-    border-radius: 12px !important;
-    text-decoration: none !important;
-    width: 100% !important;
-    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3) !important;
-    transition: all 0.2s ease !important;
-}
-
-.space-style-2-button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4) !important;
-    color: #ffffff !important;
-}
-
-/* Terms Notice */
-.space-organization-header-button-notice {
-    font-size: 12px !important;
-    color: #64748b !important;
-    text-align: center !important;
-    font-weight: 500 !important;
-}
-
-/* Responsive Mobile Adjustments */
-@media (max-width: 768px) {
-    .space-style-2-organization-header-elements {
-        flex-direction: column !important;
-        align-items: stretch !important;
+    .modern-review-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 40px 20px 60px;
+        color: #f8fafc;
+        position: relative;
+        overflow: hidden;
     }
 
-    .space-style-2-organization-header-left {
+    /* Subtle background pattern/glow */
+    .modern-review-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+            circle,
+            rgba(14, 165, 233, 0.1) 0%,
+            transparent 60%
+        );
+        pointer-events: none;
+    }
+
+    .review-hero-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .game-hero {
+        background: #0f172a;
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+    .game-hero .game-hero-inner {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .game-hero .post-breadcrumbs {
+        margin-bottom: 2rem;
+    }
+    .game-hero .post-breadcrumbs .separator {
+        color: #475569;
+        margin: 0 0.5rem;
+    }
+    .game-hero .post-breadcrumbs a {
+        text-decoration: none;
+    }
+
+    /* --- REVIEW HERO AUTHOR BAR --- */
+    .review-hero-author {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        padding: 16px 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+    }
+
+    .review-hero-author .meta-name {
+        color: #cbd5e1;
+    }
+
+    .review-hero-author .meta-date {
+        color: #94a3b8;
+    }
+
+    @media (max-width: 600px) {
+        .review-hero-author {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+
+    .game-hero .game-hero-img {
+        max-width: 300px;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .game-hero .game-hero-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 800;
+    }
+    .game-hero .game-hero-cta {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        margin-top: 1rem;
+    }
+
+    .dark-breadcrumbs,
+    .dark-breadcrumbs a {
+        color: #94a3b8 !important;
+        margin-bottom: 2px;
+    }
+
+    .dark-breadcrumbs .current {
+        color: #f8fafc !important;
+    }
+
+    /* The Glassmorphism Card */
+    .review-hero-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .review-hero-logo {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 16px;
+        width: 180px;
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .review-hero-logo img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .review-hero-content {
+        flex-grow: 1;
+    }
+
+    .review-hero-rating {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    .stars {
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    .score-text {
+        background: #0ea5e9;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .review-title {
+        font-size: 36px;
+        font-weight: 900;
+        margin: 0 0 16px 0;
+        line-height: 1.2;
+    }
+
+    .review-badges {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .review-hero-action {
+        text-align: center;
+        flex-shrink: 0;
+        min-width: 240px;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .action-price {
+        font-size: 14px;
+        color: #94a3b8;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+    }
+
+    .btn-claim-massive {
+        display: block;
+        background: #22c55e;
+        color: #ffffff;
+        padding: 18px 24px;
+        border-radius: 12px;
+        font-size: 20px;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+    }
+
+    .btn-claim-massive:hover {
+        background: #16a34a;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(34, 197, 94, 0.5);
+        color: #ffffff;
+    }
+
+    .action-terms {
+        display: block;
+        margin-top: 12px;
+        font-size: 11px;
+        color: #64748b;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 900px) {
+        .review-hero-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .review-hero-rating {
+            justify-content: center;
+        }
+
+        .review-badges {
+            justify-content: center;
+        }
+
+        .review-hero-action {
+            width: 100%;
+        }
+    }
+
+    /* --- REVIEW EXCERPT: PROS & CONS LAYOUT --- */
+    .review-excerpt {
+        margin: 32px 0;
+        width: 100%;
+    }
+
+    /* Force WordPress Gutenberg columns to act as a side-by-side flex box */
+    .review-excerpt .wp-block-columns {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin: 0 !important;
+    }
+
+    /* Make each column exactly 50% width */
+    .review-excerpt .wp-block-column {
+        flex: 1 1 calc(50% - 12px) !important;
+        min-width: 280px; /* Snaps to full width on mobile automatically */
+        margin: 0 !important;
+        display: flex;
+    }
+
+    /* Base styling for the Pros & Cons containers */
+    .space-pros,
+    .space-cons {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Colorful borders */
+    .space-pros {
+        border-top: 4px solid #22c55e;
+    } /* Green */
+    .space-cons {
+        border-top: 4px solid #ef4444;
+    } /* Red */
+
+    /* Titles */
+    .space-pros-title,
+    .space-cons-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* The Lists */
+    .space-pros-description ul,
+    .space-cons-description ul {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .space-pros-description li,
+    .space-cons-description li {
+        position: relative;
+        padding: 0 0 16px 32px !important;
+        margin: 0 !important;
+        font-size: 15px;
+        color: #475569;
+        line-height: 1.5;
+    }
+
+    /* Remove bottom padding on last item */
+    .space-pros-description li:last-child,
+    .space-cons-description li:last-child {
+        padding-bottom: 0 !important;
+    }
+
+    /* Custom Checkmark/Cross SVG Icons */
+    .space-pros-description li::before,
+    .space-cons-description li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    /* Green Checkmark */
+    .space-pros-description li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    /* Red Cross */
+    .space-cons-description li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ef4444' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
+    }
+
+    /* 1. Main Card Container */
+    .flex-around-buttons .full_box {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow:
+            0 10px 25px -5px rgba(0, 0, 0, 0.05),
+            0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        overflow: hidden;
+        margin: 32px 0;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .flex-around-buttons .full_box:hover {
+        transform: translateY(-4px);
+        box-shadow:
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .flex-around-buttons .full_box .content {
+        padding: 32px;
+    }
+
+    /* 2. Card Header & Image Layout */
+    .flex-around-buttons .full_box .content h3 {
+        display: flex;
+        flex-direction: column-reverse; /* Stacks image above text on mobile */
+        gap: 20px;
+        font-size: 24px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 0;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 20px;
+    }
+
+    /* Fix the WordPress default image float */
+    .flex-around-buttons .full_box .content h3 img {
+        float: none !important;
+        margin: 0 !important;
+        max-width: 220px;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Desktop Header Layout */
+    @media (min-width: 600px) {
+        .flex-around-buttons .full_box .content h3 {
+            flex-direction: row; /* Text on left, image on right */
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    /* 3. Description Text */
+    .flex-around-buttons .full_box .content p {
+        color: #475569;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    .flex-around-buttons .full_box .content p a {
+        color: #0ea5e9;
+        font-weight: 700;
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.2s ease;
+    }
+
+    .flex-around-buttons .full_box .content p a:hover {
+        border-color: #0ea5e9;
+    }
+
+    /* 4. Specs Grid (Turns standard <ul> into data badges) */
+    .flex-around-buttons .full_box .content ul {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 0 32px 0 !important;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    .flex-around-buttons .full_box .content ul li {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 12px 16px !important;
+        border-radius: 8px;
+        font-size: 15px;
+        color: #0f172a;
+        font-weight: 600;
+        margin: 0 !important;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    /* Styles the bold label text */
+    .flex-around-buttons .full_box .content ul li strong {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #64748b;
+        font-weight: 800;
+    }
+
+    /* 5. The Call to Action Button */
+    .space-organizations-3-archive-item-button-ins {
+        margin-top: 16px;
+    }
+
+    .space-organizations-3-archive-item-button-ins a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(
+            135deg,
+            #0ea5e9 0%,
+            #0284c7 100%
+        ); /* Brand blue gradient */
+        color: #ffffff !important;
+        text-decoration: none;
+        padding: 16px 32px;
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        transition: all 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .space-organizations-3-archive-item-button-ins a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(14, 165, 233, 0.5);
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    }
+
+    .space-organizations-3-archive-item-button-ins a i {
+        font-size: 20px;
+    }
+
+    /* --- MODERN SIDE-BY-SIDE FEATURE CARDS --- */
+
+    /* 1. Main Flex Container */
+    .flex-around-buttons.box-100 {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin: 32px 0;
         width: 100% !important;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
+
+    /* 2. The Individual Cards */
+    .flex-around-buttons .half_box {
+        flex: 1 1 calc(50% - 12px) !important; /* 50% width minus the gap */
+        min-width: 280px; /* Forces cards to stack vertically on mobile */
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-sizing: border-box;
+        box-shadow:
+            0 4px 6px -1px rgba(0, 0, 0, 0.05),
+            0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .flex-around-buttons .half_box:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 3. Card Headers (Targeting both the <h4> in Box 1 and <p> in Box 2) */
+    .flex-around-buttons .half_box h4.content,
+    .flex-around-buttons .half_box .content p:first-child {
+        margin: 0 0 16px 0 !important;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 12px;
+    }
+
+    .flex-around-buttons .half_box h4.content strong,
+    .flex-around-buttons .half_box .content p:first-child strong {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    /* 4. Highlight the Bonus Amount (Box 1 specifically) */
+    .flex-around-buttons .half_box:first-child > p {
+        margin: 0 0 20px 0;
+    }
+
+    .flex-around-buttons .half_box:first-child > p strong {
+        display: inline-block;
+        font-size: 15px;
+        font-weight: 800;
+        color: #15803d; /* Dark Green */
+        background: #f0fdf4; /* Soft Green background */
+        border: 1px dashed #bbf7d0;
+        padding: 10px 16px;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    /* 5. Clean up the Lists */
+    .flex-around-buttons .half_box ul {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .flex-around-buttons .half_box ul li {
+        position: relative;
+        padding: 0 0 12px 28px !important;
+        margin: 0 !important;
+        font-size: 15px;
+        color: #475569;
+        line-height: 1.5;
+    }
+
+    /* Remove bottom padding on the last list item to keep spacing even */
+    .flex-around-buttons .half_box ul li:last-child {
+        padding-bottom: 0 !important;
+    }
+
+    /* Set up the before pseudo-element for custom icons */
+    .flex-around-buttons .half_box ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 18px;
+        height: 18px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    /* 6. Custom Icons */
+
+    /* Box 1 Icon: Green Checkmarks for Features */
+    .flex-around-buttons .half_box:first-child ul li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    /* Box 2 Icon: Blue Chevrons for Quick Facts */
+    .flex-around-buttons .half_box:last-child ul li::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'%3E%3C/polyline%3E%3C/svg%3E");
+        top: 3px; /* Slightly adjusted to align with text visually */
+    }
+    /* --- MODERN PAYMENT METHODS GRID --- */
+
+    /* 1. The Main Grid Container */
+    .flex-around-buttons {
+        display: grid !important;
+        /* Automatically fits as many 160px cards as possible per row */
+        /* grid-template-columns: repeat(auto-fill, minmax(387px, 1fr)); */
+        gap: 16px;
+        margin: 32px 0;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
+
+    /* 2. The Payment Cards */
+    .flex-around-buttons .bs_btn {
+        position: relative; /* Required for the clickable link trick */
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    /* Hover effect: lifts the card and deepens the shadow */
+    .flex-around-buttons .bs_btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+        border-color: #cbd5e1;
+    }
+
+    /* 3. The Icons */
+    .flex-around-buttons .bs_btn img.icon {
+        width: 32px !important;
+        height: 32px !important;
+        object-fit: contain; /* Prevents logos from stretching */
+        margin: 0 !important; /* Overrides any default WordPress image margins */
+    }
+
+    /* 4. The Text / Link */
+    .flex-around-buttons .bs_btn a.text {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0f172a;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .flex-around-buttons .bs_btn:hover a.text {
+        color: #0ea5e9; /* Changes text to blue on hover */
+    }
+
+    /* 5. THE MAGIC TRICK: Make the whole card clickable */
+    .flex-around-buttons .bs_btn a.text::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+
+    /* --- MODERN FAQ ACCORDION --- */
+
+    /* 1. Main Container */
+    .panel-group {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        margin: 32px 0;
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            sans-serif;
+    }
+
+    /* 2. FAQ Card */
+    .panel-group .panel {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+        transition: all 0.3s ease !important;
+        margin: 0 !important;
+    }
+
+    /* When the FAQ is open */
+    .panel-group .panel.active {
+        border-color: #0ea5e9 !important;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1) !important;
+    }
+
+    /* 3. The Question Button */
+    .panel-group .panel-heading {
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    .panel-group .panel-title {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding: 20px 24px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+        text-decoration: none !important;
+        box-sizing: border-box !important;
+        cursor: pointer !important;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease !important;
+    }
+
+    .panel-group .panel-title:hover {
+        background: #f8fafc !important;
+        color: #0ea5e9 !important;
+    }
+
+    /* Custom CSS Chevron Arrow */
+    .panel-group .panel-title::after {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+        margin-left: 16px;
+    }
+
+    /* Change color and rotate arrow when open */
+    .panel-group .panel.active .panel-title {
+        color: #0ea5e9 !important;
+    }
+
+    .panel-group .panel.active .panel-title::after {
+        transform: rotate(180deg);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230ea5e9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    }
+
+    /* 4. The Answer Container (Overrides inline HTML height: 0px) */
+    .panel-group .panel-collapse {
+        display: block !important; /* Forces it to ignore the old Bootstrap 'collapse' rule */
+        height: auto !important;
+        max-height: 0;
+        overflow: hidden !important;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        border: none !important;
+    }
+    /* Opens the accordion */
+    .panel-group .panel.active .panel-collapse {
+        max-height: 800px !important; /* High enough to fit the text */
+    }
+
+    /* 5. The Answer Text */
+    .panel-group .panel-body {
+        padding: 0 24px 20px 24px !important;
+        color: #475569 !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        border-top: none !important;
+        opacity: 0;
+        transition: opacity 0.3s ease 0.1s;
+    }
+
+    .panel-group .panel.active .panel-body {
+        opacity: 1;
+    }
+
+    /* Mobile Tweaks */
+    @media (max-width: 768px) {
+        .panel-group .panel-title {
+            padding: 16px 20px !important;
+            font-size: 15px !important;
+        }
+        .panel-group .panel-body {
+            padding: 0 20px 16px 20px !important;
+            font-size: 14px !important;
+        }
+    }
+
+    /* Main Card Container */
+    .space-organization-single-2 {
+        background-color: #ffffff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+        border: 1px solid #f1f5f9 !important;
+        padding: 24px !important;
+        margin-bottom: 30px !important;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease !important;
+    }
+
+    .space-organization-single-2:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Flex Layout */
+    .space-style-2-organization-header-elements {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 20px !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* Left Side Wrapper */
+    .space-style-2-organization-header-left {
+        flex: 1 1 auto !important;
     }
 
     .space-organization-header-logo-title {
-        flex-direction: column !important;
-        text-align: center !important;
-        gap: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 24px !important;
     }
 
-    .space-organization-header-short-desc {
-        margin: 0 auto !important; /* Centers the badge on mobile */
+    /* Logo Box */
+    .space-organization-header-logo-box {
+        position: relative !important;
+        flex-shrink: 0 !important;
+        width: 100px !important;
+        height: 100px !important;
+        border-radius: 16px !important;
+        background: #f8fafc !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: inset 0 0 0 1px #e2e8f0 !important;
     }
 
-    .space-style-2-organization-header-right {
+    .space-organization-header-logo-box img {
         width: 100% !important;
-        flex: 1 1 auto !important;
-        margin-top: 15px !important;
+        height: auto !important;
+        max-width: 80px !important;
+        border-radius: 10px !important;
+        object-fit: contain !important;
     }
-    
-    .organization-title-2 {
-        font-size: 20px !important;
-    }
-}
 
-/* =========================================
+    /* Rating Badge (Overlapping Logo) */
+    .space-organization-header-logo-rating {
+        position: absolute !important;
+        bottom: -10px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background-color: #fbbf24 !important; /* Premium Gold */
+        color: #1e293b !important;
+        font-weight: 800 !important;
+        font-size: 13px !important;
+        padding: 4px 12px !important;
+        border-radius: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+        white-space: nowrap !important;
+        z-index: 2 !important;
+    }
+
+    /* Text Content Area */
+    .space-organization-header-title-box {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .organization-title-2 {
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    /* Bonus Description Badge */
+    .space-organization-header-short-desc {
+        font-size: 15px !important;
+        color: #16a34a !important; /* Green for bonus */
+        font-weight: 700 !important;
+        background: #dcfce7 !important;
+        padding: 6px 14px !important;
+        border-radius: 8px !important;
+        display: inline-block !important;
+        width: fit-content !important;
+    }
+
+    /* Right Side (CTA Button Area) */
+    .space-style-2-organization-header-right {
+        flex: 0 0 260px !important;
+    }
+
+    .space-organization-header-button {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    /* Call to Action Button */
+    .space-style-2-button {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        background: linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        ) !important; /* Bright Blue */
+        color: #ffffff !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 16px 24px !important;
+        border-radius: 12px !important;
+        text-decoration: none !important;
+        width: 100% !important;
+        box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .space-style-2-button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4) !important;
+        color: #ffffff !important;
+    }
+
+    /* Terms Notice */
+    .space-organization-header-button-notice {
+        font-size: 12px !important;
+        color: #64748b !important;
+        text-align: center !important;
+        font-weight: 500 !important;
+    }
+
+    /* Responsive Mobile Adjustments */
+    @media (max-width: 768px) {
+        .space-style-2-organization-header-elements {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .space-style-2-organization-header-left {
+            width: 100% !important;
+        }
+
+        .space-organization-header-logo-title {
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 20px !important;
+        }
+
+        .space-organization-header-short-desc {
+            margin: 0 auto !important; /* Centers the badge on mobile */
+        }
+
+        .space-style-2-organization-header-right {
+            width: 100% !important;
+            flex: 1 1 auto !important;
+            margin-top: 15px !important;
+        }
+
+        .organization-title-2 {
+            font-size: 20px !important;
+        }
+    }
+
+    /* =========================================
    MODERN NEWS GRID WRAPPER
 ========================================= */
-/* Turn the container into a modern CSS Grid */
-.space-news-3-items {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-    gap: 24px !important;
-    margin: 0 !important;
-}
+    /* Turn the container into a modern CSS Grid */
+    .space-news-3-items {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+        gap: 24px !important;
+        margin: 0 !important;
+    }
 
-/* Reset the theme's default 25% width and floats */
-.space-news-3-item.box-25 {
-    width: 100% !important;
-    float: none !important;
-    margin: 0 !important;
-}
+    /* Reset the theme's default 25% width and floats */
+    .space-news-3-item.box-25 {
+        width: 100% !important;
+        float: none !important;
+        margin: 0 !important;
+    }
 
-/* =========================================
+    /* =========================================
    INDIVIDUAL CARD STYLING
 ========================================= */
-.space-news-3-item-ins {
-    background: #ffffff !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-    border: 1px solid #f1f5f9 !important;
-    overflow: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-}
+    .space-news-3-item-ins {
+        background: #ffffff !important;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid #f1f5f9 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease !important;
+    }
 
-/* Lift effect on hover */
-.space-news-3-item-ins:hover {
-    transform: translateY(-6px) !important;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1) !important;
-}
+    /* Lift effect on hover */
+    .space-news-3-item-ins:hover {
+        transform: translateY(-6px) !important;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1) !important;
+    }
 
-/* =========================================
+    /* =========================================
    IMAGE & CATEGORY BADGES
 ========================================= */
-.space-news-3-item-img {
-    position: relative !important;
-    width: 100% !important;
-    aspect-ratio: 16 / 10 !important; /* Modern wide ratio */
-    overflow: hidden !important;
-}
+    .space-news-3-item-img {
+        position: relative !important;
+        width: 100% !important;
+        aspect-ratio: 16 / 10 !important; /* Modern wide ratio */
+        overflow: hidden !important;
+    }
 
-.space-news-3-item-img img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    transition: transform 0.5s ease !important;
-}
+    .space-news-3-item-img img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        transition: transform 0.5s ease !important;
+    }
 
-/* Slight zoom on image when hovering the card */
-.space-news-3-item-ins:hover .space-news-3-item-img img {
-    transform: scale(1.06) !important;
-}
+    /* Slight zoom on image when hovering the card */
+    .space-news-3-item-ins:hover .space-news-3-item-img img {
+        transform: scale(1.06) !important;
+    }
 
-/* Hide default dark overlay if it exists */
-.space-overlay {
-    display: none !important; 
-}
+    /* Hide default dark overlay if it exists */
+    .space-overlay {
+        display: none !important;
+    }
 
-/* Style the category tags as modern pill badges */
-.space-news-3-item-img-category {
-    position: absolute !important;
-    top: 15px !important;
-    left: 15px !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    z-index: 2 !important;
-}
+    /* Style the category tags as modern pill badges */
+    .space-news-3-item-img-category {
+        position: absolute !important;
+        top: 15px !important;
+        left: 15px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        z-index: 2 !important;
+    }
 
-.space-news-3-item-img-category a {
-    background: rgba(15, 23, 42, 0.75) !important;
-    backdrop-filter: blur(6px) !important; /* Glass effect */
-    -webkit-backdrop-filter: blur(6px) !important;
-    color: #ffffff !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    padding: 6px 12px !important;
-    border-radius: 20px !important;
-    text-decoration: none !important;
-    transition: background 0.2s ease !important;
-}
+    .space-news-3-item-img-category a {
+        background: rgba(15, 23, 42, 0.75) !important;
+        backdrop-filter: blur(6px) !important; /* Glass effect */
+        -webkit-backdrop-filter: blur(6px) !important;
+        color: #ffffff !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        padding: 6px 12px !important;
+        border-radius: 20px !important;
+        text-decoration: none !important;
+        transition: background 0.2s ease !important;
+    }
 
-.space-news-3-item-img-category a:hover {
-    background: #2563eb !important; /* Bright blue on hover */
-}
+    .space-news-3-item-img-category a:hover {
+        background: #2563eb !important; /* Bright blue on hover */
+    }
 
-img.aligncenter {
-    margin-right: auto !important;
-    margin-left: auto !important;
-}
+    img.aligncenter {
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
 
-/* =========================================
+    /* =========================================
    TEXT CONTENT AREA
 ========================================= */
-.space-news-3-item-title-box {
-    padding: 24px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    flex-grow: 1 !important;
-}
+    .space-news-3-item-title-box {
+        padding: 24px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+    }
 
-/* Post Title */
-.space-news-3-item-title a {
-    font-size: 18px !important;
-    font-weight: 800 !important;
-    color: #0f172a !important;
-    line-height: 1.4 !important;
-    text-decoration: none !important;
-    margin-bottom: 12px !important;
-    display: block !important;
-    transition: color 0.2s ease !important;
-}
+    /* Post Title */
+    .space-news-3-item-title a {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        line-height: 1.4 !important;
+        text-decoration: none !important;
+        margin-bottom: 12px !important;
+        display: block !important;
+        transition: color 0.2s ease !important;
+    }
 
-.space-news-3-item-title a:hover {
-    color: #2563eb !important;
-}
+    .space-news-3-item-title a:hover {
+        color: #2563eb !important;
+    }
 
-/* Post Excerpt */
-.space-news-3-item-excerpt {
-    font-size: 14px !important;
-    color: #475569 !important;
-    line-height: 1.6 !important;
-    margin-bottom: 20px !important;
-    flex-grow: 1 !important; /* Pushes the meta data to the very bottom */
-}
+    /* Post Excerpt */
+    .space-news-3-item-excerpt {
+        font-size: 14px !important;
+        color: #475569 !important;
+        line-height: 1.6 !important;
+        margin-bottom: 20px !important;
+        flex-grow: 1 !important; /* Pushes the meta data to the very bottom */
+    }
 
-/* =========================================
+    /* =========================================
    META FOOTER (DATE & ICONS)
 ========================================= */
-.space-news-3-item-meta {
-    position: static !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding-top: 16px !important;
-    border-top: 1px solid #f1f5f9 !important;
-    color: #64748b !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-}
+    .space-news-3-item-meta {
+        position: static !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding-top: 16px !important;
+        border-top: 1px solid #f1f5f9 !important;
+        color: #64748b !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
 
-/* Reset absolute positioning set by the old theme */
-.space-news-3-item-meta-left, 
-.space-news-3-item-meta-right {
-    position: static !important;
-}
+    /* Reset absolute positioning set by the old theme */
+    .space-news-3-item-meta-left,
+    .space-news-3-item-meta-right {
+        position: static !important;
+    }
 
-.space-news-3-item-meta i {
-    color: #94a3b8 !important;
-    margin-right: 6px !important;
-}
+    .space-news-3-item-meta i {
+        color: #94a3b8 !important;
+        margin-right: 6px !important;
+    }
 </style>
 
 <script>
-   document.addEventListener("DOMContentLoaded", function() {
-  // Find all FAQ question links
-  const faqHeaders = document.querySelectorAll(".panel-title");
-  
-  faqHeaders.forEach(function(header) {
-    header.addEventListener("click", function(e) {
-      e.preventDefault(); // Stops the page from jumping when clicking the link
-      
-      const currentPanel = this.closest(".panel");
-      const isCurrentlyActive = currentPanel.classList.contains("active");
-      
-      // Close all other FAQ panels
-      document.querySelectorAll(".panel").forEach(function(panel) {
-        panel.classList.remove("active");
-        panel.querySelector(".panel-title").setAttribute("aria-expanded", "false");
-      });
-      
-      // Toggle the one we just clicked
-      if (!isCurrentlyActive) {
-        currentPanel.classList.add("active");
-        this.setAttribute("aria-expanded", "true");
-      }
-    });
-  });
-}); 
+    document.addEventListener("DOMContentLoaded", function () {
+        // Find all FAQ question links
+        const faqHeaders = document.querySelectorAll(".panel-title")
+
+        faqHeaders.forEach(function (header) {
+            header.addEventListener("click", function (e) {
+                e.preventDefault() // Stops the page from jumping when clicking the link
+
+                const currentPanel = this.closest(".panel")
+                const isCurrentlyActive =
+                    currentPanel.classList.contains("active")
+
+                // Close all other FAQ panels
+                document.querySelectorAll(".panel").forEach(function (panel) {
+                    panel.classList.remove("active")
+                    panel
+                        .querySelector(".panel-title")
+                        .setAttribute("aria-expanded", "false")
+                })
+
+                // Toggle the one we just clicked
+                if (!isCurrentlyActive) {
+                    currentPanel.classList.add("active")
+                    this.setAttribute("aria-expanded", "true")
+                }
+            })
+        })
+    })
 </script>
