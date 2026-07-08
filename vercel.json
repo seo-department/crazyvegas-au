@@ -2395,6 +2395,11 @@
       "source": "/elden-ring-nightreign-patch-the-storm-ruler-is-back-in-action/",
       "destination": "/news/",
       "permanent": true
+    },
+    {
+      "source": "/blog/australia-gambling-reform-bill-2026-what-changes-for-players/",
+      "destination": "/blog/gambling-reform-bill/",
+      "permanent": true
     }
   ]
 }
