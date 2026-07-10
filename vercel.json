@@ -353,7 +353,7 @@
     },
     {
       "source": "/play/ricky-casino/",
-      "destination": "https://mediarickycasino.com/a7859aab3",
+      "destination": "https://mediarickycasino.com/a7czth8op",
       "permanent": false
     },
     {
@@ -2400,6 +2400,11 @@
       "source": "/blog/australia-gambling-reform-bill-2026-what-changes-for-players/",
       "destination": "/blog/gambling-reform-bill/",
       "permanent": true
-    }
+    },
+    {
+      "source": "/play/drakaris-casino/",
+      "destination": "https://drkrsplay.com/tskqabm10",
+      "permanent": true
+    } 
   ]
 }
