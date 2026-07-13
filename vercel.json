@@ -2470,6 +2470,11 @@
       "source": "/casino-reviews/woo/",
       "destination": "/casino-reviews/",
       "permanent": true
+    },
+    {
+      "source": "/blog/gambling-advertising-ban/",
+      "destination": "/news/",
+      "permanent": true
     }
   ]
 }
