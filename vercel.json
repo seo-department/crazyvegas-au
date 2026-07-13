@@ -2475,6 +2475,11 @@
       "source": "/blog/gambling-advertising-ban/",
       "destination": "/news/",
       "permanent": true
+    },
+    {
+      "source": "/play/spinaconda-casino/",
+      "destination": "https://gtrfspn.com/jzdl9sgb5",
+      "permanent": true
     }
   ]
 }
