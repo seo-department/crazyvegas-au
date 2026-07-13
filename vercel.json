@@ -2405,6 +2405,71 @@
       "source": "/play/drakaris-casino/",
       "destination": "https://drkrsplay.com/tskqabm10",
       "permanent": true
-    } 
+    },
+    {
+      "source": "/en/",
+      "destination": "https://au.crazyvegas.com/",
+      "permanent": true
+    },
+    {
+      "source": "/online-poker/online-poker-faqs/",
+      "destination": "https://au.crazyvegas.com/online-poker/faqs/",
+      "permanent": true
+    },
+    {
+      "source": "/free-spins-explained/",
+      "destination": "https://au.crazyvegas.com/casino-bonuses/free-spins/",
+      "permanent": true
+    },
+    {
+      "source": "/wagering-requirements-explained/",
+      "destination": "https://au.crazyvegas.com/casino-bonuses/wagering-requirements/",
+      "permanent": true
+    },
+    {
+      "source": "/live-casino/",
+      "destination": "https://au.crazyvegas.com/live-dealer-casinos/",
+      "permanent": true
+    },
+    {
+      "source": "/online-pokies/black-wolf-2/",
+      "destination": "https://au.crazyvegas.com/game/black-wolf-2/",
+      "permanent": true
+    },
+    {
+      "source": "/online-pokies/coin-volcano/",
+      "destination": "https://au.crazyvegas.com/game/coin-volcano/",
+      "permanent": true
+    },
+    {
+      "source": "/credit-cards-banned-for-gambling",
+      "destination": "https://au.crazyvegas.com/blog/credit-cards-banned-for-gambling/",
+      "permanent": true
+    },
+    {
+      "source": "/exclusive-fortune-finery-pokie-release-at-wolf-winner/",
+      "destination": "https://au.crazyvegas.com/news/",
+      "permanent": true
+    },
+    {
+      "source": "/hbo-max-arrives-in-australia/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/hollow-knight-silksong-steams-most-wishlisted-game-of-2025/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/steam-deck-launches-in-australia/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/casino-reviews/woo/",
+      "destination": "/casino-reviews/",
+      "permanent": true
+    }
   ]
 }
