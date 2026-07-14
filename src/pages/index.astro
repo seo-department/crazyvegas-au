@@ -211,6 +211,51 @@ const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
 	day: "numeric",
 })
 
+// 🚨 FALLBACK: Ensure a Person node exists in the graph.
+// Yoast sometimes omits/dedupes the Person entity — inject from GraphQL author data.
+if (yoastSchema) {
+	try {
+		const parsedSchema = JSON.parse(yoastSchema)
+		const graph = parsedSchema["@graph"] || []
+
+		const hasPerson = graph.some((n: any) => {
+			const t = n["@type"]
+			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
+		})
+
+		if (!hasPerson) {
+			const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}`
+			graph.push({
+				"@type": "Person",
+				"@id": personId,
+				name: authorName,
+				url: `https://au.crazyvegas.com${authorLink}`,
+				image: { "@type": "ImageObject", url: authorAvatar },
+				sameAs: [
+					authorTwitter,
+					authorFacebook,
+					authorInstagram,
+					authorLinkedIn,
+				].filter(Boolean),
+			})
+			// Wire the Person up as the Article author if the Article has none
+			for (const node of graph) {
+				const t = node["@type"]
+				const isArticle =
+					t === "Article" ||
+					(Array.isArray(t) && t.includes("Article"))
+				if (isArticle && !node.author) {
+					node.author = { "@id": personId }
+				}
+			}
+			parsedSchema["@graph"] = graph
+			yoastSchema = JSON.stringify(parsedSchema)
+		}
+	} catch (e) {
+		// If parsing fails, leave schema as-is
+	}
+}
+
 // Clean the WordPress Content
 const rawContent = page?.content || ""
 const fixedContent = rawContent
