@@ -74,10 +74,13 @@ const response = await fetch(wpUrl, {
                         }
                         author {
                             node {
+                                databaseId
                                 name
                                 firstName
                                 lastName
-                                avatar { url }
+                                description
+                                url
+                                avatar { url width height }
                                 seo { social { facebook twitter instagram linkedIn } }
                             }
                         }
@@ -210,8 +213,7 @@ const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
 	day: "numeric",
 })
 
-// 🚨 FALLBACK: Ensure a Person node exists in the graph.
-// Yoast sometimes omits/dedupes the Person entity — inject from GraphQL author data.
+// 🚨 Build a rich Person node from real GraphQL author data.
 if (yoastSchema) {
 	try {
 		const parsedSchema = JSON.parse(yoastSchema)
@@ -222,27 +224,47 @@ if (yoastSchema) {
 			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
 		})
 
-		if (!hasPerson) {
+		if (!hasPerson && authorObj) {
 			const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}`
-			graph.push({
+			const person: any = {
 				"@type": "Person",
 				"@id": personId,
 				name: authorName,
-				url: `https://au.crazyvegas.com${authorLink}`,
-				image: { "@type": "ImageObject", url: authorAvatar },
+				url:
+					authorObj.url ||
+					`https://au.crazyvegas.com${authorLink}`,
 				sameAs: [
 					authorTwitter,
 					authorFacebook,
 					authorInstagram,
 					authorLinkedIn,
 				].filter(Boolean),
-			})
-			
+			}
+
+			if (authorObj.description) person.description = authorObj.description
+
+			if (authorObj.avatar?.url) {
+				person.image = {
+					"@type": "ImageObject",
+					"@id": `https://au.crazyvegas.com/#/schema/person/image/${authorSlug}`,
+					url: authorObj.avatar.url,
+					contentUrl: authorObj.avatar.url,
+					...(authorObj.avatar.width && {
+						width: authorObj.avatar.width,
+					}),
+					...(authorObj.avatar.height && {
+						height: authorObj.avatar.height,
+					}),
+					caption: authorName,
+				}
+			}
+
+			graph.push(person)
 			parsedSchema["@graph"] = graph
 			yoastSchema = JSON.stringify(parsedSchema)
 		}
 	} catch (e) {
-		// If parsing fails, leave schema as-is
+		// leave schema as-is on parse failure
 	}
 }
 
