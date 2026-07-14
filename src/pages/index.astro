@@ -171,6 +171,8 @@ const authorSlug = authorName
 	.replace(/(^-|-$)+/g, "")
 const authorLink = `/about-us/${authorSlug}/`
 
+console.log("🔍 authorObj present?", !!authorObj, "| name:", authorName)
+
 // Author Social Links
 const authorSocials = authorObj?.seo?.social || {}
 const formatSocial = (value: string | undefined, domain: string) => {
@@ -224,14 +226,14 @@ if (yoastSchema) {
 			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
 		})
 
-		if (!hasPerson && authorObj) {
+		if (!hasPerson) {
 			const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}`
 			const person: any = {
 				"@type": "Person",
 				"@id": personId,
 				name: authorName,
 				url:
-					authorObj.url ||
+					authorObj?.url ||
 					`https://au.crazyvegas.com${authorLink}`,
 				sameAs: [
 					authorTwitter,
@@ -241,9 +243,9 @@ if (yoastSchema) {
 				].filter(Boolean),
 			}
 
-			if (authorObj.description) person.description = authorObj.description
+			if (authorObj?.description) person.description = authorObj.description
 
-			if (authorObj.avatar?.url) {
+			if (authorObj?.avatar?.url) {
 				person.image = {
 					"@type": "ImageObject",
 					"@id": `https://au.crazyvegas.com/#/schema/person/image/${authorSlug}`,
