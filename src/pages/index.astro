@@ -129,7 +129,6 @@ const yoastDesc = (page?.seo?.metaDesc || "").replaceAll("[year]", currentYear)
 // 🚨 FIX: Updated to match your new Cloudways App URL
 const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com"
 
-// Extract and clean the Schema so it uses the live domain
 // Fetch the full Yoast @graph directly from the rendered WP HTML (bypass GraphQL).
 let yoastSchema = await fetchYoastGraphFromHtml(wpDomain + "/")
 if (yoastSchema) {
@@ -238,16 +237,7 @@ if (yoastSchema) {
 					authorLinkedIn,
 				].filter(Boolean),
 			})
-			// Wire the Person up as the Article author if the Article has none
-			for (const node of graph) {
-				const t = node["@type"]
-				const isArticle =
-					t === "Article" ||
-					(Array.isArray(t) && t.includes("Article"))
-				if (isArticle && !node.author) {
-					node.author = { "@id": personId }
-				}
-			}
+			
 			parsedSchema["@graph"] = graph
 			yoastSchema = JSON.stringify(parsedSchema)
 		}
