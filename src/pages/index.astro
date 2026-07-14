@@ -155,6 +155,11 @@ if (yoastSchema) {
 		.replaceAll("[year]", currentYear)
 }
 
+
+
+
+
+
 // Hero Meta Data (Author)
 const authorObj = page?.author?.node
 const authorName = authorObj
@@ -197,6 +202,32 @@ const authorLinkedIn = formatSocial(
 	authorSocials.linkedIn,
 	"https://linkedin.com/in/",
 )
+
+// Build a standalone Person schema from GraphQL author data — independent of Yoast.
+let personSchema: string | undefined
+if (authorObj) {
+	const person: any = {
+		"@context": "https://schema.org",
+		"@type": "Person",
+		"@id": `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`,
+		name: authorName,
+		url: authorObj.url || `https://au.crazyvegas.com${authorLink}`,
+	}
+	if (authorObj.description) person.description = authorObj.description
+	if (authorObj.avatar?.url) {
+		person.image = {
+			"@type": "ImageObject",
+			url: authorObj.avatar.url,
+			...(authorObj.avatar.width && { width: authorObj.avatar.width }),
+			...(authorObj.avatar.height && { height: authorObj.avatar.height }),
+			caption: authorName,
+		}
+	}
+	const sameAs = [authorTwitter, authorFacebook, authorInstagram, authorLinkedIn].filter(Boolean)
+	if (sameAs.length) person.sameAs = sameAs
+
+	personSchema = JSON.stringify(person)
+}
 
 // Reviewer Data
 const reviewerName = "Kylie Johnston"
@@ -259,6 +290,7 @@ if (yoastSchema) {
 		}
 
 		graph.push(person)
+		console.log("✅ Person node injected. Graph length now:", graph.length)
 		parsedSchema["@graph"] = graph
 		yoastSchema = JSON.stringify(parsedSchema)
 		}
@@ -330,6 +362,9 @@ function stripWp(input = "") {
 	description={yoastDesc}
 	schema={yoastSchema}
 >
+{personSchema && (
+		<script type="application/ld+json" set:html={personSchema} />
+	)}
 	<header class="home-hero new-split-hero">
 		<div class="home-hero-container">
 			<div class="hero-columns">

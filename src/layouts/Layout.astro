@@ -39,7 +39,7 @@ const ogImage = new URL(image, baseForUrls).href
 
 const WP_HOSTS = [
     "https://wordpress-1164434-6467266.cloudwaysapps.com",
-    "http://wordpress-1164434-6467266.cloudwaysapps.com",
+    "http://wordpress-1164434-6467266.cloudwaysapps.com",   // present
     "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
     "//wordpress-1164434-6467266.cloudwaysapps.com",
 ]
@@ -53,21 +53,21 @@ const PUBLIC_HOST = "au.crazyvegas.com"
 function swapWpHost(input = "") {
     if (!input) return input
     let out = input
-    // www variant first so we don't leave a dangling "www."
     for (const h of [
-        "www.wordpress-1164434-6467266.cloudwaysapps.com",
-        "wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://wordpress-1164434-6467266.cloudwaysapps.com",
+        "//www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "//wordpress-1164434-6467266.cloudwaysapps.com",
     ]) {
-        out = out.split(h).join(PUBLIC_HOST)
+        out = out.split(h).join("https://" + PUBLIC_HOST)
     }
     return out
 }
-
 // Shared WP GraphQL endpoint — declared once, before any block that fetches from it
 const wpGraphQLEndpoint =
     "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
-
-
 
 // --- DYNAMIC FOOTER DATA FETCHING ---
 // (wpGraphQLEndpoint is already declared above)
@@ -301,7 +301,10 @@ function timeAgo(dateString: string) {
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="300" />
         <meta property="og:image:height" content="300" />
-        <meta property="article:publisher" content="https://www.facebook.com/aucrazyvegas" />
+        <meta
+            property="article:publisher"
+            content="https://www.facebook.com/aucrazyvegas"
+        />
         <meta name="twitter:site" content="@aucrazyvegas" />
     </head>
     <body>
@@ -718,16 +721,14 @@ function timeAgo(dateString: string) {
 </html>
 
 <style is:global>
-
     .meta-avatar {
-    width: 100px !important;
-    height: 100px !important;
-    border-radius: 50%;
-    border: 2px solid #334155;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
+        width: 100px !important;
+        height: 100px !important;
+        border-radius: 50%;
+        border: 2px solid #334155;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
 
     /* Mobile H1 - hidden on desktop */
     .home-hero-title-us {
@@ -1156,30 +1157,30 @@ function timeAgo(dateString: string) {
     }
 
     .nav-dropdown-menu.mega-menu {
-    display: grid !important;
-    grid-template-columns: repeat(var(--mega-columns, 2), 1fr) !important;
-    gap: 0 1.5rem !important;
-    width: max-content !important;
-    max-width: 90vw !important;
-}
-.mega-column {
-    margin-bottom: 15px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    min-width: 0 !important; /* lets long labels wrap instead of overflowing the column */
-}
-.mega-column a {
-    padding: 8px 0;
-    color: #ccc;
-    text-decoration: none;
-}
-
-@media (max-width: 420px) {
-    /* Too narrow for 2 columns — fall back to single column */
-    .nav-dropdown-menu.mega-menu {
-        grid-template-columns: 1fr !important;
+        display: grid !important;
+        grid-template-columns: repeat(var(--mega-columns, 2), 1fr) !important;
+        gap: 0 1.5rem !important;
+        width: max-content !important;
+        max-width: 90vw !important;
     }
-}
+    .mega-column {
+        margin-bottom: 15px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        min-width: 0 !important; /* lets long labels wrap instead of overflowing the column */
+    }
+    .mega-column a {
+        padding: 8px 0;
+        color: #ccc;
+        text-decoration: none;
+    }
+
+    @media (max-width: 420px) {
+        /* Too narrow for 2 columns — fall back to single column */
+        .nav-dropdown-menu.mega-menu {
+            grid-template-columns: 1fr !important;
+        }
+    }
 
     /* ===== Cookie consent popup ===== */
     .cookie-consent {
@@ -4946,7 +4947,7 @@ function timeAgo(dateString: string) {
         pointer-events: none;
     }
     .post-hero-container {
-        max-width: 100%;
+        max-width: 1200px;
         margin: 0 auto;
         position: relative;
         z-index: 2;
@@ -11353,7 +11354,6 @@ function timeAgo(dateString: string) {
 
     /* --- Main Banner Container --- */
     .cus-banner {
-        
         color: #f8fafc; /* Crisp, off-white text for high contrast */
         border-radius: 16px;
         padding: 32px;
@@ -11405,7 +11405,6 @@ function timeAgo(dateString: string) {
 
     /* --- Main Disclaimer Box --- */
     .desktop-dis .disclaimer-cl {
-
         border-radius: 8px; /* Modern rounded corners */
         padding: 16px 24px;
         margin: 24px 0;
@@ -14914,22 +14913,25 @@ function timeAgo(dateString: string) {
     }
 
     .star.star-full {
-    background: #fcc115 !important;
-}
+        background: #fcc115 !important;
+    }
 
-.star-half {
-    background: linear-gradient(36deg, var(--gold) 50%, #5c5f6c 50%) !important;
-    background-color: #d6d6d6 !important;
-}
+    .star-half {
+        background: linear-gradient(
+            36deg,
+            var(--gold) 50%,
+            #5c5f6c 50%
+        ) !important;
+        background-color: #d6d6d6 !important;
+    }
 
-.star {
-    background: #dddddd !important;
-}
+    .star {
+        background: #dddddd !important;
+    }
 
-
-table.offers tbody#demo {
-    counter-reset: none !important;
-}
+    table.offers tbody#demo {
+        counter-reset: none !important;
+    }
 </style>
 
 <script is:inline>
