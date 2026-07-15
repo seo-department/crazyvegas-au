@@ -14932,6 +14932,69 @@ function timeAgo(dateString: string) {
     table.offers tbody#demo {
         counter-reset: none !important;
     }
+
+
+
+
+    .nav-dropdown-menu {
+    /* ...existing rules stay... */
+    transition:
+        opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0s, 0s, 0s;
+}
+
+/* Adds a delay ONLY when hiding, so a quick flick across the boundary
+   doesn't retrigger the hide/show loop */
+.nav-dropdown:not(:hover) .nav-dropdown-menu {
+    transition-delay: 0.15s, 0.15s, 0.15s;
+}
+
+/* Invisible bridge closing the gap between the toggle button and the
+   dropdown panel — this is what actually stops the flicker, since the
+   mouse never leaves a hoverable area while moving from button to menu */
+.nav-dropdown::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 20px; /* match roughly the gap your translateY creates */
+    background: transparent;
+}
+
+
+/* Preserve horizontal centering transform for mega-menus specifically —
+   the generic hover rule above was stomping translateX(-50%) with
+   translateY(0) alone, causing the menu to jump sideways on hover */
+.nav-dropdown-menu.mega-menu {
+    transform: translateX(-50%) translateY(15px);
+}
+.nav-dropdown:hover .nav-dropdown-menu.mega-menu {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Right-anchored menus (last 3 dropdowns) must not get translateX(-50%) re-applied */
+.header-nav .nav-dropdown:nth-last-of-type(1) .nav-dropdown-menu.mega-menu,
+.header-nav .nav-dropdown:nth-last-of-type(2) .nav-dropdown-menu.mega-menu,
+.header-nav .nav-dropdown:nth-last-of-type(3) .nav-dropdown-menu.mega-menu {
+    transform: translateY(15px) !important;
+}
+.header-nav .nav-dropdown:nth-last-of-type(1):hover .nav-dropdown-menu.mega-menu,
+.header-nav .nav-dropdown:nth-last-of-type(2):hover .nav-dropdown-menu.mega-menu,
+.header-nav .nav-dropdown:nth-last-of-type(3):hover .nav-dropdown-menu.mega-menu {
+    transform: translateY(0) !important;
+}
+
+.disclaimer-cl {
+    background: #f8fafc;
+    margin-top: 13px;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #60a5fa;
+}
 </style>
 
 <script is:inline>
@@ -15595,3 +15658,4 @@ function timeAgo(dateString: string) {
     document.addEventListener("DOMContentLoaded", initCookieConsent)
     document.addEventListener("astro:page-load", initCookieConsent)
 </script>
+
