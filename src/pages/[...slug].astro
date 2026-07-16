@@ -923,7 +923,7 @@ fixedContent = stripWp(fixedContent)
                     </div>
 
                     <div class="review-hero-author">
-                        <div class="meta-author">
+                        <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
                             <a
                                 href={authorLink}
                                 class="author-image-link"
@@ -941,9 +941,10 @@ fixedContent = stripWp(fixedContent)
                                     By{" "}
                                     <a
                                         href={authorLink}
-                                        class="author-text-link"
+                                        class="author-text-link url fn"
+                                        itemprop="url"
                                     >
-                                        <strong>{authorName}</strong>
+                                        <strong itemprop="name">{authorName}</strong>
                                     </a>
                                 </span>
 
@@ -1080,7 +1081,7 @@ fixedContent = stripWp(fixedContent)
                     />
 
                     <div class="post-meta-bar">
-                        <div class="meta-author">
+                        <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
                             <a
                                 href={authorLink}
                                 class="author-image-link"
@@ -1098,9 +1099,10 @@ fixedContent = stripWp(fixedContent)
                                     By{" "}
                                     <a
                                         href={authorLink}
-                                        class="author-text-link"
+                                        class="author-text-link url fn"
+                                        itemprop="url"
                                     >
-                                        <strong>{authorName}</strong>
+                                        <strong itemprop="name">{authorName}</strong>
                                     </a>
                                 </span>
                                 <span class="meta-date">
