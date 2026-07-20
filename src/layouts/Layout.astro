@@ -442,8 +442,8 @@ function timeAgo(dateString: string) {
                     </a>
                     <p>
                         Your trusted guide to the fastest, safest, and most
-                        rewarding online casino experiences in the United States
-                        for 2026.
+                        rewarding online casino experiences in Australia for
+                        2026.
                     </p>
 
                     <a
@@ -15197,11 +15197,29 @@ function timeAgo(dateString: string) {
         }
     }
 
-    #toc_container .toc_title{cursor:pointer;position:relative}
-#toc_container .toc_title::after{content:"\f078";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:0;transition:transform .25s}
-#toc_container.is-open .toc_title::after{transform:rotate(180deg)}
-#toc_container .toc_list{max-height:0;overflow:hidden;transition:max-height .3s ease}
-#toc_container.is-open .toc_list{max-height:800px}
+    #toc_container .toc_title {
+        cursor: pointer;
+        position: relative;
+    }
+    #toc_container .toc_title::after {
+        content: "\f078";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: 0;
+        transition: transform 0.25s;
+    }
+    #toc_container.is-open .toc_title::after {
+        transform: rotate(180deg);
+    }
+    #toc_container .toc_list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    #toc_container.is-open .toc_list {
+        max-height: 800px;
+    }
 </style>
 
 <script is:inline>
