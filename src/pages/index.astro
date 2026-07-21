@@ -136,22 +136,29 @@ const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com"
 let yoastSchema = await fetchYoastGraphFromHtml(wpDomain + "/")
 if (yoastSchema) {
 	yoastSchema = yoastSchema
-		.replaceAll("https://www.wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
-		.replaceAll("http://www.wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
-		.replaceAll("https://wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
-		.replaceAll("http://wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
+		.replaceAll(
+			"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+			"https://au.crazyvegas.com",
+		)
+		.replaceAll(
+			"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+			"https://au.crazyvegas.com",
+		)
+		.replaceAll(
+			"https://wordpress-1164434-6467266.cloudwaysapps.com",
+			"https://au.crazyvegas.com",
+		)
+		.replaceAll(
+			"http://wordpress-1164434-6467266.cloudwaysapps.com",
+			"https://au.crazyvegas.com",
+		)
 		// 🚨 Catch bare-domain leaks (e.g. inside email addresses) that have no protocol prefix
 		.replace(
 			/([a-zA-Z0-9._%+-]+)@wordpress-1164434-6467266\.cloudwaysapps\.com/g,
-			"contact@au.crazyvegas.com"
+			"contact@au.crazyvegas.com",
 		)
 		.replaceAll("[year]", currentYear)
 }
-
-
-
-
-
 
 // Hero Meta Data (Author)
 const authorObj = page?.author?.node
@@ -165,7 +172,7 @@ if (yoastSchema && authorName) {
 	const escapedName = authorName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 	const dupeNamePattern = new RegExp(
 		`("description"\\s*:\\s*"\\s*)${escapedName}\\s+${escapedName}\\b`,
-		"g"
+		"g",
 	)
 	yoastSchema = yoastSchema.replace(dupeNamePattern, `$1${authorName}`)
 }
@@ -226,7 +233,12 @@ if (authorObj) {
 			caption: authorName,
 		}
 	}
-	const sameAs = [authorTwitter, authorFacebook, authorInstagram, authorLinkedIn].filter(Boolean)
+	const sameAs = [
+		authorTwitter,
+		authorFacebook,
+		authorInstagram,
+		authorLinkedIn,
+	].filter(Boolean)
 	if (sameAs.length) person.sameAs = sameAs
 
 	personSchema = JSON.stringify(person)
@@ -276,7 +288,12 @@ if (yoastSchema && !yoastHasPerson) {
 			"@id": personId,
 			name: authorName,
 			url: authorObj?.url || `https://au.crazyvegas.com${authorLink}`,
-			sameAs: [authorTwitter, authorFacebook, authorInstagram, authorLinkedIn].filter(Boolean),
+			sameAs: [
+				authorTwitter,
+				authorFacebook,
+				authorInstagram,
+				authorLinkedIn,
+			].filter(Boolean),
 		}
 
 		if (authorObj?.description) person.description = authorObj.description
@@ -287,8 +304,12 @@ if (yoastSchema && !yoastHasPerson) {
 				"@id": `https://au.crazyvegas.com/#/schema/person/image/${authorSlug}-profile`,
 				url: authorObj.avatar.url,
 				contentUrl: authorObj.avatar.url,
-				...(authorObj.avatar.width && { width: authorObj.avatar.width }),
-				...(authorObj.avatar.height && { height: authorObj.avatar.height }),
+				...(authorObj.avatar.width && {
+					width: authorObj.avatar.width,
+				}),
+				...(authorObj.avatar.height && {
+					height: authorObj.avatar.height,
+				}),
 				caption: authorName,
 			}
 		}
@@ -366,9 +387,11 @@ function stripWp(input = "") {
 	description={yoastDesc}
 	schema={yoastSchema}
 >
-{!yoastHasPerson && personSchema && (
-	<script type="application/ld+json" set:html={personSchema} />
-)}
+	{
+		!yoastHasPerson && personSchema && (
+			<script type="application/ld+json" set:html={personSchema} />
+		)
+	}
 	<header class="home-hero new-split-hero">
 		<div class="home-hero-container">
 			<div class="hero-columns">
@@ -414,7 +437,17 @@ function stripWp(input = "") {
 						>
 							<p class="hero-lead-text">
 								<span class="cus-teaser">
-									Finding the best online casinos Australia has on offer comes down to one question: will it pay you out when you win? At Crazy Vegas, in our opinion, that's the test against which everything else gets measured. We check payout speed, bonus terms, game selection, payment options, and licensing before recommending anything. So if a casino can't pass the cashout test, it doesn't make the list, however good the welcome offer looks.
+									Finding the best online casinos Australia
+									has on offer comes down to one question:
+									will it pay you out when you win? At Crazy
+									Vegas, in our opinion, that's the test
+									against which everything else gets measured.
+									We check payout speed, bonus terms, game
+									selection, payment options, and licensing
+									before recommending anything. So if a casino
+									can't pass the cashout test, it doesn't make
+									the list, however good the welcome offer
+									looks.
 								</span>
 								<button
 									id="cus-toggle-1"
@@ -435,11 +468,20 @@ function stripWp(input = "") {
 								style="display: none;"
 							>
 								<p>
-									Not every Aussie casino is strong for the same reason, and in our experience, that's fine. Some of you want the strongest all-around value. Others want the deepest pokies and games library, the cleanest live casino, the fastest withdrawal, or something that works well on mobile. We cover the lot.
+									Not every Aussie casino is strong for the
+									same reason, and in our experience, that's
+									fine. Some of you want the strongest
+									all-around value. Others want the deepest
+									pokies and games library, the cleanest live
+									casino, the fastest withdrawal, or something
+									that works well on mobile. We cover the lot.
 								</p>
 
 								<p>
-									We're upfront about the trade-offs, too. No casino on this page is perfect. We'll tell you who each one suits and who it doesn't, before you deposit.
+									We're upfront about the trade-offs, too. No
+									casino on this page is perfect. We'll tell
+									you who each one suits and who it doesn't,
+									before you deposit.
 								</p>
 
 								<!-- (Your existing table code goes here, omitted for brevity but keep your table-responsive div intact) -->
@@ -554,10 +596,61 @@ function stripWp(input = "") {
 						</div>
 					</div>
 				</div>
-				<div class="author vcard" style="display: none;">
-					<a class="fn url" href={authorLink} rel="author"
-						>{authorName}</a
-					>
+				<div class="author-reviewer-bar">
+					<div class="author-block">
+						<img
+							src={authorAvatar}
+							alt={authorName}
+							class="author-avatar"
+							width="40"
+							height="40"
+							loading="lazy"
+						/>
+						<div class="author-text">
+							<span class="author-label">
+								By <a
+									class="fn url"
+									href={authorLink}
+									rel="author">{authorName}</a
+								>
+							</span>
+							<span class="author-updated"
+								>Updated: {formattedDate}</span
+							>
+						</div>
+					</div>
+
+					<div class="reviewer-block">
+						<img
+							src={reviewerAvatar}
+							alt={reviewerName}
+							class="reviewer-avatar"
+							width="40"
+							height="40"
+							loading="lazy"
+						/>
+						<div class="reviewer-text">
+							<span class="reviewer-label">
+								Reviewed by <a href={reviewerLink}
+									>{reviewerName}</a
+								>
+							</span>
+							<span class="reviewer-role">Casino Expert</span>
+						</div>
+						{
+							authorTwitter && (
+								<a
+									href={authorTwitter}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="reviewer-twitter"
+									aria-label={`${reviewerName} on Twitter`}
+								>
+									<i class="fa-brands fa-twitter" />
+								</a>
+							)
+						}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -849,6 +942,130 @@ function stripWp(input = "") {
 	.hero-disclaimer-box .disclaimer-cl {
 		max-width: 100%;
 	}
+
+	.author-reviewer-bar {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+		padding: 16px 20px;
+		background: rgba(15, 23, 42, 0.6);
+		border-radius: 10px;
+		flex-wrap: wrap;
+	}
+
+	.author-block,
+	.reviewer-block {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		position: relative;
+	}
+
+	.reviewer-block {
+		padding-left: 24px;
+		border-left: 1px solid rgba(255, 255, 255, 0.15);
+	}
+
+	.author-avatar,
+	.reviewer-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+	.author-text,
+	.reviewer-text {
+		display: flex;
+		flex-direction: column;
+		font-size: 14px;
+		color: #cbd5e1;
+	}
+
+	.author-label a,
+	.reviewer-label a {
+		color: #ffffff;
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.author-updated,
+	.reviewer-role {
+		font-size: 12px;
+		color: #94a3b8;
+	}
+
+	.reviewer-twitter {
+		margin-left: 8px;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: #1d9bf0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		text-decoration: none;
+		flex-shrink: 0;
+	}
+
+	@media (max-width: 600px) {
+		.author-reviewer-bar {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 16px;
+			padding: 16px;
+		}
+
+		.author-block,
+		.reviewer-block {
+			width: 100%;
+		}
+
+		.reviewer-block {
+			padding-left: 0;
+			padding-top: 16px;
+			border-left: none;
+			border-top: 1px solid rgba(255, 255, 255, 0.15);
+		}
+
+		.author-text,
+		.reviewer-text {
+			flex: 1;
+			min-width: 0;
+		}
+
+		.author-label,
+		.reviewer-label {
+			white-space: nowrap;
+		}
+
+		.reviewer-twitter {
+			margin-left: auto;
+		}
+	}
+
+	@media (max-width: 600px) {
+	.reviewer-block {
+		flex-wrap: wrap;
+	}
+
+	.author-label,
+	.reviewer-label {
+		white-space: normal;
+		word-break: break-word;
+	}
+
+	.reviewer-text {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.reviewer-twitter {
+		flex-shrink: 0;
+		margin-left: auto;
+	}
+}
 
 	/* Base Paragraph Styling */
 	.hero-disclaimer-box p {
@@ -4520,8 +4737,6 @@ function stripWp(input = "") {
 		margin: 0 !important;
 		display: block !important;
 	}
-
-	
 </style>
 
 <script>
