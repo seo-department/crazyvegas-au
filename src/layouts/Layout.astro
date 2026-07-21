@@ -66,7 +66,7 @@ function swapWpHost(input = "") {
     // 🚨 Catch bare-domain leaks (emails, etc.) with no protocol prefix
     out = out.replace(
         /([a-zA-Z0-9._%+-]+)@wordpress-1164434-6467266\.cloudwaysapps\.com/g,
-        `contact@${PUBLIC_HOST}`
+        `contact@${PUBLIC_HOST}`,
     )
     return out
 }
@@ -724,6 +724,11 @@ function timeAgo(dateString: string) {
         flex-shrink: 0;
     }
 
+    iframe {
+    width: 100% !important;
+    aspect-ratio: 16 / 9 !important;
+}
+
     /* Mobile H1 - hidden on desktop */
     .home-hero-title-us {
         display: none;
@@ -735,6 +740,11 @@ function timeAgo(dateString: string) {
     }
 
     @media (max-width: 768px) {
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
         .home-hero-title-us {
             display: block;
         }
@@ -1420,8 +1430,8 @@ function timeAgo(dateString: string) {
     }
 
     iframe {
-    width: 100%;
-}
+        width: 100%;
+    }
 
     img,
     figure.wp-block-image img,
