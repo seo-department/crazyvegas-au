@@ -136,21 +136,14 @@ const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com"
 let yoastSchema = await fetchYoastGraphFromHtml(wpDomain + "/")
 if (yoastSchema) {
 	yoastSchema = yoastSchema
-		.replaceAll(
-			"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"https://wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"http://wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
+		.replaceAll("https://www.wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
+		.replaceAll("http://www.wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
+		.replaceAll("https://wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
+		.replaceAll("http://wordpress-1164434-6467266.cloudwaysapps.com", "https://au.crazyvegas.com")
+		// 🚨 Catch bare-domain leaks (e.g. inside email addresses) that have no protocol prefix
+		.replace(
+			/([a-zA-Z0-9._%+-]+)@wordpress-1164434-6467266\.cloudwaysapps\.com/g,
+			"contact@au.crazyvegas.com"
 		)
 		.replaceAll("[year]", currentYear)
 }
@@ -167,6 +160,16 @@ const authorName = authorObj
 		? `${authorObj.firstName} ${authorObj.lastName}`
 		: authorObj.name
 	: "Editorial Team"
+
+if (yoastSchema && authorName) {
+	const escapedName = authorName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+	const dupeNamePattern = new RegExp(
+		`("description"\\s*:\\s*"\\s*)${escapedName}\\s+${escapedName}\\b`,
+		"g"
+	)
+	yoastSchema = yoastSchema.replace(dupeNamePattern, `$1${authorName}`)
+}
+
 let authorAvatar =
 	authorObj?.avatar?.url ||
 	`https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=1e293b&bold=true`
@@ -246,33 +249,34 @@ const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
 	day: "numeric",
 })
 
-// 🚨 Build a rich Person node from real GraphQL author data.
+// Determine once whether Yoast's own graph already has a Person node
+let yoastHasPerson = false
 if (yoastSchema) {
+	try {
+		const checkSchema = JSON.parse(yoastSchema)
+		const checkGraph = checkSchema["@graph"] || []
+		yoastHasPerson = checkGraph.some((n: any) => {
+			const t = n["@type"]
+			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
+		})
+	} catch (e) {
+		// leave as false on parse failure
+	}
+}
+
+// 🚨 Build a rich Person node from real GraphQL author data — only if Yoast doesn't already have one.
+if (yoastSchema && !yoastHasPerson) {
 	try {
 		const parsedSchema = JSON.parse(yoastSchema)
 		const graph = parsedSchema["@graph"] || []
 
-		const hasPerson = graph.some((n: any) => {
-			const t = n["@type"]
-			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
-		})
-
-		if (!hasPerson) {
-			// Always add a standalone (unreferenced) Person so it renders as its own row.
 		const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`
 		const person: any = {
 			"@type": "Person",
 			"@id": personId,
 			name: authorName,
-			url:
-				authorObj?.url ||
-				`https://au.crazyvegas.com${authorLink}`,
-			sameAs: [
-				authorTwitter,
-				authorFacebook,
-				authorInstagram,
-				authorLinkedIn,
-			].filter(Boolean),
+			url: authorObj?.url || `https://au.crazyvegas.com${authorLink}`,
+			sameAs: [authorTwitter, authorFacebook, authorInstagram, authorLinkedIn].filter(Boolean),
 		}
 
 		if (authorObj?.description) person.description = authorObj.description
@@ -290,10 +294,8 @@ if (yoastSchema) {
 		}
 
 		graph.push(person)
-		console.log("✅ Person node injected. Graph length now:", graph.length)
 		parsedSchema["@graph"] = graph
 		yoastSchema = JSON.stringify(parsedSchema)
-		}
 	} catch (e) {
 		// leave schema as-is on parse failure
 	}
@@ -320,6 +322,8 @@ const fixedContent = rawContent
 	.replace(/<p>\s*\[casino_toc\]\s*<\/p>/gi, "")
 	.replaceAll("[casino_toc]", "") // Failsafe in case it's not in a <p> tag
 	.replaceAll("[year]", currentYear)
+
+	.replace(/(https?:\/\/[^\/"]+)\/\1\//g, "$1/")
 
 	.replace(
 		/<a([^>]*?)href="\/play\/([^"]+?)(?:-casino)?"([^>]*?)class="cus-claim-btn"/g,
@@ -362,9 +366,9 @@ function stripWp(input = "") {
 	description={yoastDesc}
 	schema={yoastSchema}
 >
-{personSchema && (
-		<script type="application/ld+json" set:html={personSchema} />
-	)}
+{!yoastHasPerson && personSchema && (
+	<script type="application/ld+json" set:html={personSchema} />
+)}
 	<header class="home-hero new-split-hero">
 		<div class="home-hero-container">
 			<div class="hero-columns">
