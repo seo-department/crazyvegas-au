@@ -1,6 +1,38 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 
+// 🔒 SECURITY: Cloudways staging host + helper to strip it from any string,
+// turning a full staging URL into a relative path. Defined up top so it's
+// available everywhere below, including inside getStaticPaths.
+const WP_HOSTS = [
+  "https://wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://wordpress-1164434-6467266.cloudwaysapps.com",
+  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+  "//wordpress-1164434-6467266.cloudwaysapps.com",
+];
+
+// Strip the origin host from any string (HTML, JSON-LD, a single URL).
+// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
+function stripWp(input = "") {
+  let out = input;
+  for (const h of WP_HOSTS) out = out.split(h).join("");
+  return out;
+}
+
+// Full sanitizer for single media URLs (avatar/thumbnail): strips ANY
+// cloudwaysapps.com host (not just this one app ID) down to just the path.
+const CLOUDWAYS_DOMAIN_RE = /https?:\/\/[a-z0-9.-]+\.cloudwaysapps\.com/gi;
+function toRelativeMediaUrl(url: string | undefined | null): string {
+    if (!url) return url as any;
+    if (!/\.cloudwaysapps\.com/i.test(url)) return url;
+    try {
+        return new URL(url).pathname;
+    } catch {
+        return url.replace(CLOUDWAYS_DOMAIN_RE, "");
+    }
+}
+
 // 1. Fetch ALL posts and group them by Author, then use Astro's paginate()
 export async function getStaticPaths({ paginate }: { paginate: any }) {
     // SINGLE SOURCE OF TRUTH FOR DOMAIN
@@ -147,10 +179,16 @@ const manualAvatars: Record<string, string> = {
 };
 
 let authorAvatar =
-    manualAvatars[author] ||   // 1. manual override (real photo)
-    authorData.avatar ||       // 2. dynamic WP avatar
-    DEFAULT_AVATAR;            // 3. relevant default (real image)
-authorAvatar = authorAvatar.replace('https://au.crazyvegas.com', wpDomain).replace('https://casinous.com', wpDomain);
+    manualAvatars[author] ||   // 1. manual override (real photo, already relative)
+    authorData.avatar ||       // 2. dynamic WP avatar (may be a raw Cloudways URL)
+    DEFAULT_AVATAR;            // 3. relevant default (real image, already relative)
+
+// 🔒 FIX: was doing authorAvatar.replace('https://au.crazyvegas.com', wpDomain)
+// — that's backwards. It only fires if the string already contains the LIVE
+// domain (it never does for a fresh WP avatar URL), so the raw Cloudways host
+// sailed straight through into rendered <img src>. Now we strip the Cloudways
+// domain down to a relative path instead, so it never leaks.
+authorAvatar = toRelativeMediaUrl(authorAvatar);
 
 const formatSocial = (value: string | undefined, domain: string) => {
     if (!value) return null;
@@ -167,23 +205,6 @@ const stripHtml = (html: string) => {
     if (!html) return "";
     return html.replace(/<\/?[^>]+(>|$)/g, "");
 };
-
-const WP_HOSTS = [
-  "https://wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://wordpress-1164434-6467266.cloudwaysapps.com",
-  "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-  "//wordpress-1164434-6467266.cloudwaysapps.com",
-];
-
-// Strip the origin host from any string (HTML, JSON-LD, a single URL).
-// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
-function stripWp(input = "") {
-  let out = input;
-  for (const h of WP_HOSTS) out = out.split(h).join("");
-  return out;
-}
-
 ---
 
 <Layout 

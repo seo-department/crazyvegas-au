@@ -461,6 +461,21 @@ const robotsTag = `${noindex}, ${nofollow}`
 
 // 5. Author Data Extraction
 const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com"
+
+// 🔒 SECURITY: strip ANY Cloudways staging domain from a URL, turning it
+// into a relative path so the raw wordpress-xxxx-xxxx.cloudwaysapps.com
+// host can never leak into rendered HTML (avatars, thumbnails, etc).
+const CLOUDWAYS_DOMAIN_RE = /https?:\/\/[a-z0-9.-]+\.cloudwaysapps\.com/gi
+function toRelativeMediaUrl(url: string | undefined | null): string {
+    if (!url) return url as any
+    if (!/\.cloudwaysapps\.com/i.test(url)) return url
+    try {
+        return new URL(url).pathname
+    } catch {
+        return url.replace(CLOUDWAYS_DOMAIN_RE, "")
+    }
+}
+
 const authorNode = post.author?.node
 const authorName = authorNode
     ? authorNode.firstName && authorNode.lastName
@@ -487,17 +502,14 @@ const manualAvatars: Record<string, string> = {
 const DEFAULT_AVATAR = "/wp-content/uploads/2026/03/mason-j.png"
 
 let authorAvatar =
-    manualAvatars[authorSlug] || // 1. manual override (real photo)
-    authorNode?.avatar?.url || // 2. dynamic WP gravatar
-    DEFAULT_AVATAR // 3. relevant default (real image)
-authorAvatar = authorAvatar.replace(
-    /https?:\/\/(www\.)?casinous\.com/gi,
-    wpDomain,
-)
-authorAvatar = authorAvatar.replace(
-    /https?:\/\/(www\.)?au\.crazyvegas\.com/gi,
-    wpDomain,
-)
+    manualAvatars[authorSlug] || // 1. manual override (real photo, already relative)
+    authorNode?.avatar?.url || // 2. dynamic WP gravatar (may be a raw Cloudways URL)
+    DEFAULT_AVATAR // 3. relevant default (real image, already relative)
+// 🔒 FIX: was doing two backwards .replace(casinous.com/au.crazyvegas.com -> wpDomain)
+// calls — those only fire if the string already contains a LIVE domain, which
+// a fresh WP avatar URL never does, so the raw Cloudways host sailed straight
+// through into rendered <img src>. Now we strip the Cloudways domain instead.
+authorAvatar = toRelativeMediaUrl(authorAvatar)
 
 const authorLink = `/about-us/${authorSlug}/`
 
@@ -585,15 +597,10 @@ function getReviewerFor(author: string) {
 const assignedReviewer = getReviewerFor(authorName)
 const reviewerName = assignedReviewer.name
 
-let reviewerAvatar = assignedReviewer.avatar
-reviewerAvatar = reviewerAvatar.replace(
-    /https?:\/\/(www\.)?casinous\.com/gi,
-    wpDomain,
-)
-reviewerAvatar = reviewerAvatar.replace(
-    /https?:\/\/(www\.)?au\.crazyvegas\.com/gi,
-    wpDomain,
-)
+// 🔒 FIX: same backwards-replace bug as authorAvatar above. The pool entries
+// are already relative paths, so in practice this was harmless — but any
+// future entry pointing at a raw WP avatar URL would have leaked silently.
+let reviewerAvatar = toRelativeMediaUrl(assignedReviewer.avatar)
 
 const reviewerSlug = assignedReviewer.slug
 const reviewerLink = `/about-us/${reviewerSlug}/`
@@ -753,8 +760,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a
-                                            href={crumb.url}
+                                        
+                                         <a   href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -800,8 +807,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a
-                                            href={crumb.url}
+                                        
+                                          <a  href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -903,8 +910,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="review-hero-action">
                             <div class="action-price">Exclusive Bonus</div>
-                            <a
-                                href={claimUrl}
+                            
+                            <a    href={claimUrl}
                                 class="btn-claim-massive"
                                 target={claimIsExternal ? "_blank" : undefined}
                                 rel={
@@ -924,8 +931,8 @@ fixedContent = stripWp(fixedContent)
 
                     <div class="review-hero-author">
                         <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            <a
-                                href={authorLink}
+                            
+                             <a   href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -939,8 +946,8 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    <a
-                                        href={authorLink}
+                                    
+                                    <a    href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
@@ -955,8 +962,8 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            <a
-                                href={reviewerLink}
+                            
+                             <a   href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -970,8 +977,8 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    <a
-                                        href={reviewerLink}
+                                    
+                                     <a   href={reviewerLink}
                                         class="author-text-link"
                                     >
                                         <strong>{reviewerName}</strong>
@@ -984,8 +991,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                <a
-                                    href={twitterLink}
+                                
+                                 <a   href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -995,8 +1002,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                <a
-                                    href={facebookLink}
+                                
+                                <a    href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1006,8 +1013,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                <a
-                                    href={instagramLink}
+                                
+                                  <a  href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1017,8 +1024,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                <a
-                                    href={linkedinLink}
+                                
+                                 <a   href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1048,8 +1055,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a
-                                            href={crumb.url}
+                                        
+                                        <a    href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -1082,8 +1089,8 @@ fixedContent = stripWp(fixedContent)
 
                     <div class="post-meta-bar">
                         <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            <a
-                                href={authorLink}
+                            
+                             <a   href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -1097,8 +1104,8 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    <a
-                                        href={authorLink}
+                                    
+                                     <a   href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
@@ -1112,8 +1119,8 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            <a
-                                href={reviewerLink}
+                            
+                              <a  href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -1127,8 +1134,8 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    <a
-                                        href={reviewerLink}
+                                    
+                                     <a   href={reviewerLink}
                                         class="author-text-link"
                                     >
                                         <strong>{reviewerName}</strong>
@@ -1140,8 +1147,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                <a
-                                    href={twitterLink}
+                                
+                                 <a   href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -1151,8 +1158,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                <a
-                                    href={facebookLink}
+                                
+                                 <a   href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1162,8 +1169,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                <a
-                                    href={instagramLink}
+                                
+                                  <a  href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1173,8 +1180,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                <a
-                                    href={linkedinLink}
+                                
+                                <a    href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1219,8 +1226,8 @@ fixedContent = stripWp(fixedContent)
                             class="cus-author-item"
                             style="display: flex; gap: 1rem; align-items: center;"
                         >
-                            <a
-                                href={reviewerLink}
+                            
+                              <a  href={reviewerLink}
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
                                 <img
@@ -1235,8 +1242,8 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span style="display: block; font-size: 0.9rem; color: #475569;">
                                     Reviewed By{" "}
-                                    <a
-                                        href={reviewerLink}
+                                    
+                                      <a  href={reviewerLink}
                                         style="color: #0f172a; text-decoration: none;"
                                     >
                                         <strong>{reviewerName}</strong>
@@ -1316,12 +1323,15 @@ fixedContent = stripWp(fixedContent)
                                     let recAuthorAvatar =
                                         authorObj?.avatar?.url ||
                                         `https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+                                    // 🔒 FIX: this had NO Cloudways sanitization at all —
+                                    // a raw staging avatar URL from WP would render as-is.
+                                    recAuthorAvatar = toRelativeMediaUrl(recAuthorAvatar)
 
                                     return (
                                         <div class="breaking-story-card">
                                             <div class="breaking-story-image">
-                                                <a
-                                                    href={storyLink}
+                                                
+                                                <a    href={storyLink}
                                                     class="thumbnail-link"
                                                 >
                                                     <img
@@ -1346,8 +1356,8 @@ fixedContent = stripWp(fixedContent)
                                                         {storyDate}
                                                     </span>
                                                 </div>
-                                                <a
-                                                    href={storyLink}
+                                                
+                                                <a    href={storyLink}
                                                     class="card-title-link"
                                                 >
                                                     <h3
@@ -1416,6 +1426,8 @@ fixedContent = stripWp(fixedContent)
                                     let blogAuthorAvatar =
                                         authorObj?.avatar?.url ||
                                         `https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+                                    // 🔒 FIX: same missing sanitization as recAuthorAvatar above.
+                                    blogAuthorAvatar = toRelativeMediaUrl(blogAuthorAvatar)
 
                                     return (
                                         <div class="blog-post-card">
@@ -1436,8 +1448,8 @@ fixedContent = stripWp(fixedContent)
                                                 </a>
                                             </div>
                                             <div class="blog-post-content">
-                                                <a
-                                                    href={blogLink}
+                                                
+                                                  <a  href={blogLink}
                                                     class="blog-title-link"
                                                 >
                                                     <h3
@@ -1460,8 +1472,8 @@ fixedContent = stripWp(fixedContent)
                                                             {blogDate}
                                                         </span>
                                                     </div>
-                                                    <a
-                                                        href={blogLink}
+                                                    
+                                                       <a href={blogLink}
                                                         class="blog-read-more"
                                                     >
                                                         Read{" "}
