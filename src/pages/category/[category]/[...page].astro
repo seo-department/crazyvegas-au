@@ -195,6 +195,21 @@ function stripWp(input = "") {
   return out;
 }
 
+// 🔒 SECURITY: strip ANY Cloudways staging domain from a single media URL,
+// turning it into a relative path. Used for the post-card featured image
+// below, which was previously running a backwards .replace() that only
+// matched the LIVE domain (never present on a fresh WP image URL), letting
+// the raw Cloudways host leak straight into rendered <img src>.
+const CLOUDWAYS_DOMAIN_RE = /https?:\/\/[a-z0-9.-]+\.cloudwaysapps\.com/gi;
+function toRelativeMediaUrl(url: string | undefined | null): string {
+    if (!url) return url as any;
+    if (!/\.cloudwaysapps\.com/i.test(url)) return url;
+    try {
+        return new URL(url).pathname;
+    } catch {
+        return url.replace(CLOUDWAYS_DOMAIN_RE, "");
+    }
+}
 ---
 
 <Layout 
@@ -232,7 +247,11 @@ function stripWp(input = "") {
                     const postLink = `/${cleanSlug}/`;
                     
                     let featImage = post.featuredImage?.node?.sourceUrl || 'https://via.placeholder.com/600x400?text=Casino';
-                    featImage = featImage.replace('https://au.crazyvegas.com', wpDomain).replace('https://casinous.com', wpDomain);
+                    // 🔒 FIX: was featImage.replace('https://au.crazyvegas.com', wpDomain)
+                    // .replace('https://casinous.com', wpDomain) — backwards, never matched
+                    // anything since the WP image URL is already the raw Cloudways host.
+                    // Now strip the Cloudways domain down to a relative path instead.
+                    featImage = toRelativeMediaUrl(featImage);
                     
                     const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
                     const excerpt = stripHtml(post.excerpt).substring(0, 120) + '...';
