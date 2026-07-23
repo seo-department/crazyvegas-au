@@ -34,7 +34,7 @@ export async function getStaticPaths() {
                             nodes {
                                 uri title content date modified
                                 featuredImage { node { sourceUrl altText } }
-                                author { node { name firstName lastName uri url avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
+                                author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
                                     title metaDesc focuskw canonical metaRobotsNoindex metaRobotsNofollow schema { raw } 
                                     breadcrumbs {
@@ -105,7 +105,7 @@ export async function getStaticPaths() {
                             nodes {
                                 uri title content date modified
                                 featuredImage { node { sourceUrl altText } }
-                                author { node { name firstName lastName uri url avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
+                                author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
                                     title metaDesc focuskw canonical metaRobotsNoindex metaRobotsNofollow schema { raw } 
                                     breadcrumbs {
@@ -180,7 +180,7 @@ export async function getStaticPaths() {
                                 ratingBonuses
                                 ratingCustomer
                                 featuredImage { node { sourceUrl altText } }
-                                author { node { name firstName lastName uri url avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
+                                author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
                                     title metaDesc focuskw canonical metaRobotsNoindex metaRobotsNofollow schema { raw } 
                                     breadcrumbs { text url }
@@ -243,7 +243,7 @@ export async function getStaticPaths() {
                             nodes {
                                 uri title content excerpt date modified
                                 featuredImage { node { sourceUrl altText } }
-                                author { node { name firstName lastName uri url avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
+                                author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
                                     title metaDesc focuskw canonical metaRobotsNoindex metaRobotsNofollow schema { raw } 
                                     breadcrumbs {
@@ -483,6 +483,28 @@ const authorName = authorNode
         : authorNode.name
     : "Editorial Team"
 
+// Strip HTML tags from WP bio text — descriptions sometimes contain markup
+// like <strong>Name</strong>, which would otherwise render as literal text
+// in the plain-text tooltip instead of being interpreted as formatting.
+const stripHtmlTags = (html: string) => {
+    if (!html) return ""
+    return html.replace(/<\/?[^>]+(>|$)/g, "").trim()
+}
+
+// Bold every occurrence of `name` inside `text`. We build this HTML
+// ourselves from already-tag-stripped text, so it's safe to render with
+// set:html — nothing from raw WP content passes through unescaped.
+const boldName = (text: string, name: string) => {
+    if (!text || !name) return text
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    return text.replace(new RegExp(`(${escapedName})`, "g"), "<strong>$1</strong>")
+}
+
+// 🚨 NEW: Hover-tooltip bio text for the author name link
+const authorBio = authorNode?.description
+    ? boldName(stripHtmlTags(stripWp(authorNode.description)), authorName)
+    : `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
+
 // Build the author slug once — used for both the avatar lookup and the profile link
 const authorSlug = authorName
     .toLowerCase()
@@ -541,21 +563,25 @@ const REVIEWER_POOL = [
         name: "Caleb Daly",
         slug: "caleb-daly",
         avatar: "/wp-content/uploads/2026/03/caleb-daly.png",
+        bio: "Caleb Daly is a dynamic iGaming professional and investigative journalist with a unique blend of operational casino experience and media-savvy storytelling. Formerly a casino manager, he brings an insider's perspective to every article.",
     },
     {
         name: "Daphne Hutchens",
         slug: "daphne-hutchens",
         avatar: "/wp-content/uploads/2026/03/daphne-hutchens.png",
+        bio: "Daphne Hutchens is a casino industry analyst specializing in licensing, payout speed, and responsible gambling standards, with a sharp eye for the details players actually care about.",
     },
     {
         name: "Kayla McBrien",
         slug: "kayla-mcbrien",
         avatar: "/wp-content/uploads/2026/03/kayla-mcbrien.png",
+        bio: "Kayla McBrien covers slots, live dealer games, and mobile casino experiences, testing every title and platform herself before it's recommended to readers.",
     },
     {
         name: "Mason Heaton",
         slug: "mason-heaton",
         avatar: DEFAULT_AVATAR, // Mason's own default photo
+        bio: "Mason Heaton is a seasoned iGaming specialist and digital publishing strategist with more than a decade of hands-on experience covering online casinos, gambling legislation, and the ever-evolving Australian betting landscape.",
     },
 ]
 
@@ -601,6 +627,9 @@ const reviewerName = assignedReviewer.name
 // are already relative paths, so in practice this was harmless — but any
 // future entry pointing at a raw WP avatar URL would have leaked silently.
 let reviewerAvatar = toRelativeMediaUrl(assignedReviewer.avatar)
+
+// 🚨 NEW: Hover-tooltip bio text for the reviewer name link
+const reviewerBio = boldName(assignedReviewer.bio, assignedReviewer.name)
 
 const reviewerSlug = assignedReviewer.slug
 const reviewerLink = `/about-us/${reviewerSlug}/`
@@ -760,8 +789,7 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        
-                                         <a   href={crumb.url}
+                                        <a href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -807,8 +835,7 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        
-                                          <a  href={crumb.url}
+                                        <a href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -910,8 +937,7 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="review-hero-action">
                             <div class="action-price">Exclusive Bonus</div>
-                            
-                            <a    href={claimUrl}
+                            <a href={claimUrl}
                                 class="btn-claim-massive"
                                 target={claimIsExternal ? "_blank" : undefined}
                                 rel={
@@ -931,8 +957,7 @@ fixedContent = stripWp(fixedContent)
 
                     <div class="review-hero-author">
                         <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            
-                             <a   href={authorLink}
+                            <a href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -946,12 +971,14 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    
-                                    <a    href={authorLink}
+                                    <a href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
-                                        <strong itemprop="name">{authorName}</strong>
+                                        <span class="author-tooltip-wrap">
+                                            <strong itemprop="name">{authorName}</strong>
+                                            <span class="author-tooltip-popup" set:html={authorBio} />
+                                        </span>
                                     </a>
                                 </span>
 
@@ -962,8 +989,7 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            
-                             <a   href={reviewerLink}
+                            <a href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -977,11 +1003,13 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    
-                                     <a   href={reviewerLink}
+                                    <a href={reviewerLink}
                                         class="author-text-link"
                                     >
-                                        <strong>{reviewerName}</strong>
+                                        <span class="author-tooltip-wrap">
+                                            <strong>{reviewerName}</strong>
+                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                        </span>
                                     </a>
                                 </span>
 
@@ -991,8 +1019,7 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                
-                                 <a   href={twitterLink}
+                                <a href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -1002,8 +1029,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                
-                                <a    href={facebookLink}
+                                <a href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1013,8 +1039,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                
-                                  <a  href={instagramLink}
+                                <a href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1024,8 +1049,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                
-                                 <a   href={linkedinLink}
+                                <a href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1055,8 +1079,7 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        
-                                        <a    href={crumb.url}
+                                        <a href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -1089,8 +1112,7 @@ fixedContent = stripWp(fixedContent)
 
                     <div class="post-meta-bar">
                         <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            
-                             <a   href={authorLink}
+                            <a href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -1104,12 +1126,14 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    
-                                     <a   href={authorLink}
+                                    <a href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
-                                        <strong itemprop="name">{authorName}</strong>
+                                        <span class="author-tooltip-wrap">
+                                            <strong itemprop="name">{authorName}</strong>
+                                            <span class="author-tooltip-popup" set:html={authorBio} />
+                                        </span>
                                     </a>
                                 </span>
                                 <span class="meta-date">
@@ -1119,8 +1143,7 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            
-                              <a  href={reviewerLink}
+                            <a href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -1134,11 +1157,13 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    
-                                     <a   href={reviewerLink}
+                                    <a href={reviewerLink}
                                         class="author-text-link"
                                     >
-                                        <strong>{reviewerName}</strong>
+                                        <span class="author-tooltip-wrap">
+                                            <strong>{reviewerName}</strong>
+                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                        </span>
                                     </a>
                                 </span>
                                 <span class="meta-date">Casino Expert</span>
@@ -1147,8 +1172,7 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                
-                                 <a   href={twitterLink}
+                                <a href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -1158,8 +1182,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                
-                                 <a   href={facebookLink}
+                                <a href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1169,8 +1192,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                
-                                  <a  href={instagramLink}
+                                <a href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1180,8 +1202,7 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                
-                                <a    href={linkedinLink}
+                                <a href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1226,8 +1247,7 @@ fixedContent = stripWp(fixedContent)
                             class="cus-author-item"
                             style="display: flex; gap: 1rem; align-items: center;"
                         >
-                            
-                              <a  href={reviewerLink}
+                            <a href={reviewerLink}
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
                                 <img
@@ -1242,11 +1262,13 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span style="display: block; font-size: 0.9rem; color: #475569;">
                                     Reviewed By{" "}
-                                    
-                                      <a  href={reviewerLink}
+                                    <a href={reviewerLink}
                                         style="color: #0f172a; text-decoration: none;"
                                     >
-                                        <strong>{reviewerName}</strong>
+                                        <span class="author-tooltip-wrap">
+                                            <strong>{reviewerName}</strong>
+                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                        </span>
                                     </a>
                                 </span>
                                 <span style="display: block; font-size: 0.8rem; color: #64748b;">
@@ -1330,8 +1352,7 @@ fixedContent = stripWp(fixedContent)
                                     return (
                                         <div class="breaking-story-card">
                                             <div class="breaking-story-image">
-                                                
-                                                <a    href={storyLink}
+                                                <a href={storyLink}
                                                     class="thumbnail-link"
                                                 >
                                                     <img
@@ -1356,8 +1377,7 @@ fixedContent = stripWp(fixedContent)
                                                         {storyDate}
                                                     </span>
                                                 </div>
-                                                
-                                                <a    href={storyLink}
+                                                <a href={storyLink}
                                                     class="card-title-link"
                                                 >
                                                     <h3
@@ -1448,8 +1468,7 @@ fixedContent = stripWp(fixedContent)
                                                 </a>
                                             </div>
                                             <div class="blog-post-content">
-                                                
-                                                  <a  href={blogLink}
+                                                <a href={blogLink}
                                                     class="blog-title-link"
                                                 >
                                                     <h3
@@ -1472,8 +1491,7 @@ fixedContent = stripWp(fixedContent)
                                                             {blogDate}
                                                         </span>
                                                     </div>
-                                                    
-                                                       <a href={blogLink}
+                                                    <a href={blogLink}
                                                         class="blog-read-more"
                                                     >
                                                         Read{" "}
@@ -2193,6 +2211,75 @@ fixedContent = stripWp(fixedContent)
         color: #2563eb !important;
         padding-left: 5px;
     }
+
+    /* =========================================
+   AUTHOR/REVIEWER NAME HOVER TOOLTIP
+========================================= */
+.author-tooltip-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.author-tooltip-popup {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: max-content;
+    max-width: 260px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.25),
+        0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+    z-index: 50;
+}
+
+.author-tooltip-popup strong {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.author-tooltip-popup::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.author-tooltip-wrap:hover .author-tooltip-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 600px) {
+    .author-tooltip-popup {
+        max-width: 220px;
+        left: 0;
+        transform: translateY(6px);
+    }
+    .author-tooltip-wrap:hover .author-tooltip-popup {
+        transform: translateY(0);
+    }
+}
 
     /* =========================================
        POST HERO SECTION

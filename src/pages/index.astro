@@ -1,6 +1,25 @@
 ---
 import Layout from "../layouts/Layout.astro"
 
+// 🔒 Moved to the top so it's available everywhere below (authorBio uses it
+// early in the file). Previously this was declared near the bottom, which
+// caused "Cannot access 'WP_HOSTS' before initialization".
+const WP_HOSTS = [
+	"https://wordpress-1164434-6467266.cloudwaysapps.com",
+	"http://wordpress-1164434-6467266.cloudwaysapps.com",
+	"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+	"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+	"//wordpress-1164434-6467266.cloudwaysapps.com",
+]
+
+// Strip the origin host from any string (HTML, JSON-LD, a single URL).
+// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
+function stripWp(input = "") {
+	let out = input
+	for (const h of WP_HOSTS) out = out.split(h).join("")
+	return out
+}
+
 // 1. Fetch BOTH the Homepage content AND the 8 recent posts in a single GraphQL query
 const wpUrl = "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
 
@@ -167,6 +186,24 @@ const authorName = authorObj
 		? `${authorObj.firstName} ${authorObj.lastName}`
 		: authorObj.name
 	: "Editorial Team"
+
+// Strip HTML tags from WP bio text — descriptions sometimes contain markup
+// like <strong>Name</strong>, which would otherwise render as literal text
+// in the plain-text tooltip instead of being interpreted as formatting.
+const stripHtmlTags = (html: string) => {
+	if (!html) return ""
+	return html.replace(/<\/?[^>]+(>|$)/g, "").trim()
+}
+
+// 🚨 NEW: Hover-tooltip bio text for author & reviewer name links
+const authorBio = authorObj?.description
+	? stripHtmlTags(stripWp(authorObj.description))
+	: `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
+
+// Caleb Daly is currently hardcoded as the site-wide reviewer, so his bio
+// is hardcoded too — swap this out if/when reviewer data comes from WP.
+const reviewerBio =
+	"Caleb Daly is a dynamic iGaming professional and investigative journalist with a unique blend of operational casino experience and media-savvy storytelling. Formerly a casino manager, he brings an insider’s perspective to every article - from regulatory deep-dives to review breakdowns and news features. With his dual background in casino operations and journalism, Caleb ensures readers receive accurate, comprehensive, and trustworthy information about the evolving online gambling landscape in Australia."
 
 if (yoastSchema && authorName) {
 	const escapedName = authorName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
@@ -363,22 +400,6 @@ const fixedContent = rawContent
 const recentPosts = result.data?.posts?.nodes || []
 const breakingStories = recentPosts.slice(0, 3)
 const blogPosts = recentPosts.slice(3, 7)
-
-const WP_HOSTS = [
-	"https://wordpress-1164434-6467266.cloudwaysapps.com",
-	"http://wordpress-1164434-6467266.cloudwaysapps.com",
-	"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-	"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-	"//wordpress-1164434-6467266.cloudwaysapps.com",
-]
-
-// Strip the origin host from any string (HTML, JSON-LD, a single URL).
-// Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
-function stripWp(input = "") {
-	let out = input
-	for (const h of WP_HOSTS) out = out.split(h).join("")
-	return out
-}
 ---
 
 <Layout
@@ -620,11 +641,17 @@ function stripWp(input = "") {
 						/>
 						<div class="author-text">
 							<span class="author-label">
-								By <a
-									class="fn url"
-									href={authorLink}
-									rel="author">{authorName}</a
-								>
+								By{" "}
+								<span class="author-tooltip-wrap">
+									<a
+										class="fn url"
+										href={authorLink}
+										rel="author">{authorName}</a
+									>
+									<span class="author-tooltip-popup"
+										>{authorBio}</span
+									>
+								</span>
 							</span>
 							<span class="author-updated"
 								>Updated: {formattedDate}</span
@@ -643,9 +670,13 @@ function stripWp(input = "") {
 						/>
 						<div class="reviewer-text">
 							<span class="reviewer-label">
-								Reviewed by <a href={reviewerLink}
-									>{reviewerName}</a
-								>
+								Reviewed by{" "}
+								<span class="author-tooltip-wrap">
+									<a href={reviewerLink}>{reviewerName}</a>
+									<span class="author-tooltip-popup"
+										>{reviewerBio}</span
+									>
+								</span>
 							</span>
 							<span class="reviewer-role">Casino Expert</span>
 						</div>
@@ -965,6 +996,71 @@ function stripWp(input = "") {
 		flex-wrap: wrap;
 	}
 
+
+	/* =========================================
+   AUTHOR/REVIEWER NAME HOVER TOOLTIP
+========================================= */
+.author-tooltip-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.author-tooltip-popup {
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    width: max-content;
+    max-width: 260px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 10px;
+    box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.25),
+        0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+    z-index: 50;
+}
+
+.author-tooltip-popup::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.author-tooltip-wrap:hover .author-tooltip-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 600px) {
+    .author-tooltip-popup {
+        max-width: 220px;
+        left: 0;
+        transform: translateY(6px);
+    }
+    .author-tooltip-wrap:hover .author-tooltip-popup {
+        transform: translateY(0);
+    }
+}
+
 	.author-block,
 	.reviewer-block {
 		display: flex;
@@ -1022,6 +1118,15 @@ function stripWp(input = "") {
 	}
 
 	@media (max-width: 600px) {
+		h1.home-hero-title-us {
+			font-size: 20px;
+			font-weight: 500;
+			line-height: 1.3;
+			text-align: left;
+			margin: 0;
+			word-break: normal;
+			text-wrap: balance;
+		}
 		.author-reviewer-bar {
 			flex-direction: column;
 			align-items: stretch;
@@ -2387,7 +2492,7 @@ function stripWp(input = "") {
 		background: transparent;
 		border: none;
 		padding: 0;
-		margin-bottom: 2.5rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.hero-lead-text {
