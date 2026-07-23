@@ -269,6 +269,9 @@ const stripHtml = (html: string) => {
                     const postLink = `/${cleanSlug}/`;
                     
                     let featImage = post.featuredImage?.node?.sourceUrl || 'https://via.placeholder.com/600x400?text=Casino';
+                    // 🔒 FIX: this had NO sanitization at all — the raw Cloudways
+                    // featured-image URL was rendering straight into <img src>.
+                    featImage = toRelativeMediaUrl(featImage);
                     
                     const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
                     const excerpt = stripHtml(post.excerpt).substring(0, 120) + '...';
