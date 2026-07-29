@@ -5,82 +5,81 @@ import Layout from "../layouts/Layout.astro"
 // early in the file). Previously this was declared near the bottom, which
 // caused "Cannot access 'WP_HOSTS' before initialization".
 const WP_HOSTS = [
-	"https://wordpress-1164434-6467266.cloudwaysapps.com",
-	"http://wordpress-1164434-6467266.cloudwaysapps.com",
-	"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-	"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-	"//wordpress-1164434-6467266.cloudwaysapps.com",
+    "https://wordpress-1164434-6467266.cloudwaysapps.com",
+    "http://wordpress-1164434-6467266.cloudwaysapps.com",
+    "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+    "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+    "//wordpress-1164434-6467266.cloudwaysapps.com",
 ]
 
 // Strip the origin host from any string (HTML, JSON-LD, a single URL).
 // Leaves a root-relative path: https://wp-host/wp-content/x.png -> /wp-content/x.png
 function stripWp(input = "") {
-	let out = input
-	for (const h of WP_HOSTS) out = out.split(h).join("")
-	return out
+    let out = input
+    for (const h of WP_HOSTS) out = out.split(h).join("")
+    return out
 }
 
 // 1. Fetch BOTH the Homepage content AND the 8 recent posts in a single GraphQL query
 const wpUrl = "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
 
 // Fetch the full Yoast @graph by extracting it from the rendered WP HTML.
-
 async function fetchYoastGraphFromHtml(pageUrl: string) {
-	try {
-		const res = await fetch(pageUrl, {
-			headers: { "User-Agent": "Mozilla/5.0 AstroBuild" },
-		})
-		if (!res.ok) return undefined
-		const html = await res.text()
+    try {
+        const res = await fetch(pageUrl, {
+            headers: { "User-Agent": "Mozilla/5.0 AstroBuild" },
+        })
+        if (!res.ok) return undefined
+        const html = await res.text()
 
-		const re =
-			/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
-		const nodes: any[] = []
-		let m: RegExpExecArray | null
+        const re =
+            /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+        const nodes: any[] = []
+        let m: RegExpExecArray | null
 
-		while ((m = re.exec(html)) !== null) {
-			try {
-				const parsed = JSON.parse(m[1].trim())
-				if (parsed["@graph"] && Array.isArray(parsed["@graph"])) {
-					// Yoast-style: flatten the @graph array into our combined nodes
-					nodes.push(...parsed["@graph"])
-				} else if (Array.isArray(parsed)) {
-					nodes.push(...parsed)
-				} else {
-					nodes.push(parsed)
-				}
-			} catch (err) {
-				// Skip malformed blocks silently
-			}
-		}
+        while ((m = re.exec(html)) !== null) {
+            try {
+                const parsed = JSON.parse(m[1].trim())
+                if (parsed["@graph"] && Array.isArray(parsed["@graph"])) {
+                    // Yoast-style: flatten the @graph array into our combined nodes
+                    nodes.push(...parsed["@graph"])
+                } else if (Array.isArray(parsed)) {
+                    nodes.push(...parsed)
+                } else {
+                    nodes.push(parsed)
+                }
+            } catch (err) {
+                // Skip malformed blocks silently
+            }
+        }
 
-		if (!nodes.length) return undefined
+        if (!nodes.length) return undefined
 
-		// De-duplicate by @id (Yoast entries all have @id anchors)
-		const seen = new Set<string>()
-		const deduped = nodes.filter(n => {
-			const id = n["@id"]
-			if (!id) return true
-			if (seen.has(id)) return false
-			seen.add(id)
-			return true
-		})
+        // De-duplicate by @id (Yoast entries all have @id anchors)
+        const seen = new Set<string>()
+        const deduped = nodes.filter(n => {
+            const id = n["@id"]
+            if (!id) return true
+            if (seen.has(id)) return false
+            seen.add(id)
+            return true
+        })
 
-		return JSON.stringify({
-			"@context": "https://schema.org",
-			"@graph": deduped,
-		})
-	} catch (e: any) {
-		console.error("❌ Failed to fetch Yoast schema:", e.message)
-		return undefined
-	}
+        return JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": deduped,
+        })
+    } catch (e: any) {
+        console.error("❌ Failed to fetch Yoast schema:", e.message)
+        return undefined
+    }
 }
 
 const response = await fetch(wpUrl, {
-	method: "POST",
-	headers: { "Content-Type": "application/json" },
-	body: JSON.stringify({
-		query: `
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        query: `
             query GetHomeAndPosts {
                 nodeByUri(uri: "/") {
                     ... on Page {
@@ -129,22 +128,22 @@ const response = await fetch(wpUrl, {
                 }
             }
         `,
-	}),
+    }),
 })
 
 const result = await response.json()
 
 if (result.errors) {
-	console.error("❌ GRAPHQL ERROR:", JSON.stringify(result.errors, null, 2))
-	throw new Error("WordPress rejected the GraphQL query.")
+    console.error("❌ GRAPHQL ERROR:", JSON.stringify(result.errors, null, 2))
+    throw new Error("WordPress rejected the GraphQL query.")
 }
 
 // --- 2. PROCESS HOMEPAGE DATA ---
 const page = result.data?.nodeByUri
 const currentYear = new Date().getFullYear().toString()
 const yoastTitle = (page?.seo?.title || page?.title || "Casino US").replaceAll(
-	"[year]",
-	currentYear,
+    "[year]",
+    currentYear,
 )
 const yoastDesc = (page?.seo?.metaDesc || "").replaceAll("[year]", currentYear)
 
@@ -154,131 +153,129 @@ const wpDomain = "https://wordpress-1164434-6467266.cloudwaysapps.com"
 // Fetch the full Yoast @graph directly from the rendered WP HTML (bypass GraphQL).
 let yoastSchema = await fetchYoastGraphFromHtml(wpDomain + "/")
 if (yoastSchema) {
-	yoastSchema = yoastSchema
-		.replaceAll(
-			"https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"https://wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		.replaceAll(
-			"http://wordpress-1164434-6467266.cloudwaysapps.com",
-			"https://au.crazyvegas.com",
-		)
-		// 🚨 Catch bare-domain leaks (e.g. inside email addresses) that have no protocol prefix
-		.replace(
-			/([a-zA-Z0-9._%+-]+)@wordpress-1164434-6467266\.cloudwaysapps\.com/g,
-			"contact@au.crazyvegas.com",
-		)
-		.replaceAll("[year]", currentYear)
+    yoastSchema = yoastSchema
+        .replaceAll(
+            "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+            "https://au.crazyvegas.com",
+        )
+        .replaceAll(
+            "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+            "https://au.crazyvegas.com",
+        )
+        .replaceAll(
+            "https://wordpress-1164434-6467266.cloudwaysapps.com",
+            "https://au.crazyvegas.com",
+        )
+        .replaceAll(
+            "http://wordpress-1164434-6467266.cloudwaysapps.com",
+            "https://au.crazyvegas.com",
+        )
+        // 🚨 Catch bare-domain leaks (e.g. inside email addresses) that have no protocol prefix
+        .replace(
+            /([a-zA-Z0-9._%+-]+)@wordpress-1164434-6467266\.cloudwaysapps\.com/g,
+            "contact@au.crazyvegas.com",
+        )
+        .replaceAll("[year]", currentYear)
 }
 
 // Hero Meta Data (Author)
 const authorObj = page?.author?.node
 const authorName = authorObj
-	? authorObj.firstName && authorObj.lastName
-		? `${authorObj.firstName} ${authorObj.lastName}`
-		: authorObj.name
-	: "Editorial Team"
+    ? authorObj.firstName && authorObj.lastName
+        ? `${authorObj.firstName} ${authorObj.lastName}`
+        : authorObj.name
+    : "Editorial Team"
 
 // Strip HTML tags from WP bio text — descriptions sometimes contain markup
 // like <strong>Name</strong>, which would otherwise render as literal text
 // in the plain-text tooltip instead of being interpreted as formatting.
 const stripHtmlTags = (html: string) => {
-	if (!html) return ""
-	return html.replace(/<\/?[^>]+(>|$)/g, "").trim()
+    if (!html) return ""
+    return html.replace(/<\/?[^>]+(>|$)/g, "").trim()
 }
 
 // 🚨 NEW: Hover-tooltip bio text for author & reviewer name links
 const authorBio = authorObj?.description
-	? stripHtmlTags(stripWp(authorObj.description))
-	: `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
+    ? stripHtmlTags(stripWp(authorObj.description))
+    : `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
 
 // Caleb Daly is currently hardcoded as the site-wide reviewer, so his bio
 // is hardcoded too — swap this out if/when reviewer data comes from WP.
 const reviewerBio =
-	"Caleb Daly is a dynamic iGaming professional and investigative journalist with a unique blend of operational casino experience and media-savvy storytelling. Formerly a casino manager, he brings an insider’s perspective to every article - from regulatory deep-dives to review breakdowns and news features. With his dual background in casino operations and journalism, Caleb ensures readers receive accurate, comprehensive, and trustworthy information about the evolving online gambling landscape in Australia."
+    "Caleb Daly is a dynamic iGaming professional and investigative journalist with a unique blend of operational casino experience and media-savvy storytelling. Formerly a casino manager, he brings an insider’s perspective to every article - from regulatory deep-dives to review breakdowns and news features. With his dual background in casino operations and journalism, Caleb ensures readers receive accurate, comprehensive, and trustworthy information about the evolving online gambling landscape in Australia."
 
 if (yoastSchema && authorName) {
-	const escapedName = authorName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-	const dupeNamePattern = new RegExp(
-		`("description"\\s*:\\s*"\\s*)${escapedName}\\s+${escapedName}\\b`,
-		"g",
-	)
-	yoastSchema = yoastSchema.replace(dupeNamePattern, `$1${authorName}`)
+    const escapedName = authorName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const dupeNamePattern = new RegExp(
+        `("description"\\s*:\\s*"\\s*)${escapedName}\\s+${escapedName}\\b`,
+        "g",
+    )
+    yoastSchema = yoastSchema.replace(dupeNamePattern, `$1${authorName}`)
 }
 
 let authorAvatar =
-	authorObj?.avatar?.url ||
-	`https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=1e293b&bold=true`
+    authorObj?.avatar?.url ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=1e293b&bold=true`
 const authorSlug = authorName
-	.toLowerCase()
-	.replace(/[^a-z0-9]+/g, "-")
-	.replace(/(^-|-$)+/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
 const authorLink = `/about-us/${authorSlug}/`
-
-console.log("🔍 authorObj present?", !!authorObj, "| name:", authorName)
 
 // Author Social Links
 const authorSocials = authorObj?.seo?.social || {}
 const formatSocial = (value: string | undefined, domain: string) => {
-	if (!value) return null
-	return value.startsWith("http")
-		? value
-		: `${domain}${value.replace(/^@/, "")}`
+    if (!value) return null
+    return value.startsWith("http")
+        ? value
+        : `${domain}${value.replace(/^@/, "")}`
 }
 const authorTwitter = formatSocial(
-	authorSocials.twitter,
-	"https://twitter.com/",
+    authorSocials.twitter,
+    "https://twitter.com/",
 )
 const authorFacebook = formatSocial(
-	authorSocials.facebook,
-	"https://facebook.com/",
+    authorSocials.facebook,
+    "https://facebook.com/",
 )
 const authorInstagram = formatSocial(
-	authorSocials.instagram,
-	"https://instagram.com/",
+    authorSocials.instagram,
+    "https://instagram.com/",
 )
 const authorLinkedIn = formatSocial(
-	authorSocials.linkedIn,
-	"https://linkedin.com/in/",
+    authorSocials.linkedIn,
+    "https://linkedin.com/in/",
 )
 
 // Build a standalone Person schema from GraphQL author data — independent of Yoast.
 let personSchema: string | undefined
 if (authorObj) {
-	const person: any = {
-		"@context": "https://schema.org",
-		"@type": "Person",
-		"@id": `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`,
-		name: authorName,
-		url: authorObj.url || `https://au.crazyvegas.com${authorLink}`,
-	}
-	if (authorObj.description) person.description = authorObj.description
-	if (authorObj.avatar?.url) {
-		person.image = {
-			"@type": "ImageObject",
-			url: authorObj.avatar.url,
-			...(authorObj.avatar.width && { width: authorObj.avatar.width }),
-			...(authorObj.avatar.height && { height: authorObj.avatar.height }),
-			caption: authorName,
-		}
-	}
-	const sameAs = [
-		authorTwitter,
-		authorFacebook,
-		authorInstagram,
-		authorLinkedIn,
-	].filter(Boolean)
-	if (sameAs.length) person.sameAs = sameAs
+    const person: any = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`,
+        name: authorName,
+        url: authorObj.url || `https://au.crazyvegas.com${authorLink}`,
+    }
+    if (authorObj.description) person.description = authorObj.description
+    if (authorObj.avatar?.url) {
+        person.image = {
+            "@type": "ImageObject",
+            url: authorObj.avatar.url,
+            ...(authorObj.avatar.width && { width: authorObj.avatar.width }),
+            ...(authorObj.avatar.height && { height: authorObj.avatar.height }),
+            caption: authorName,
+        }
+    }
+    const sameAs = [
+        authorTwitter,
+        authorFacebook,
+        authorInstagram,
+        authorLinkedIn,
+    ].filter(Boolean)
+    if (sameAs.length) person.sameAs = sameAs
 
-	personSchema = JSON.stringify(person)
+    personSchema = JSON.stringify(person)
 }
 
 // Reviewer Data
@@ -286,115 +283,115 @@ const reviewerName = "Caleb Daly"
 const reviewerAvatar = "/wp-content/uploads/2026/03/caleb-daly.png"
 const reviewerTwitter: string | null = null // add real handle/URL if Caleb has one, e.g. "https://twitter.com/handle"
 const reviewerSlug = reviewerName
-	.toLowerCase()
-	.replace(/[^a-z0-9]+/g, "-")
-	.replace(/(^-|-$)+/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "")
 const reviewerLink = `/about-us/${reviewerSlug}/`
 
 const rawDate = page?.modified || page?.date || new Date().toISOString()
 const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
-	year: "numeric",
-	month: "short",
-	day: "numeric",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
 })
 
 // Determine once whether Yoast's own graph already has a Person node
 let yoastHasPerson = false
 if (yoastSchema) {
-	try {
-		const checkSchema = JSON.parse(yoastSchema)
-		const checkGraph = checkSchema["@graph"] || []
-		yoastHasPerson = checkGraph.some((n: any) => {
-			const t = n["@type"]
-			return t === "Person" || (Array.isArray(t) && t.includes("Person"))
-		})
-	} catch (e) {
-		// leave as false on parse failure
-	}
+    try {
+        const checkSchema = JSON.parse(yoastSchema)
+        const checkGraph = checkSchema["@graph"] || []
+        yoastHasPerson = checkGraph.some((n: any) => {
+            const t = n["@type"]
+            return t === "Person" || (Array.isArray(t) && t.includes("Person"))
+        })
+    } catch (e) {
+        // leave as false on parse failure
+    }
 }
 
 // 🚨 Build a rich Person node from real GraphQL author data — only if Yoast doesn't already have one.
 if (yoastSchema && !yoastHasPerson) {
-	try {
-		const parsedSchema = JSON.parse(yoastSchema)
-		const graph = parsedSchema["@graph"] || []
+    try {
+        const parsedSchema = JSON.parse(yoastSchema)
+        const graph = parsedSchema["@graph"] || []
 
-		const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`
-		const person: any = {
-			"@type": "Person",
-			"@id": personId,
-			name: authorName,
-			url: authorObj?.url || `https://au.crazyvegas.com${authorLink}`,
-			sameAs: [
-				authorTwitter,
-				authorFacebook,
-				authorInstagram,
-				authorLinkedIn,
-			].filter(Boolean),
-		}
+        const personId = `https://au.crazyvegas.com/#/schema/person/${authorSlug}-profile`
+        const person: any = {
+            "@type": "Person",
+            "@id": personId,
+            name: authorName,
+            url: authorObj?.url || `https://au.crazyvegas.com${authorLink}`,
+            sameAs: [
+                authorTwitter,
+                authorFacebook,
+                authorInstagram,
+                authorLinkedIn,
+            ].filter(Boolean),
+        }
 
-		if (authorObj?.description) person.description = authorObj.description
+        if (authorObj?.description) person.description = authorObj.description
 
-		if (authorObj?.avatar?.url) {
-			person.image = {
-				"@type": "ImageObject",
-				"@id": `https://au.crazyvegas.com/#/schema/person/image/${authorSlug}-profile`,
-				url: authorObj.avatar.url,
-				contentUrl: authorObj.avatar.url,
-				...(authorObj.avatar.width && {
-					width: authorObj.avatar.width,
-				}),
-				...(authorObj.avatar.height && {
-					height: authorObj.avatar.height,
-				}),
-				caption: authorName,
-			}
-		}
+        if (authorObj?.avatar?.url) {
+            person.image = {
+                "@type": "ImageObject",
+                "@id": `https://au.crazyvegas.com/#/schema/person/image/${authorSlug}-profile`,
+                url: authorObj.avatar.url,
+                contentUrl: authorObj.avatar.url,
+                ...(authorObj.avatar.width && {
+                    width: authorObj.avatar.width,
+                }),
+                ...(authorObj.avatar.height && {
+                    height: authorObj.avatar.height,
+                }),
+                caption: authorName,
+            }
+        }
 
-		graph.push(person)
-		parsedSchema["@graph"] = graph
-		yoastSchema = JSON.stringify(parsedSchema)
-	} catch (e) {
-		// leave schema as-is on parse failure
-	}
+        graph.push(person)
+        parsedSchema["@graph"] = graph
+        yoastSchema = JSON.stringify(parsedSchema)
+    } catch (e) {
+        // leave schema as-is on parse failure
+    }
 }
 
 // Clean the WordPress Content
 const rawContent = page?.content || ""
 const fixedContent = rawContent
-	.replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, "")
-	.replace(/src="[^"]*placeholder[^"]*"/gi, "")
-	.replaceAll('data-src="/wp-content/', 'src="/wp-content/')
-	.replaceAll('data-srcset="/wp-content/', 'srcset="/wp-content/')
+    .replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, "")
+    .replace(/src="[^"]*placeholder[^"]*"/gi, "")
+    .replaceAll('data-src="/wp-content/', 'src="/wp-content/')
+    .replaceAll('data-srcset="/wp-content/', 'srcset="/wp-content/')
 
-	// 🚨 BULLETPROOF FIX: Globally strip the Cloudways domain from the entire HTML string.
-	// This catches internal links (href), main images (src), and all srcset variants.
-	.replaceAll(wpDomain, "")
+    // 🚨 BULLETPROOF FIX: Globally strip the Cloudways domain from the entire HTML string.
+    // This catches internal links (href), main images (src), and all srcset variants.
+    .replaceAll(wpDomain, "")
 
-	.replaceAll("<img ", '<img referrerpolicy="no-referrer" ')
-	.replace(/<p>\s*(&nbsp;)?\s*<\/p>/gi, "")
-	.replace(
-		/<strong>\s*Ranking of the Best Payment Methods\s*<\/strong>/gi,
-		"",
-	)
-	.replace(/<p>\s*\[casino_toc\]\s*<\/p>/gi, "")
-	.replaceAll("[casino_toc]", "") // Failsafe in case it's not in a <p> tag
-	.replaceAll("[year]", currentYear)
+    .replaceAll("<img ", '<img referrerpolicy="no-referrer" ')
+    .replace(/<p>\s*(&nbsp;)?\s*<\/p>/gi, "")
+    .replace(
+        /<strong>\s*Ranking of the Best Payment Methods\s*<\/strong>/gi,
+        "",
+    )
+    .replace(/<p>\s*\[casino_toc\]\s*<\/p>/gi, "")
+    .replaceAll("[casino_toc]", "") // Failsafe in case it's not in a <p> tag
+    .replaceAll("[year]", currentYear)
 
-	.replace(/(https?:\/\/[^\/"]+)\/\1\//g, "$1/")
+    .replace(/(https?:\/\/[^\/"]+)\/\1\//g, "$1/")
 
-	.replace(
-		/<a([^>]*?)href="\/play\/([^"]+?)(?:-casino)?"([^>]*?)class="cus-claim-btn"/g,
-		(full: string, pre: string, slug: string, mid: string) => {
-			const name = slug
-				.replace(/-/g, " ")
-				.replace(/\b\w/g, (c: string) => c.toUpperCase())
-			return `<a${pre}href="/play/${slug}-casino"${mid}class="cus-claim-btn" aria-label="Claim bonus at ${name} Casino"`
-		},
-	)
+    .replace(
+        /<a([^>]*?)href="\/play\/([^"]+?)(?:-casino)?"([^>]*?)class="cus-claim-btn"/g,
+        (full: string, pre: string, slug: string, mid: string) => {
+            const name = slug
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (c: string) => c.toUpperCase())
+            return `<a${pre}href="/play/${slug}-casino"${mid}class="cus-claim-btn" aria-label="Claim bonus at ${name} Casino"`
+        },
+    )
 
-	.replace(/<h3([^>]*\bcus-bonus-title\b[^>]*)>/g, "<div$1>")
-	.replace(/<\/h3>(?=\s*<\/[^>]*cus-)/g, "</div>")
+    .replace(/<h3([^>]*\bcus-bonus-title\b[^>]*)>/g, "<div$1>")
+    .replace(/<\/h3>(?=\s*<\/[^>]*cus-)/g, "</div>")
 
 // --- 3. PROCESS RECENT POSTS (For Breaking News Section) ---
 const recentPosts = result.data?.posts?.nodes || []
@@ -403,581 +400,611 @@ const blogPosts = recentPosts.slice(3, 7)
 ---
 
 <Layout
-	title={yoastTitle}
-	seoTitle={yoastTitle}
-	description={yoastDesc}
-	schema={yoastSchema}
+    title={yoastTitle}
+    seoTitle={yoastTitle}
+    description={yoastDesc}
+    schema={yoastSchema}
 >
-	{
-		!yoastHasPerson && personSchema && (
-			<script type="application/ld+json" set:html={personSchema} />
-		)
-	}
-	<header class="home-hero new-split-hero">
-		<div class="home-hero-container">
-			<div class="hero-columns">
-				<!-- Mobile-only H1 -->
-				<h1
-					class="home-hero-title-us"
-					set:html={page?.title ||
-						"Best Online Casinos in the USA for Real Money"}
-				/>
-				<!-- LEFT COLUMN: Text, Cards, Search -->
-				<div class="hero-left">
-					<!-- Desktop-only heading - NOT an h1, just styled div -->
-					<div
-						class="home-hero-title"
-						set:html={page?.title ||
-							"Best Online Casinos in the USA for Real Money"}
-					/>
+    {
+        !yoastHasPerson && personSchema && (
+            <script type="application/ld+json" set:html={personSchema} />
+        )
+    }
+    <header class="home-hero new-split-hero">
+        <div class="home-hero-container">
+            <div class="hero-columns">
+                <!-- Mobile-only H1 -->
+                <h1
+                    class="home-hero-title-us"
+                    set:html={page?.title ||
+                        "Best Online Casinos in the USA for Real Money"}
+                />
+                <!-- LEFT COLUMN: Text, Cards, Search -->
+                <div class="hero-left">
+                    <!-- Desktop-only heading - NOT an h1, just styled div -->
+                    <div
+                        class="home-hero-title"
+                        set:html={page?.title ||
+                            "Best Online Casinos in the USA for Real Money"}
+                    />
 
-					<div class="hero-r-mobile">
-						<div class="hero-right">
-							<a
-								href="/play/betya-casino"
-								target="_blank"
-								rel="nofollow noopener noreferrer"
-								class="hero-banner-link"
-							>
-								<img
-									src="/wp-content/uploads/2026/03/compare-top-online-casinos-australia.png"
-									alt="Compare top online casinos Australia"
-									class="hero-banner-img"
-									fetchpriority="high"
-									decoding="sync"
-								/>
-							</a>
-						</div>
-					</div>
+                    <div class="hero-r-mobile">
+                        <div class="hero-right">
+                            <a
+                                href="/play/betya-casino"
+                                target="_blank"
+                                rel="nofollow noopener noreferrer"
+                                class="hero-banner-link"
+                            >
+                                <img
+                                    src="/wp-content/uploads/2026/03/compare-top-online-casinos-australia.png"
+                                    alt="Compare top online casinos Australia"
+                                    class="hero-banner-img"
+                                    fetchpriority="high"
+                                    decoding="sync"
+                                />
+                            </a>
+                        </div>
+                    </div>
 
-					<div class="hero-intro-box">
-						<div
-							id="cus-banner-1"
-							class="cus-banner"
-							aria-live="polite"
-						>
-							<p class="hero-lead-text">
-								<span class="cus-teaser">
-									Finding the best online casinos in Australia
-									comes down to one question: will it pay you
-									out when you win? Pick the wrong casino site
-									and a $500 win can sit frozen in “pending”
-									for weeks. Then there’s the support chat
-									that goes quiet, and a welcome bonus worth
-									nothing.
-								</span>
-								<button
-									id="cus-toggle-1"
-									class="show-more-link cus-toggle"
-									aria-expanded="false"
-									aria-controls="cus-hidden-1"
-									onclick="toggleCustomBlock(this, 'cus-hidden-1')"
-									>Show More <i
-										class="fa-solid fa-chevron-down"
-									></i></button
-								>
-							</p>
+                    <div class="hero-intro-box">
+                        <div
+                            id="cus-banner-1"
+                            class="cus-banner"
+                            aria-live="polite"
+                        >
+                            <p class="hero-lead-text">
+                                <span class="cus-teaser">
+                                    Finding the best online casinos in Australia
+                                    comes down to one question: will it pay you
+                                    out when you win? Pick the wrong casino site
+                                    and a $500 win can sit frozen in “pending”
+                                    for weeks. Then there’s the support chat
+                                    that goes quiet, and a welcome bonus worth
+                                    nothing.
+                                </span>
+                                <button
+                                    id="cus-toggle-1"
+                                    class="show-more-link cus-toggle"
+                                    aria-expanded="false"
+                                    aria-controls="cus-hidden-1"
+                                    onclick="toggleCustomBlock(this, 'cus-hidden-1')"
+                                    >Show More <i
+                                        class="fa-solid fa-chevron-down"
+                                    ></i></button
+                                >
+                            </p>
 
-							<!-- Hidden Expandable Content -->
-							<div
-								id="cus-hidden-1"
-								class="cus-hidden"
-								style="display: none;"
-							>
-								<p>
-									At Crazy Vegas, we’ve tested 150+ casino
-									sites, and in our opinion, the cashout test
-									matters most. We check AUD banking like
-									PayID and crypto, bonus terms, pokies and
-									game selection, and licensing before
-									recommending anything. So if a real money
-									online casino fails the withdrawals test, it
-									doesn’t make the list, whatever the welcome
-									offer promises.
-								</p>
+                            <!-- Hidden Expandable Content -->
+                            <div
+                                id="cus-hidden-1"
+                                class="cus-hidden"
+                                style="display: none;"
+                            >
+                                <p>
+                                    At Crazy Vegas, we’ve tested 150+ casino
+                                    sites, and in our opinion, the cashout test
+                                    matters most. We check AUD banking like
+                                    PayID and crypto, bonus terms, pokies and
+                                    game selection, and licensing before
+                                    recommending anything. So if a real money
+                                    online casino fails the withdrawals test, it
+                                    doesn’t make the list, whatever the welcome
+                                    offer promises.
+                                </p>
 
-								<p>
-									Not every Aussie online casino is strong for
-									the same reason, and in our experience,
-									that’s fine. While some of you want the
-									strongest all-around value, others want the
-									deepest online pokies and casino games
-									library. Some care most about the cleanest
-									live casino or the fastest withdrawal.
-									Others want something that works well on
-									mobile. We cover the lot, and every pick
-									here is tested for real money play, not just
-									browsing.
-								</p>
+                                <p>
+                                    Not every Aussie online casino is strong for
+                                    the same reason, and in our experience,
+                                    that’s fine. While some of you want the
+                                    strongest all-around value, others want the
+                                    deepest online pokies and casino games
+                                    library. Some care most about the cleanest
+                                    live casino or the fastest withdrawal.
+                                    Others want something that works well on
+                                    mobile. We cover the lot, and every pick
+                                    here is tested for real money play, not just
+                                    browsing.
+                                </p>
 
-								<p>
-									We’re upfront about the trade-offs, too. No
-									Australian online casino on this page is
-									perfect. We’ll tell you who each one suits
-									and who it doesn’t, before you deposit.
-								</p>
+                                <p>
+                                    We’re upfront about the trade-offs, too. No
+                                    Australian online casino on this page is
+                                    perfect. We’ll tell you who each one suits
+                                    and who it doesn’t, before you deposit.
+                                </p>
 
-								<!-- (Your existing table code goes here, omitted for brevity but keep your table-responsive div intact) -->
-								<div class="table-responsive">
-									<!-- Keep your existing table exactly as it was here -->
-								</div>
-							</div>
-						</div>
-					</div>
+                                <div class="table-responsive">
+                                    <!-- Keep your existing table exactly as it was here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-					<!-- NEW: Search Bar -->
-					<form
-						action="/search/"
-						method="get"
-						role="search"
-						class="hero-search-wrapper"
-					>
-						<input
-							type="search"
-							name="q"
-							aria-label="Search the site"
-							placeholder="Search over 2000 bonuses, casinos and slots..."
-							class="hero-search-input"
-							required
-						/>
-						<button
-							type="submit"
-							class="hero-search-btn"
-							aria-label="Search"
-						>
-							<i class="fa-solid fa-search"></i>
-						</button>
-					</form>
-				</div>
+                    
+                </div>
 
-				<!-- RIGHT COLUMN: Modern CTA Card with Animations -->
+                <!-- RIGHT COLUMN: Modern CTA Card with Animations -->
+                <div class="hero-right">
+                    <a
+                        href="/play/betya-casino"
+                        target="_blank"
+                        rel="nofollow noopener noreferrer"
+                        class="hero-banner-link"
+                    >
+                        <img
+                            src="/wp-content/uploads/2026/03/compare-top-online-casinos-australia.png"
+                            alt="Compare top online casinos Australia"
+                            class="hero-banner-img"
+                            fetchpriority="high"
+                            decoding="sync"
+                        />
+                    </a>
+                </div>
+            </div>
 
-				<div class="hero-right">
-					<a
-						href="/play/betya-casino"
-						target="_blank"
-						rel="nofollow noopener noreferrer"
-						class="hero-banner-link"
-					>
-						<img
-							src="/wp-content/uploads/2026/03/compare-top-online-casinos-australia.png"
-							alt="Compare top online casinos Australia"
-							class="hero-banner-img"
-							fetchpriority="high"
-							decoding="sync"
-						/>
-					</a>
-				</div>
-			</div>
+            <!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
+            <div class="hero-bottom-meta-section">
+                <div class="hero-disclaimer-box desktop-dis">
+                    <div class="disclaimer-cl">
+                        <p>
+                            <b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
+                            should always be seen as entertainment, not a way to
+                            make money. Laws regarding online gambling vary
+                            <button
+                                class="show-more-link show-more-btn"
+                                onclick="toggleContent(this)"
+                                >Show More <i class="fa-solid fa-chevron-down"
+                                ></i></button
+                            >
+                        </p>
+                        <div
+                            class="content1"
+                            style="display: none; margin-top: 1rem;"
+                        >
+                            <p>
+                                by country, so always ensure you meet the <a
+                                    href="/gambling-laws/">legal gambling age</a
+                                > and comply with your local regulations before playing.
+                                Gambling can be addictive; we encourage you to set
+                                personal limits and <a
+                                    href="/gambling-addiction/"
+                                    >seek professional help</a
+                                > if needed.
+                            </p>
+                            <p>
+                                Some of the links on Crazy Vegas are affiliate
+                                links. This means we may earn a commission (at
+                                no additional cost to you) if you click through
+                                and make a deposit at a partner site. Our
+                                reviews and recommendations are based on
+                                independent research and a strict <a
+                                    href="/editorial-policy/"
+                                    >editorial process</a
+                                > to ensure accuracy, impartiality, and trustworthiness.
+                                You can learn more about our evaluation process on
+                                our <a href="/how-we-rate-casinos/"
+                                    >How We Rate</a
+                                > page.
+                            </p>
 
-			<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
-			<div class="hero-bottom-meta-section">
-				<div class="hero-disclaimer-box desktop-dis">
-					<div class="disclaimer-cl">
-						<p>
-							<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
-							should always be seen as entertainment, not a way to
-							make money. Laws regarding online gambling vary
-							<button
-								class="show-more-link show-more-btn"
-								onclick="toggleContent(this)"
-								>Show More <i class="fa-solid fa-chevron-down"
-								></i></button
-							>
-						</p>
-						<div
-							class="content1"
-							style="display: none; margin-top: 1rem;"
-						>
-							<p>
-								by country, so always ensure you meet the <a
-									href="/gambling-laws/">legal gambling age</a
-								> and comply with your local regulations before playing.
-								Gambling can be addictive; we encourage you to set
-								personal limits and <a
-									href="/gambling-addiction/"
-									>seek professional help</a
-								> if needed.
-							</p>
-							<p>
-								Some of the links on Crazy Vegas are affiliate
-								links. This means we may earn a commission (at
-								no additional cost to you) if you click through
-								and make a deposit at a partner site. Our
-								reviews and recommendations are based on
-								independent research and a strict <a
-									href="/editorial-policy/"
-									>editorial process</a
-								> to ensure accuracy, impartiality, and trustworthiness.
-								You can learn more about our evaluation process on
-								our <a href="/how-we-rate-casinos/"
-									>How We Rate</a
-								> page.
-							</p>
+                            <p>
+                                For full transparency, please see our <a
+                                    href="/affiliate-disclosure/"
+                                    >Affiliate Disclosure</a
+                                >. If you have any questions, feedback, or
+                                concerns, don’t hesitate to contact our team.
+                                Remember: play for fun, stay safe, and <a
+                                    href="/responsible-gambling/"
+                                    >gamble within your means</a
+                                >.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="author-reviewer-bar">
+                    <div class="author-block">
+                        <img
+                            src={authorAvatar}
+                            alt={authorName}
+                            class="author-avatar"
+                            width="40"
+                            height="40"
+                            loading="lazy"
+                        />
+                        <div class="author-text">
+                            <span class="author-label">
+                                By{" "}
+                                <span class="author-tooltip-wrap">
+                                    <a
+                                        class="fn url"
+                                        href={authorLink}
+                                        rel="author">{authorName}</a
+                                    >
+                                    <span class="author-tooltip-popup"
+                                        >{authorBio}</span
+                                    >
+                                </span>
+                            </span>
+                            <span class="author-updated"
+                                >Updated: {formattedDate}</span
+                            >
+                        </div>
+                    </div>
 
-							<p>
-								For full transparency, please see our <a
-									href="/affiliate-disclosure/"
-									>Affiliate Disclosure</a
-								>. If you have any questions, feedback, or
-								concerns, don’t hesitate to contact our team.
-								Remember: play for fun, stay safe, and <a
-									href="/responsible-gambling/"
-									>gamble within your means</a
-								>.
-							</p>
-						</div>
-					</div>
-				</div>
-				<div class="author-reviewer-bar">
-					<div class="author-block">
-						<img
-							src={authorAvatar}
-							alt={authorName}
-							class="author-avatar"
-							width="40"
-							height="40"
-							loading="lazy"
-						/>
-						<div class="author-text">
-							<span class="author-label">
-								By{" "}
-								<span class="author-tooltip-wrap">
-									<a
-										class="fn url"
-										href={authorLink}
-										rel="author">{authorName}</a
-									>
-									<span class="author-tooltip-popup"
-										>{authorBio}</span
-									>
-								</span>
-							</span>
-							<span class="author-updated"
-								>Updated: {formattedDate}</span
-							>
-						</div>
-					</div>
+                    <div class="reviewer-block">
+                        <img
+                            src={reviewerAvatar}
+                            alt={reviewerName}
+                            class="reviewer-avatar"
+                            width="40"
+                            height="40"
+                            loading="lazy"
+                        />
+                        <div class="reviewer-text">
+                            <span class="reviewer-label">
+                                Reviewed by{" "}
+                                <span class="author-tooltip-wrap">
+                                    <a href={reviewerLink}>{reviewerName}</a>
+                                    <span class="author-tooltip-popup"
+                                        >{reviewerBio}</span
+                                    >
+                                </span>
+                            </span>
+                            <span class="reviewer-role">Casino Expert</span>
+                        </div>
+                        {
+                            authorTwitter && (
+                                <a
+                                    href={authorTwitter}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="reviewer-twitter"
+                                    aria-label={`${reviewerName} on Twitter`}
+                                >
+                                    <i class="fa-brands fa-twitter" />
+                                </a>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-					<div class="reviewer-block">
-						<img
-							src={reviewerAvatar}
-							alt={reviewerName}
-							class="reviewer-avatar"
-							width="40"
-							height="40"
-							loading="lazy"
-						/>
-						<div class="reviewer-text">
-							<span class="reviewer-label">
-								Reviewed by{" "}
-								<span class="author-tooltip-wrap">
-									<a href={reviewerLink}>{reviewerName}</a>
-									<span class="author-tooltip-popup"
-										>{reviewerBio}</span
-									>
-								</span>
-							</span>
-							<span class="reviewer-role">Casino Expert</span>
-						</div>
-						{
-							authorTwitter && (
-								<a
-									href={authorTwitter}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="reviewer-twitter"
-									aria-label={`${reviewerName} on Twitter`}
-								>
-									<i class="fa-brands fa-twitter" />
-								</a>
-							)
-						}
-					</div>
-				</div>
-			</div>
-		</div>
-	</header>
+    <main class="home-wrapper" id="content">
+        <article class="home-container wp-content" set:html={fixedContent} />
 
-	<main class="home-wrapper" id="content">
-		<article class="home-container wp-content" set:html={fixedContent} />
+        {
+            recentPosts.length >= 4 && (
+                <section class="full-width-discovery-section">
+                    <div class="discovery-container">
+                        <div class="discovery-columns">
+                            <div class="discovery-left-col">
+                                <h2 class="discovery-section-title">
+                                    Read today's breaking stories
+                                </h2>
+                                <div class="breaking-stories-list">
+                                    {breakingStories.map((story: any) => {
+                                        // 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+                                        let relativeUri = story.uri
+                                            ? story.uri.replace(
+                                                  /https?:\/\/[^\/]+/g,
+                                                  "",
+                                              )
+                                            : "/"
+                                        const cleanSlug = relativeUri.replace(
+                                            /^\/|\/$/g,
+                                            "",
+                                        )
+                                        const storyLink = `/${cleanSlug}/`
 
-		{
-			recentPosts.length >= 4 && (
-				<section class="full-width-discovery-section">
-					<div class="discovery-container">
-						<div class="discovery-columns">
-							<div class="discovery-left-col">
-								<h2 class="discovery-section-title">
-									Read today's breaking stories
-								</h2>
-								<div class="breaking-stories-list">
-									{breakingStories.map((story: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = story.uri
-											? story.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const storyLink = `/${cleanSlug}/`
+                                        const storyDate = new Date(
+                                            story.date,
+                                        ).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric",
+                                        })
 
-										const storyDate = new Date(
-											story.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
+                                        let storyImage =
+                                            story.featuredImage?.node
+                                                ?.sourceUrl ||
+                                            "https://via.placeholder.com/300x150"
 
-										let storyImage =
-											story.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/300x150"
+                                        // 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+                                        try {
+                                            const parsedUrl = new URL(
+                                                storyImage,
+                                            )
+                                            storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
+                                        } catch (e) {}
 
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(
-												storyImage,
-											)
-											storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
-										} catch (e) {}
+                                        const authorObj = story.author?.node
+                                        const recAuthorName = authorObj
+                                            ? authorObj.firstName &&
+                                              authorObj.lastName
+                                                ? `${authorObj.firstName} ${authorObj.lastName}`
+                                                : authorObj.name
+                                            : "Editorial Team"
+                                        let recAuthorAvatar =
+                                            authorObj?.avatar?.url ||
+                                            `https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
 
-										const authorObj = story.author?.node
-										const recAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let recAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+                                        return (
+                                            <div class="breaking-story-card">
+                                                <div class="breaking-story-image">
+                                                    <a
+                                                        href={storyLink}
+                                                        class="thumbnail-link"
+                                                    >
+                                                        <img
+                                                            src={storyImage}
+                                                            alt={
+                                                                story
+                                                                    .featuredImage
+                                                                    ?.node
+                                                                    ?.altText ||
+                                                                story.title
+                                                            }
+                                                            loading="lazy"
+                                                            referrerpolicy="no-referrer"
+                                                        />
+                                                    </a>
+                                                </div>
+                                                <div class="breaking-story-content">
+                                                    <div class="card-meta-top">
+                                                        <span class="card-category">
+                                                            News
+                                                        </span>
+                                                        <span class="card-date">
+                                                            {storyDate}
+                                                        </span>
+                                                    </div>
+                                                    <a
+                                                        href={storyLink}
+                                                        class="card-title-link"
+                                                    >
+                                                        <h3
+                                                            set:html={
+                                                                story.title
+                                                            }
+                                                        />
+                                                    </a>
+                                                    <div class="card-meta-bottom">
+                                                        <img
+                                                            src={
+                                                                recAuthorAvatar
+                                                            }
+                                                            alt={recAuthorName}
+                                                            class="card-author-avatar"
+                                                        />
+                                                        <span>
+                                                            {recAuthorName} • 10
+                                                            min read
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
 
-										return (
-											<div class="breaking-story-card">
-												<div class="breaking-story-image">
-													<a
-														href={storyLink}
-														class="thumbnail-link"
-													>
-														<img
-															src={storyImage}
-															alt={
-																story
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																story.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
-												</div>
-												<div class="breaking-story-content">
-													<div class="card-meta-top">
-														<span class="card-category">
-															News
-														</span>
-														<span class="card-date">
-															{storyDate}
-														</span>
-													</div>
-													<a
-														href={storyLink}
-														class="card-title-link"
-													>
-														<h3
-															set:html={
-																story.title
-															}
-														/>
-													</a>
-													<div class="card-meta-bottom">
-														<img
-															src={
-																recAuthorAvatar
-															}
-															alt={recAuthorName}
-															class="card-author-avatar"
-														/>
-														<span>
-															{recAuthorName} • 10
-															min read
-														</span>
-													</div>
-												</div>
-											</div>
-										)
-									})}
-								</div>
-							</div>
+                            <div class="discovery-right-col">
+                                <h2 class="discovery-section-title">
+                                    Discover our blogs
+                                </h2>
+                                <div class="discover-blogs-list">
+                                    {blogPosts.map((blogPost: any) => {
+                                        // 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+                                        let relativeUri = blogPost.uri
+                                            ? blogPost.uri.replace(
+                                                  /https?:\/\/[^\/]+/g,
+                                                  "",
+                                              )
+                                            : "/"
+                                        const cleanSlug = relativeUri.replace(
+                                            /^\/|\/$/g,
+                                            "",
+                                        )
+                                        const blogLink = `/${cleanSlug}/`
 
-							<div class="discovery-right-col">
-								<h2 class="discovery-section-title">
-									Discover our blogs
-								</h2>
-								<div class="discover-blogs-list">
-									{blogPosts.map((blogPost: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = blogPost.uri
-											? blogPost.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const blogLink = `/${cleanSlug}/`
+                                        const blogDate = new Date(
+                                            blogPost.date,
+                                        ).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric",
+                                        })
 
-										const blogDate = new Date(
-											blogPost.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
+                                        let blogImage =
+                                            blogPost.featuredImage?.node
+                                                ?.sourceUrl ||
+                                            "https://via.placeholder.com/150"
 
-										let blogImage =
-											blogPost.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/150"
+                                        // 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+                                        try {
+                                            const parsedUrl = new URL(blogImage)
+                                            blogImage = parsedUrl.pathname
+                                        } catch (e) {}
 
-										// 🚨 BULLETPROOF FIX: Use JS URL object to force the Cloudways domain
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(blogImage)
-											blogImage = parsedUrl.pathname
-										} catch (e) {}
+                                        const authorObj = blogPost.author?.node
+                                        const blogAuthorName = authorObj
+                                            ? authorObj.firstName &&
+                                              authorObj.lastName
+                                                ? `${authorObj.firstName} ${authorObj.lastName}`
+                                                : authorObj.name
+                                            : "Editorial Team"
+                                        let blogAuthorAvatar =
+                                            authorObj?.avatar?.url ||
+                                            `https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
 
-										const authorObj = blogPost.author?.node
-										const blogAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let blogAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-										return (
-											<div class="blog-post-card">
-												<div class="blog-post-image">
-													<a href={blogLink}>
-														<img
-															src={blogImage}
-															alt={
-																blogPost
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																blogPost.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
-												</div>
-												<div class="blog-post-content">
-													<a
-														href={blogLink}
-														class="blog-title-link"
-													>
-														<h3
-															set:html={
-																blogPost.title
-															}
-														/>
-													</a>
-													<div class="blog-meta">
-														<div class="blog-meta-author">
-															<img
-																src={
-																	blogAuthorAvatar
-																}
-																alt={
-																	blogAuthorName
-																}
-																class="blog-author-avatar"
-															/>
-															<span>
-																{blogAuthorName}{" "}
-																• {blogDate}
-															</span>
-														</div>
-														<a
-															href={blogLink}
-															class="blog-read-more"
-														>
-															Read{" "}
-															<i class="fa-solid fa-arrow-right" />
-														</a>
-													</div>
-												</div>
-											</div>
-										)
-									})}
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-			)
-		}
-	</main>
+                                        return (
+                                            <div class="blog-post-card">
+                                                <div class="blog-post-image">
+                                                    <a href={blogLink}>
+                                                        <img
+                                                            src={blogImage}
+                                                            alt={
+                                                                blogPost
+                                                                    .featuredImage
+                                                                    ?.node
+                                                                    ?.altText ||
+                                                                blogPost.title
+                                                            }
+                                                            loading="lazy"
+                                                            referrerpolicy="no-referrer"
+                                                        />
+                                                    </a>
+                                                </div>
+                                                <div class="blog-post-content">
+                                                    <a
+                                                        href={blogLink}
+                                                        class="blog-title-link"
+                                                    >
+                                                        <h3
+                                                            set:html={
+                                                                blogPost.title
+                                                            }
+                                                        />
+                                                    </a>
+                                                    <div class="blog-meta">
+                                                        <div class="blog-meta-author">
+                                                            <img
+                                                                src={
+                                                                    blogAuthorAvatar
+                                                                }
+                                                                alt={
+                                                                    blogAuthorName
+                                                                }
+                                                                class="blog-author-avatar"
+                                                            />
+                                                            <span>
+                                                                {blogAuthorName}{" "}
+                                                                • {blogDate}
+                                                            </span>
+                                                        </div>
+                                                        <a
+                                                            href={blogLink}
+                                                            class="blog-read-more"
+                                                        >
+                                                            Read{" "}
+                                                            <i class="fa-solid fa-arrow-right" />
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )
+        }
+    </main>
 </Layout>
 
+<!-- 🚨 FIX: Placed inline script properly with DOM parsing logic to insert TOC automatically -->
 <script is:inline>
-	// FIX: Explictly check visibility state so it never gets confused
-	window.toggleCustomBlock = function (btn, targetId) {
-		const hiddenBlock = document.getElementById(targetId)
-		if (!hiddenBlock) return
+(function () {
+    function buildToc() {
+        const article = document.querySelector(".home-container.wp-content");
+        if (!article) return;
 
-		const isVisible =
-			window.getComputedStyle(hiddenBlock).display === "block"
+        // Prevent building TOC twice
+        if (document.getElementById("toc_container")) {
+            return;
+        }
 
-		if (isVisible) {
-			// Collapse
-			hiddenBlock.style.display = "none"
-			btn.innerHTML = 'Show More <i class="fa-solid fa-chevron-down"></i>'
-			btn.setAttribute("aria-expanded", "false")
-		} else {
-			// Expand
-			hiddenBlock.style.display = "block"
-			btn.innerHTML = 'Show Less <i class="fa-solid fa-chevron-up"></i>'
-			btn.setAttribute("aria-expanded", "true")
-		}
-	}
+        const headings = Array.from(article.querySelectorAll("h2"));
+        if (!headings.length) return;
 
-	// FIX: New toggle for the Disclaimer Block
-	window.toggleContent = function (btn) {
-		const container = btn.closest(".disclaimer-cl")
-		const content = container.querySelector(".content1")
-		if (!content) return
+        const slugify = (text) =>
+            text.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
 
-		const isVisible = window.getComputedStyle(content).display === "block"
+        const usedIds = new Set();
+        const items = headings.map((h2) => {
+            let id = h2.id || slugify(h2.textContent);
+            while (usedIds.has(id)) id += "-2";
+            usedIds.add(id);
+            h2.id = id;
+            return { id, text: h2.textContent };
+        });
 
-		if (isVisible) {
-			// Collapse
-			content.style.display = "none"
-			btn.innerHTML = 'Show More <i class="fa-solid fa-chevron-down"></i>'
-		} else {
-			// Expand
-			content.style.display = "block"
-			btn.innerHTML = 'Show Less <i class="fa-solid fa-chevron-up"></i>'
-		}
-	}
+        const toc = document.createElement("div");
+        toc.id = "toc_container";
+        toc.className = "toc-wrapper cus-toc";
+        toc.style.marginBottom = "2.5rem"; // spacing between TOC and first paragraph
+        
+        toc.innerHTML = `
+          <div class="toc-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background-color: #ffffff; cursor: pointer; font-size: 1.2rem; font-weight: 800; color: #0f172a; border-radius: 12px; border: 1px solid #e2e8f0; transition: background-color 0.2s ease;">
+            Table of Contents <i class="fa-solid fa-chevron-down toc-arrow" style="font-size: 0.8rem; color: #64748b; transition: transform 0.3s ease;"></i>
+          </div>
+          <div class="toc-body" id="tocBody" style="padding: 0 1.5rem 1.5rem 1.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px; display: none; text-align: left;">
+            <ul style="list-style: none; padding: 1rem 0 0 0; margin: 0; column-count: 1;">
+              ${items.map(i => `<li style="margin-bottom: 0.85rem; position: relative; padding-left: 1.25rem;"><span style="color: #3b82f6; font-weight: bold; position: absolute; left: 0; top: -1px; font-size: 1.2rem;">•</span><a href="#${i.id}" style="color: #475569; text-decoration: none; font-weight: 600; font-size: 0.95rem;">${i.text}</a></li>`).join("")}
+            </ul>
+          </div>
+        `;
+
+        // 🚨 TARGET H1 / HERO TITLE TO INSERT TOC BELOW IT 🚨
+        const desktopTitle = document.querySelector('.home-hero-title');
+        
+        if (desktopTitle) {
+            desktopTitle.insertAdjacentElement('afterend', toc);
+        } else {
+            // Fallback if H1 not found: place at the top of the article content
+            article.insertBefore(toc, article.firstChild);
+        }
+
+        // Add toggle functionality
+        const header = toc.querySelector(".toc-header");
+        const body = toc.querySelector(".toc-body");
+        const arrow = toc.querySelector(".toc-arrow");
+
+        header.addEventListener("click", () => {
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                header.style.borderRadius = "12px"; // Restore rounded corners when closed
+                if (arrow) arrow.style.transform = "rotate(0deg)";
+            } else {
+                body.style.display = "block";
+                header.style.borderRadius = "12px 12px 0 0"; // Flatten bottom corners when open
+                if (arrow) arrow.style.transform = "rotate(180deg)";
+            }
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", buildToc);
+    } else {
+        buildToc();
+    }
+})();
 </script>
 
+
+
 <style is:global>
+
+	 /* Styling to ensure the generated TOC supports 2 columns on desktop */
+    @media (min-width: 768px) {
+        #toc_container .toc-body ul {
+            column-count: 2 !important;
+            column-gap: 2.5rem !important;
+        }
+    }
+    #toc_container .toc-body a {
+        transition: color 0.2s ease, transform 0.2s ease;
+        display: inline-block;
+    }
+    #toc_container .toc-body a:hover {
+        color: #2563eb !important;
+        transform: translateX(4px);
+    }
 	/* =========================================
        HERO DISCLAIMER BOX
     ========================================= */
@@ -4854,6 +4881,88 @@ const blogPosts = recentPosts.slice(3, 7)
 		margin: 0 !important;
 		display: block !important;
 	}
+
+
+
+
+
+
+	#toc_container {
+  background: transparent;
+  margin: 0 0 24px 0;
+}
+
+#toc_container .toc_title {
+  background: #0f172a; /* matches hero-cta-card dark slate */
+  border: 1px solid #166534; /* your green accent border, same as hero-cat-card */
+  padding: 14px 90px 14px 20px;
+  border-radius: 8px;
+  margin: 0;
+  position: relative;
+  cursor: pointer;
+  font-size: 0;
+  color: transparent;
+}
+
+#toc_container .toc_title::before {
+  content: "Table Of Contents";
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+#toc_container .toc_title::after {
+  content: "Show";
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #22c55e; /* your bright green accent */
+  color: #ffffff;
+  padding: 6px 16px;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+#toc_container.is-open .toc_title::after {
+  content: "Hide";
+}
+
+#toc_container .toc_list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  margin: 0;
+  padding: 0 24px;
+  list-style: none;
+}
+
+#toc_container.is-open .toc_list {
+  max-height: 800px;
+  padding: 16px 24px;
+}
+
+#toc_container .toc_list li {
+  padding: 6px 0;
+  border-bottom: 1px solid #f0eef8;
+}
+#toc_container .toc_list li:last-child { border-bottom: none; }
+
+#toc_container .toc_list a {
+  color: #166534;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+#toc_container .toc_list a:hover { color: #22c55e; }
 </style>
 
 <script>
@@ -4961,4 +5070,100 @@ const blogPosts = recentPosts.slice(3, 7)
 
 		// ... [Your existing tab-switching and mobile-scroll code goes here] ...
 	})
+</script>
+
+<script>
+(function () {
+  function buildToc() {
+    const article = document.querySelector(".home-container.wp-content");
+    console.log("[TOC] article found?", !!article);
+    if (!article) return;
+
+    if (document.getElementById("toc_container")) {
+      console.log("[TOC] already inserted, skipping");
+      return;
+    }
+
+    const headings = Array.from(article.querySelectorAll("h2"));
+    console.log("[TOC] h2 count:", headings.length);
+    if (!headings.length) return;
+
+    const slugify = (text) =>
+      text.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+
+    const usedIds = new Set();
+    const items = headings.map((h2) => {
+      let id = h2.id || slugify(h2.textContent);
+      while (usedIds.has(id)) id += "-2";
+      usedIds.add(id);
+      h2.id = id;
+      return { id, text: h2.textContent };
+    });
+
+    const toc = document.createElement("div");
+    toc.id = "toc_container";
+    toc.innerHTML = `
+      <p class="toc_title">Table Of Contents</p>
+      <ul class="toc_list">
+        ${items.map(i => `<li><a href="#${i.id}">${i.text}</a></li>`).join("")}
+      </ul>
+    `;
+
+    article.parentElement.insertBefore(toc, article);
+    console.log("[TOC] inserted successfully");
+
+    toc.querySelector(".toc_title").addEventListener("click", () => {
+      toc.classList.toggle("is-open");
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", buildToc);
+  } else {
+    buildToc();
+  }
+})();
+</script>
+
+
+<script is:inline>
+	// FIX: Explictly check visibility state so it never gets confused
+	window.toggleCustomBlock = function (btn, targetId) {
+		const hiddenBlock = document.getElementById(targetId)
+		if (!hiddenBlock) return
+
+		const isVisible =
+			window.getComputedStyle(hiddenBlock).display === "block"
+
+		if (isVisible) {
+			// Collapse
+			hiddenBlock.style.display = "none"
+			btn.innerHTML = 'Show More <i class="fa-solid fa-chevron-down"></i>'
+			btn.setAttribute("aria-expanded", "false")
+		} else {
+			// Expand
+			hiddenBlock.style.display = "block"
+			btn.innerHTML = 'Show Less <i class="fa-solid fa-chevron-up"></i>'
+			btn.setAttribute("aria-expanded", "true")
+		}
+	}
+
+	// FIX: New toggle for the Disclaimer Block
+	window.toggleContent = function (btn) {
+		const container = btn.closest(".disclaimer-cl")
+		const content = container.querySelector(".content1")
+		if (!content) return
+
+		const isVisible = window.getComputedStyle(content).display === "block"
+
+		if (isVisible) {
+			// Collapse
+			content.style.display = "none"
+			btn.innerHTML = 'Show More <i class="fa-solid fa-chevron-down"></i>'
+		} else {
+			// Expand
+			content.style.display = "block"
+			btn.innerHTML = 'Show Less <i class="fa-solid fa-chevron-up"></i>'
+		}
+	}
 </script>

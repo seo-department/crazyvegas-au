@@ -725,9 +725,9 @@ function timeAgo(dateString: string) {
     }
 
     iframe {
-    width: 100% !important;
-    aspect-ratio: 16 / 9 !important;
-}
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+    }
 
     /* Mobile H1 - hidden on desktop */
     .home-hero-title-us {
@@ -740,6 +740,26 @@ function timeAgo(dateString: string) {
     }
 
     @media (max-width: 768px) {
+        .wp-content h3 {
+            font-size: 18px !important;
+        }
+
+        .wp-content h4 {
+            font-size: 16px !important;
+        }
+
+        div#toc_container {
+            margin-top: -6px !important;
+        }
+
+        .wp-content h2 {
+            font-size: 23px !important;
+        }
+
+        h1.page-title {
+            font-size: 25px !important;
+        }
+
         img {
             max-width: 100% !important;
             height: auto !important;
@@ -4650,8 +4670,8 @@ function timeAgo(dateString: string) {
     /* CSS-only Chevron Arrow (No HTML added) */
     .toc_title::after {
         content: "";
-        width: 8px;
-        height: 8px;
+        width: 71px;
+        height: 31px;
         border-right: 2px solid #64748b;
         border-bottom: 2px solid #64748b;
         transform: translateY(-2px) rotate(45deg);
@@ -4941,7 +4961,7 @@ function timeAgo(dateString: string) {
         color: #fff;
         padding: 4rem 1rem 3rem;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath fill-rule='evenodd' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm28-65c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm23-11c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-6 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm29 21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM32 34c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm60-35c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zM6 10c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm90 60c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-40 20c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-20-40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zM10 50c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm80 40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-40-20c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-20-40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z'/%3E%3C/g%3E%3C/svg%3E");
     }
     .post-hero::before {
@@ -7826,7 +7846,7 @@ function timeAgo(dateString: string) {
         padding: 3rem 1rem;
         border-bottom: 1px solid #3a4459;
         position: relative;
-        overflow: hidden;
+        overflow: visible; /* was: overflow: hidden; */
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='2' fill='%23ffffff' fill-opacity='0.05'/%3E%3C/svg%3E");
     }
     header.page-hero {
@@ -12246,8 +12266,6 @@ function timeAgo(dateString: string) {
             text-decoration: none !important;
         }
 
-        
-
         /* Force brand name text appearance */
         .space-organizations-3-archive-items .card-name {
             font-size: 18px !important;
@@ -15217,28 +15235,100 @@ function timeAgo(dateString: string) {
         }
     }
 
+    /* Table of Contents container */
+    #toc_container {
+        background: transparent;
+        border: none;
+        margin: 24px 0;
+        padding: 0;
+    }
+
+    ul.toc_list li {
+        border-bottom: 1px dotted #94a3b8;
+        line-height: 26px;
+    }
+
+    /* Purple header bar */
     #toc_container .toc_title {
-        cursor: pointer;
+        background: #212a40;
+        padding: 14px 90px 14px 20px !important; /* room for pill on the right */
+        border-radius: 8px;
+        margin: 0;
         position: relative;
+        cursor: pointer;
+        font-size: 0 !important;
+        color: transparent !important;
+        text-align: center !important;
     }
+
+    /* Injected heading text */
+    #toc_container .toc_title::before {
+        content: "Table Of Contents";
+        display: block;
+        width: 100%;
+        font-size: 1.05rem !important;
+        font-weight: 700;
+        color: #ffffff !important;
+        text-align: center !important;
+    }
+
+    /* Show/Hide pill button */
     #toc_container .toc_title::after {
-        content: "\f078";
-        font-family: "Font Awesome 6 Free";
-        font-weight: 900;
+        content: "Show";
+        font-family: inherit !important;
+        font-size: 0.85rem !important; /* must be set explicitly, doesn't inherit parent's 0 */
+        font-weight: 600 !important;
         position: absolute;
-        right: 0;
-        transition: transform 0.25s;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #ffffff;
+        color: #6b21e0 !important;
+        padding: 6px 16px;
+        border-radius: 6px;
+        line-height: 1;
     }
+
     #toc_container.is-open .toc_title::after {
-        transform: rotate(180deg);
+        content: "Hide";
     }
+
+    /* Collapsible list */
     #toc_container .toc_list {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease;
+        background: #ffffff;
+        border: 1px solid #e5e0f5;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        margin: 0;
+        padding: 0 24px;
+        list-style: none;
     }
+
     #toc_container.is-open .toc_list {
         max-height: 800px;
+        padding: 16px 24px;
+    }
+
+    #toc_container .toc_list li {
+        padding: 6px 0;
+        border-bottom: 1px solid #f0eef8;
+    }
+
+    #toc_container .toc_list li:last-child {
+        border-bottom: none;
+    }
+
+    #toc_container .toc_list a {
+        color: #4b21b0;
+        text-decoration: none;
+        font-size: 0.95rem;
+    }
+
+    #toc_container .toc_list a:hover {
+        text-decoration: underline;
     }
 </style>
 

@@ -497,7 +497,10 @@ const stripHtmlTags = (html: string) => {
 const boldName = (text: string, name: string) => {
     if (!text || !name) return text
     const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    return text.replace(new RegExp(`(${escapedName})`, "g"), "<strong>$1</strong>")
+    return text.replace(
+        new RegExp(`(${escapedName})`, "g"),
+        "<strong>$1</strong>",
+    )
 }
 
 // 🚨 NEW: Hover-tooltip bio text for the author name link
@@ -789,7 +792,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a href={crumb.url}
+                                        <a
+                                            href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -815,8 +819,6 @@ fixedContent = stripWp(fixedContent)
                     )}
 
                     <h1 class="game-hero-title" set:html={displayTitle} />
-
-                    
                 </div>
             </header>
         ) : isReview ? (
@@ -835,7 +837,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a href={crumb.url}
+                                        <a
+                                            href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -937,7 +940,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="review-hero-action">
                             <div class="action-price">Exclusive Bonus</div>
-                            <a href={claimUrl}
+                            <a
+                                href={claimUrl}
                                 class="btn-claim-massive"
                                 target={claimIsExternal ? "_blank" : undefined}
                                 rel={
@@ -956,8 +960,13 @@ fixedContent = stripWp(fixedContent)
                     </div>
 
                     <div class="review-hero-author">
-                        <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            <a href={authorLink}
+                        <div
+                            class="meta-author vcard author"
+                            itemscope
+                            itemtype="https://schema.org/Person"
+                        >
+                            <a
+                                href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -971,13 +980,19 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    <a href={authorLink}
+                                    <a
+                                        href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
                                         <span class="author-tooltip-wrap">
-                                            <strong itemprop="name">{authorName}</strong>
-                                            <span class="author-tooltip-popup" set:html={authorBio} />
+                                            <strong itemprop="name">
+                                                {authorName}
+                                            </strong>
+                                            <span
+                                                class="author-tooltip-popup"
+                                                set:html={authorBio}
+                                            />
                                         </span>
                                     </a>
                                 </span>
@@ -989,7 +1004,8 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            <a href={reviewerLink}
+                            <a
+                                href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -1003,12 +1019,16 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    <a href={reviewerLink}
+                                    <a
+                                        href={reviewerLink}
                                         class="author-text-link"
                                     >
                                         <span class="author-tooltip-wrap">
                                             <strong>{reviewerName}</strong>
-                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                            <span
+                                                class="author-tooltip-popup"
+                                                set:html={reviewerBio}
+                                            />
                                         </span>
                                     </a>
                                 </span>
@@ -1019,7 +1039,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                <a href={twitterLink}
+                                <a
+                                    href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -1029,7 +1050,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                <a href={facebookLink}
+                                <a
+                                    href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1039,7 +1061,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                <a href={instagramLink}
+                                <a
+                                    href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1049,7 +1072,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                <a href={linkedinLink}
+                                <a
+                                    href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1079,7 +1103,8 @@ fixedContent = stripWp(fixedContent)
                                     />
                                 ) : (
                                     <>
-                                        <a href={crumb.url}
+                                        <a
+                                            href={crumb.url}
                                             set:html={crumb.text}
                                         />
                                         <span class="separator">›</span>
@@ -1111,8 +1136,13 @@ fixedContent = stripWp(fixedContent)
                     />
 
                     <div class="post-meta-bar">
-                        <div class="meta-author vcard author" itemscope itemtype="https://schema.org/Person">
-                            <a href={authorLink}
+                        <div
+                            class="meta-author vcard author"
+                            itemscope
+                            itemtype="https://schema.org/Person"
+                        >
+                            <a
+                                href={authorLink}
                                 class="author-image-link"
                                 aria-label={`View ${authorName}'s profile`}
                             >
@@ -1126,13 +1156,19 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     By{" "}
-                                    <a href={authorLink}
+                                    <a
+                                        href={authorLink}
                                         class="author-text-link url fn"
                                         itemprop="url"
                                     >
                                         <span class="author-tooltip-wrap">
-                                            <strong itemprop="name">{authorName}</strong>
-                                            <span class="author-tooltip-popup" set:html={authorBio} />
+                                            <strong itemprop="name">
+                                                {authorName}
+                                            </strong>
+                                            <span
+                                                class="author-tooltip-popup"
+                                                set:html={authorBio}
+                                            />
                                         </span>
                                     </a>
                                 </span>
@@ -1143,7 +1179,8 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <div class="meta-reviewer">
-                            <a href={reviewerLink}
+                            <a
+                                href={reviewerLink}
                                 class="author-image-link"
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
@@ -1157,12 +1194,16 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span class="meta-name">
                                     Reviewed by{" "}
-                                    <a href={reviewerLink}
+                                    <a
+                                        href={reviewerLink}
                                         class="author-text-link"
                                     >
                                         <span class="author-tooltip-wrap">
                                             <strong>{reviewerName}</strong>
-                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                            <span
+                                                class="author-tooltip-popup"
+                                                set:html={reviewerBio}
+                                            />
                                         </span>
                                     </a>
                                 </span>
@@ -1172,7 +1213,8 @@ fixedContent = stripWp(fixedContent)
 
                         <div class="meta-share">
                             {twitterLink && (
-                                <a href={twitterLink}
+                                <a
+                                    href={twitterLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn twitter"
@@ -1182,7 +1224,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {facebookLink && (
-                                <a href={facebookLink}
+                                <a
+                                    href={facebookLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn facebook"
@@ -1192,7 +1235,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {instagramLink && (
-                                <a href={instagramLink}
+                                <a
+                                    href={instagramLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn instagram"
@@ -1202,7 +1246,8 @@ fixedContent = stripWp(fixedContent)
                                 </a>
                             )}
                             {linkedinLink && (
-                                <a href={linkedinLink}
+                                <a
+                                    href={linkedinLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="share-btn linkedin"
@@ -1247,7 +1292,8 @@ fixedContent = stripWp(fixedContent)
                             class="cus-author-item"
                             style="display: flex; gap: 1rem; align-items: center;"
                         >
-                            <a href={reviewerLink}
+                            <a
+                                href={reviewerLink}
                                 aria-label={`View ${reviewerName}'s profile`}
                             >
                                 <img
@@ -1262,12 +1308,16 @@ fixedContent = stripWp(fixedContent)
                             <div>
                                 <span style="display: block; font-size: 0.9rem; color: #475569;">
                                     Reviewed By{" "}
-                                    <a href={reviewerLink}
+                                    <a
+                                        href={reviewerLink}
                                         style="color: #0f172a; text-decoration: none;"
                                     >
                                         <span class="author-tooltip-wrap">
                                             <strong>{reviewerName}</strong>
-                                            <span class="author-tooltip-popup" set:html={reviewerBio} />
+                                            <span
+                                                class="author-tooltip-popup"
+                                                set:html={reviewerBio}
+                                            />
                                         </span>
                                     </a>
                                 </span>
@@ -1347,12 +1397,14 @@ fixedContent = stripWp(fixedContent)
                                         `https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
                                     // 🔒 FIX: this had NO Cloudways sanitization at all —
                                     // a raw staging avatar URL from WP would render as-is.
-                                    recAuthorAvatar = toRelativeMediaUrl(recAuthorAvatar)
+                                    recAuthorAvatar =
+                                        toRelativeMediaUrl(recAuthorAvatar)
 
                                     return (
                                         <div class="breaking-story-card">
                                             <div class="breaking-story-image">
-                                                <a href={storyLink}
+                                                <a
+                                                    href={storyLink}
                                                     class="thumbnail-link"
                                                 >
                                                     <img
@@ -1377,7 +1429,8 @@ fixedContent = stripWp(fixedContent)
                                                         {storyDate}
                                                     </span>
                                                 </div>
-                                                <a href={storyLink}
+                                                <a
+                                                    href={storyLink}
                                                     class="card-title-link"
                                                 >
                                                     <h3
@@ -1447,7 +1500,8 @@ fixedContent = stripWp(fixedContent)
                                         authorObj?.avatar?.url ||
                                         `https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
                                     // 🔒 FIX: same missing sanitization as recAuthorAvatar above.
-                                    blogAuthorAvatar = toRelativeMediaUrl(blogAuthorAvatar)
+                                    blogAuthorAvatar =
+                                        toRelativeMediaUrl(blogAuthorAvatar)
 
                                     return (
                                         <div class="blog-post-card">
@@ -1468,7 +1522,8 @@ fixedContent = stripWp(fixedContent)
                                                 </a>
                                             </div>
                                             <div class="blog-post-content">
-                                                <a href={blogLink}
+                                                <a
+                                                    href={blogLink}
                                                     class="blog-title-link"
                                                 >
                                                     <h3
@@ -1491,7 +1546,8 @@ fixedContent = stripWp(fixedContent)
                                                             {blogDate}
                                                         </span>
                                                     </div>
-                                                    <a href={blogLink}
+                                                    <a
+                                                        href={blogLink}
                                                         class="blog-read-more"
                                                     >
                                                         Read{" "}
@@ -2215,71 +2271,77 @@ fixedContent = stripWp(fixedContent)
     /* =========================================
    AUTHOR/REVIEWER NAME HOVER TOOLTIP
 ========================================= */
-.author-tooltip-wrap {
-    position: relative;
-    display: inline-block;
-}
+    .author-tooltip-wrap {
+        position: relative;
+        display: inline-block;
+    }
 
-.author-tooltip-popup {
-    position: absolute;
-    bottom: 130%;
-    left: 50%;
-    transform: translateX(-50%) translateY(6px);
-    width: max-content;
-    max-width: 260px;
-    background: #ffffff;
-    color: #334155;
-    font-size: 0.85rem;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: left;
-    padding: 14px 16px;
-    border-radius: 10px;
-    box-shadow:
-        0 10px 25px -5px rgba(0, 0, 0, 0.25),
-        0 4px 6px -2px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
-    z-index: 50;
-}
-
-.author-tooltip-popup strong {
-    color: #0f172a;
-    font-weight: 700;
-}
-
-.author-tooltip-popup::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: #ffffff transparent transparent transparent;
-}
-
-.author-tooltip-wrap:hover .author-tooltip-popup {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-@media (max-width: 600px) {
     .author-tooltip-popup {
-        max-width: 220px;
-        left: 0;
-        transform: translateY(6px);
+        position: absolute;
+        top: 130%; /* was: bottom: 130%; */
+        left: 50%;
+        transform: translateX(-50%) translateY(-6px); /* was: translateY(6px) */
+        width: max-content;
+        max-width: 260px;
+        background: #ffffff;
+        color: #334155;
+        font-size: 0.85rem;
+        font-weight: 400;
+        line-height: 1.5;
+        text-align: left;
+        padding: 14px 16px;
+        border-radius: 10px;
+        box-shadow:
+            0 10px 25px -5px rgba(0, 0, 0, 0.25),
+            0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease,
+            visibility 0.2s ease;
+        z-index: 50;
     }
+
+    .author-tooltip-popup::after {
+        content: "";
+        position: absolute;
+        bottom: 100%; /* was: top: 100%; */
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #ffffff transparent; /* was: #ffffff transparent transparent transparent */
+    }
+
     .author-tooltip-wrap:hover .author-tooltip-popup {
-        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
     }
-}
+
+    .author-tooltip-popup strong {
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .author-tooltip-wrap:hover .author-tooltip-popup {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 600px) {
+        .author-tooltip-popup {
+            max-width: 220px;
+            left: 0;
+            transform: translateY(6px);
+        }
+        .author-tooltip-wrap:hover .author-tooltip-popup {
+            transform: translateY(0);
+        }
+    }
 
     /* =========================================
        POST HERO SECTION
@@ -2289,7 +2351,7 @@ fixedContent = stripWp(fixedContent)
         color: #ffffff;
         padding: 4rem 1rem 3rem;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath fill-rule='evenodd' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 86c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm28-65c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm23-11c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm-6 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zm29 21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM32 34c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm60-35c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zM6 10c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm90 60c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-40 20c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-20-40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zM10 50c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm80 40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-40-20c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm-20-40c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z'/%3E%3C/g%3E%3C/svg%3E");
     }
     .post-hero::before {
@@ -2370,34 +2432,34 @@ fixedContent = stripWp(fixedContent)
 
     /* Post Meta Bar */
     .post-meta-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #1e293b;
-    padding-top: 1.5rem;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-}
-
-.meta-reviewer {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding-left: 1.5rem;
-    margin-left: 1.5rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 900px) {
-    .post-meta-bar {
-        justify-content: flex-start;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #1e293b;
+        padding-top: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
     }
+
     .meta-reviewer {
-        border-left: none;
-        padding-left: 0;
-        margin-left: 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding-left: 1.5rem;
+        margin-left: 1.5rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
     }
-}
+
+    @media (max-width: 900px) {
+        .post-meta-bar {
+            justify-content: flex-start;
+        }
+        .meta-reviewer {
+            border-left: none;
+            padding-left: 0;
+            margin-left: 0;
+        }
+    }
     .meta-author {
         display: flex;
         align-items: center;
@@ -2835,7 +2897,7 @@ fixedContent = stripWp(fixedContent)
         padding: 40px 20px 60px;
         color: #f8fafc;
         position: relative;
-        overflow: hidden;
+        overflow: visible; /* was: overflow: hidden; */
     }
 
     /* Subtle background pattern/glow */
@@ -2884,17 +2946,17 @@ fixedContent = stripWp(fixedContent)
 
     /* --- REVIEW HERO AUTHOR BAR --- */
     .review-hero-author {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    padding: 16px 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-}
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        padding: 16px 24px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+    }
 
     .review-hero-author .meta-name {
         color: #cbd5e1;
@@ -4050,13 +4112,13 @@ fixedContent = stripWp(fixedContent)
     }
 
     .meta-avatar {
-    width: 100px !important;
-    height: 100px !important;
-    border-radius: 50%;
-    border: 2px solid #334155;
-    object-fit: cover;
-    flex-shrink: 0;
-}
+        width: 100px !important;
+        height: 100px !important;
+        border-radius: 50%;
+        border: 2px solid #334155;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
 </style>
 
 <script>
