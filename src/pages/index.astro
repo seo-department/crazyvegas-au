@@ -905,6 +905,60 @@ const blogPosts = recentPosts.slice(3, 7)
             )
         }
     </main>
+
+	<section class="site-trust-section">
+        <div class="site-trust-container">
+            <div class="site-author-card">
+                <img
+                    src={authorAvatar}
+                    alt={authorName}
+                    class="site-author-avatar"
+                    referrerpolicy="no-referrer"
+                />
+                <div class="site-author-info">
+                    <h3 class="site-author-name">
+                        <a href={authorLink}>{authorName}</a>
+                    </h3>
+                    <p class="site-author-bio" set:html={authorBio} />
+                    <div class="site-author-socials">
+                        {authorTwitter && (
+                            <a href={authorTwitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                                <i class="fa-brands fa-twitter" />
+                            </a>
+                        )}
+                        {authorFacebook && (
+                            <a href={authorFacebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                                <i class="fa-brands fa-facebook-f" />
+                            </a>
+                        )}
+                        {authorInstagram && (
+                            <a href={authorInstagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                <i class="fa-brands fa-instagram" />
+                            </a>
+                        )}
+                        {authorLinkedIn && (
+                            <a href={authorLinkedIn} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in" />
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-trust-statement">
+                <p>
+                    Crazy Vegas delivers real money online casino reviews,
+                    comparisons, and payout data that Australian players can
+                    actually rely on. Our team backs every review with real
+                    deposits, real withdrawals, and over a decade of
+                    experience testing the AU market. We're committed to
+                    clear, honest, and independently tested coverage of
+                    online casinos in Australia.
+                </p>
+            </div>
+        </div>
+    </section>
+</Layout>
 </Layout>
 
 <!-- 🚨 FIX: Placed inline script properly with DOM parsing logic to insert TOC automatically -->
@@ -1031,6 +1085,114 @@ const blogPosts = recentPosts.slice(3, 7)
     position: relative;
     display: inline-block;
 }
+
+
+/* ===== Site trust / author card (above footer, homepage) ===== */
+    .site-trust-section {
+        background: #f8fafc;
+        padding: 48px 20px;
+        border-top: 1px solid #e2e8f0;
+    }
+    .site-trust-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    .site-author-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-top: 4px solid #1a233a;
+        border-radius: 16px;
+        padding: 28px;
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .site-author-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 3px solid #f1f5f9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .site-author-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .site-author-name {
+        margin: 0 0 12px 0;
+        font-size: 1.4rem;
+        font-weight: 800;
+    }
+    .site-author-name a {
+        color: #1a233a;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .site-author-name a:hover {
+        color: #2563eb;
+    }
+    .site-author-bio {
+        color: #475569;
+        font-size: 0.98rem;
+        line-height: 1.7;
+        margin: 0 0 16px 0;
+    }
+    .site-author-bio strong {
+        color: #0f172a;
+    }
+    .site-author-socials {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .site-author-socials a {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+    .site-author-socials a:hover {
+        background: #1a233a;
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+    .site-trust-statement {
+        background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+        border: 1px solid #dbeafe;
+        border-left: 4px solid #2563eb;
+        border-radius: 12px;
+        padding: 24px 28px;
+    }
+    .site-trust-statement p {
+        margin: 0;
+        color: #334155;
+        font-size: 1rem;
+        line-height: 1.75;
+        font-weight: 500;
+    }
+    @media (max-width: 640px) {
+        .site-author-card {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .site-author-socials {
+            justify-content: center;
+        }
+    }
+	
 
 .author-tooltip-popup {
     position: absolute;
