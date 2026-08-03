@@ -7597,7 +7597,9 @@ function timeAgo(dateString: string) {
         .mobile-menu-toggle {
             display: block;
         }
-        .header-nav {
+        
+        /* Apply mobile styles to both header-nav and the header-right wrapper */
+        .header-nav, .header-right {
             display: none;
             flex-direction: column;
             position: absolute;
@@ -7610,13 +7612,17 @@ function timeAgo(dateString: string) {
             z-index: 999;
             box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
         }
+        
         .nav-dropdown {
             width: 100%;
             display: block;
         }
-        .header-nav.active {
+        
+        /* Activate both elements when toggled */
+        .header-nav.active, .header-right.active {
             display: flex;
         }
+        
         .header-nav .nav-dropdown-toggle,
         .header-nav .nav-link {
             width: 100%;
@@ -7657,6 +7663,7 @@ function timeAgo(dateString: string) {
             text-decoration: none;
         }
     }
+    
     @media (max-width: 768px) {
         .cus-heading {
             font-size: 1.8rem;
@@ -15524,65 +15531,66 @@ function timeAgo(dateString: string) {
 </script>
 
 <script>
-    // Wrap the logic in a function so it can be called safely
     function initMobileMenu() {
-        const toggleBtn = document.querySelector(".mobile-menu-toggle")
-        const nav = document.querySelector(".header-nav")
+        const toggleBtn = document.querySelector(".mobile-menu-toggle");
+        // Target .header-right to safely catch the MegaMenu wrapper
+        const nav = document.querySelector(".header-right") || document.querySelector(".header-nav");
 
-        // ASTRO FIX: Prevent errors if elements don't exist on the current page
-        if (!toggleBtn || !nav) return
+        if (!toggleBtn || !nav) return;
 
-        const iconBars = toggleBtn.querySelector(".icon-bars")
-        const iconClose = toggleBtn.querySelector(".icon-close")
+        const iconBars = toggleBtn.querySelector(".icon-bars");
+        const iconClose = toggleBtn.querySelector(".icon-close");
 
-        // ASTRO FIX: don't bind the same button twice (DOMContentLoaded + astro:page-load)
-        if (toggleBtn.dataset.bound === "true") return
-        toggleBtn.dataset.bound = "true"
+        if (toggleBtn.dataset.bound === "true") return;
+        toggleBtn.dataset.bound = "true";
 
-        // 1. Main Mobile Menu Toggle (swaps the two inline SVGs, not a font icon)
+        // Main menu toggle
         toggleBtn.addEventListener("click", function () {
-            const isOpen = nav.classList.toggle("active")
-            toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false")
-            if (iconBars) iconBars.style.display = isOpen ? "none" : "block"
-            if (iconClose) iconClose.style.display = isOpen ? "block" : "none"
-        })
+            const isOpen = nav.classList.toggle("active");
+            
+            // If the wrapper is used, also toggle the inner header-nav just in case
+            const innerNav = nav.querySelector(".header-nav");
+            if (innerNav) innerNav.classList.toggle("active", isOpen);
 
-        // 2. Mobile Dropdown Toggle (Accordion effect)
-        const dropdownToggles = document.querySelectorAll(
-            ".nav-dropdown-toggle",
-        )
+            toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            if (iconBars) iconBars.style.display = isOpen ? "none" : "block";
+            if (iconClose) iconClose.style.display = isOpen ? "block" : "none";
+        });
 
+        // Dropdown toggles
+        const dropdownToggles = document.querySelectorAll(".nav-dropdown-toggle");
         dropdownToggles.forEach(btn => {
-            // ASTRO FIX: Remove old event listeners to prevent duplicates during View Transitions
-            // (Astro runs scripts multiple times if you navigate back and forth)
-            const newBtn = btn.cloneNode(true)
-            btn.parentNode.replaceChild(newBtn, btn)
+            // Remove old event listeners to prevent duplicates during View Transitions
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
 
             newBtn.addEventListener("click", function (e) {
                 if (window.innerWidth <= 991) {
-                    e.preventDefault()
+                    e.preventDefault();
+                    const parentDropdown = this.parentElement;
+                    if (!parentDropdown) return;
 
-                    const parentDropdown = this.parentElement
-                    if (!parentDropdown) return
-
-                    parentDropdown.classList.toggle("open")
-
-                    const chevron = this.querySelector(".fa-chevron-down")
+                    parentDropdown.classList.toggle("open");
+                    const chevron = this.querySelector(".fa-chevron-down");
                     if (chevron) {
-                        if (parentDropdown.classList.contains("open")) {
-                            chevron.style.transform = "rotate(180deg)"
-                        } else {
-                            chevron.style.transform = "rotate(0deg)"
-                        }
+                        chevron.style.transform = parentDropdown.classList.contains("open") 
+                            ? "rotate(180deg)" 
+                            : "rotate(0deg)";
                     }
                 }
-            })
-        })
+            });
+        });
     }
 
-    // ASTRO FIX: Support both standard loads and Astro View Transitions
-    document.addEventListener("DOMContentLoaded", initMobileMenu)
-    document.addEventListener("astro:page-load", initMobileMenu)
+    // ASTRO FIX: Module scripts are deferred, meaning DOMContentLoaded might have already passed.
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initMobileMenu);
+    } else {
+        initMobileMenu();
+    }
+
+    // Support for Astro View Transitions
+    document.addEventListener("astro:page-load", initMobileMenu);
 </script>
 
 <script>
