@@ -11514,6 +11514,193 @@ function timeAgo(dateString: string) {
         }
     }
 
+
+
+    .author-reviewer-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 14px 20px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #dc2626;
+    border-radius: 4px;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+.update-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 24px;
+    border-right: 1px solid #e2e8f0;
+    margin-right: 24px;
+}
+.update-flag {
+    color: #dc2626;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.update-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+.update-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+.update-date {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.author-block,
+.reviewer-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 24px;
+}
+.author-avatar,
+.reviewer-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #dc2626;
+    padding: 2px;
+    flex-shrink: 0;
+}
+.author-text,
+.reviewer-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+}
+.author-name-link,
+.reviewer-name-link {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #dc2626 !important;
+    text-decoration: none;
+}
+.author-name-link:hover,
+.reviewer-name-link:hover {
+    text-decoration: underline;
+}
+.author-role,
+.reviewer-role {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: #475569;
+}
+
+.fact-checked-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 24px;
+    border-left: 1px solid #e2e8f0;
+    padding-left: 24px;
+}
+.fact-checked-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    font-weight: 800;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #0f172a;
+    letter-spacing: 0.02em;
+}
+.fact-checked-icon {
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.share-block {
+    margin-left: auto;
+    position: relative;
+}
+.share-toggle-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.share-toggle-btn:hover {
+    background: #0284c7;
+    transform: translateY(-2px);
+}
+.share-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+}
+.share-popup a {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: transform 0.15s ease;
+}
+.share-popup a:hover {
+    transform: translateY(-2px);
+}
+.share-fb { background: #1877f2; }
+.share-x { background: #000; }
+.share-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.share-yt { background: #ff0000; }
+.share-pin { background: #e60023; }
+.share-reddit { background: #ff4500; }
+
+@media (max-width: 900px) {
+    .author-reviewer-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+    .update-block,
+    .author-block,
+    .reviewer-block,
+    .fact-checked-block {
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .share-block {
+        margin-left: 0;
+        align-self: flex-end;
+    }
+}
+
+
+
     /* Individual Casino Card */
     .cus-hp-casino-card {
         background-color: #ffffff;
@@ -11607,11 +11794,15 @@ function timeAgo(dateString: string) {
         border-top: 3px solid #e5e5e5;
     }
 
+    .disclaimer-cl {
+    margin-bottom: -29px !important;
+}
+
     /* --- Main Disclaimer Box --- */
     .desktop-dis .disclaimer-cl {
         border-radius: 8px; /* Modern rounded corners */
         padding: 16px 24px;
-        margin: 24px 0;
+        margin: 1px 0;
         font-family:
             system-ui,
             -apple-system,
@@ -16175,4 +16366,39 @@ function timeAgo(dateString: string) {
     }
     document.addEventListener("DOMContentLoaded", initCookieConsent)
     document.addEventListener("astro:page-load", initCookieConsent)
+</script>
+
+<script>
+    function initSharePopup() {
+        const btn = document.getElementById("shareToggleBtn")
+        const popup = document.getElementById("sharePopup")
+        if (!btn || !popup || btn.dataset.bound === "true") return
+        btn.dataset.bound = "true"
+
+        btn.addEventListener("click", (e) => {
+            e.stopPropagation()
+            const isHidden = popup.hasAttribute("hidden")
+            if (isHidden) {
+                popup.removeAttribute("hidden")
+                btn.setAttribute("aria-expanded", "true")
+            } else {
+                popup.setAttribute("hidden", "")
+                btn.setAttribute("aria-expanded", "false")
+            }
+        })
+
+        document.addEventListener("click", (e) => {
+            if (!popup.contains(e.target) && e.target !== btn) {
+                popup.setAttribute("hidden", "")
+                btn.setAttribute("aria-expanded", "false")
+            }
+        })
+    }
+
+    if (document.readyState !== "loading") {
+        initSharePopup()
+    } else {
+        document.addEventListener("DOMContentLoaded", initSharePopup)
+    }
+    document.addEventListener("astro:page-load", initSharePopup)
 </script>
