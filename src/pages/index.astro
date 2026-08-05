@@ -1199,49 +1199,49 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	.author-tooltip-popup {
-    position: absolute;
-    top: 130%;              /* was: bottom: 130% */
-    left: 50%;
-    transform: translateX(-50%) translateY(-6px);   /* was: translateY(6px) */
-    width: max-content;
-    max-width: 260px;
-    background: #ffffff;
-    color: #334155;
-    font-size: 0.85rem;
-    font-weight: 400;
-    line-height: 1.5;
-    text-align: left;
-    padding: 14px 16px;
-    border-radius: 10px;
-    box-shadow:
-        0 10px 25px -5px rgba(0, 0, 0, 0.25),
-        0 4px 6px -2px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
-    z-index: 50;
-}
+		position: absolute;
+		top: 130%; /* was: bottom: 130% */
+		left: 50%;
+		transform: translateX(-50%) translateY(-6px); /* was: translateY(6px) */
+		width: max-content;
+		max-width: 260px;
+		background: #ffffff;
+		color: #334155;
+		font-size: 0.85rem;
+		font-weight: 400;
+		line-height: 1.5;
+		text-align: left;
+		padding: 14px 16px;
+		border-radius: 10px;
+		box-shadow:
+			0 10px 25px -5px rgba(0, 0, 0, 0.25),
+			0 4px 6px -2px rgba(0, 0, 0, 0.1);
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition:
+			opacity 0.2s ease,
+			transform 0.2s ease,
+			visibility 0.2s ease;
+		z-index: 50;
+	}
 
-.author-tooltip-popup::after {
-    content: "";
-    position: absolute;
-    bottom: 100%;             /* was: top: 100% */
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: transparent transparent #ffffff transparent;   /* was: #ffffff transparent transparent transparent */
-}
+	.author-tooltip-popup::after {
+		content: "";
+		position: absolute;
+		bottom: 100%; /* was: top: 100% */
+		left: 50%;
+		transform: translateX(-50%);
+		border-width: 6px;
+		border-style: solid;
+		border-color: transparent transparent #ffffff transparent; /* was: #ffffff transparent transparent transparent */
+	}
 
-.author-tooltip-wrap:hover .author-tooltip-popup {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
+	.author-tooltip-wrap:hover .author-tooltip-popup {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(-50%) translateY(0);
+	}
 
 	@media (max-width: 600px) {
 		.author-tooltip-popup {
@@ -1251,6 +1251,16 @@ const blogPosts = recentPosts.slice(3, 7)
 		}
 		.author-tooltip-wrap:hover .author-tooltip-popup {
 			transform: translateY(0);
+		}
+
+		.author-text {
+			text-align: left !important;
+		}
+		.reviewer-text {
+			text-align: left !important;
+		}
+		.fact-checked-text {
+			display: block !important;
 		}
 	}
 
