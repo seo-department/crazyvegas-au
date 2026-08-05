@@ -627,52 +627,30 @@ const blogPosts = recentPosts.slice(3, 7)
 							so always ensure you meet the <a
 								href="/gambling-laws/">legal gambling age</a
 							> and comply with your local regulations before playing.
-							<button
-								class="show-more-link show-more-btn"
-								onclick="toggleContent(this)"
-								>Show More <i class="fa-solid fa-chevron-down"
-								></i></button
-							>
+							
 						</p>
-						<div
-							class="content1"
-							style="display: none; margin-top: 1rem;"
-						>
-							<p>
-								Gambling can be addictive; we encourage you to
-								set personal limits and <a
-									href="/gambling-addiction/"
-									>seek professional help</a
-								> if needed.
-							</p>
-							<p>
-								Some of the links on Crazy Vegas are affiliate
-								links. This means we may earn a commission (at
-								no additional cost to you) if you click through
-								and make a deposit at a partner site. Our
-								reviews and recommendations are based on
-								independent research and a strict <a
-									href="/editorial-policy/"
-									>editorial process</a
-								> to ensure accuracy, impartiality, and trustworthiness.
-								You can learn more about our evaluation process on
-								our <a href="/how-we-rate-casinos/"
-									>How We Rate</a
-								> page.
-							</p>
 
-							<p>
-								For full transparency, please see our <a
-									href="/affiliate-disclosure/"
-									>Affiliate Disclosure</a
-								>. If you have any questions, feedback, or
-								concerns, don’t hesitate to contact our team.
-								Remember: play for fun, stay safe, and <a
-									href="/responsible-gambling/"
-									>gamble within your means</a
-								>.
-							</p>
-						</div>
+						<p>
+							Gambling can be addictive; we encourage you to set
+							personal limits and <a href="/gambling-addiction/"
+								>seek professional help</a
+							> if needed.
+						</p>
+
+						<p>
+							Some of the links on Crazy Vegas are affiliate
+							links. This means we may earn a commission (at no
+							additional cost to you) if you click through and
+							make a deposit at a partner site. Our reviews and
+							recommendations are based on independent research
+							and a strict <a href="/editorial-policy/"
+								>editorial process</a
+							> to ensure accuracy, impartiality, and trustworthiness.
+							You can learn more about our evaluation process on our
+							<a href="/how-we-rate-casinos/">How We Rate</a> page.
+						</p>
+
+						
 					</div>
 				</div>
 			</div>
@@ -1134,18 +1112,17 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: 500;
 	}
 	@media (max-width: 640px) {
+		.author-reviewer-bar {
+			margin-top: 11px;
+		}
 
 		.author-reviewer-bar {
-    margin-top: 11px;
-}
+			margin-bottom: -5px !important;
+		}
 
-.author-reviewer-bar {
-    margin-bottom: -5px !important;
-}
-
-.space-organizations-3-archive-items.box-100.relative {
-    margin-top: -47px !important;
-}
+		.space-organizations-3-archive-items.box-100.relative {
+			margin-top: -47px !important;
+		}
 		.site-author-card {
 			flex-direction: column;
 			align-items: center;
@@ -4116,13 +4093,11 @@ const blogPosts = recentPosts.slice(3, 7)
 	/* --- Adjust Left Column (Breaking Stories) Sizing --- */
 
 	@media (min-width: 601px) {
-    .breaking-story-image {
-        width: 220px !important;
-        min-width: 220px !important;
-    }
-
-	
-}
+		.breaking-story-image {
+			width: 220px !important;
+			min-width: 220px !important;
+		}
+	}
 	/* Shrink the thumbnail image slightly */
 	.breaking-story-image {
 		width: 220px !important; /* Reduced from default */
@@ -4522,11 +4497,10 @@ const blogPosts = recentPosts.slice(3, 7)
        MOBILE RESPONSIVENESS
     ========================================= */
 	@media (max-width: 768px) {
-
 		div#main-content {
-    max-width: 100% !important;
-    overflow: hidden !important;
-}
+			max-width: 100% !important;
+			overflow: hidden !important;
+		}
 
 		.cus-casino-float-image.right {
 			float: none;

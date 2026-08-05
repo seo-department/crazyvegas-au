@@ -2475,6 +2475,36 @@
       "source": "/play/spinaconda-casino/",
       "destination": "https://gtrfspn.com/jzdl9sgb5",
       "permanent": true
+    },
+    {
+      "source": "/play/jackpot-town-casino",
+      "destination": "https://www.jackpot-town.com/en",
+      "permanent": true
+    },
+    {
+      "source": "/play/aces-wild-casino",
+      "destination": "https://www.aces-wild.com/en",
+      "permanent": true
+    },
+    {
+      "source": "/play/reel-roger-casino",
+      "destination": "https://www.reelroger.com/en",
+      "permanent": true
+    },
+    {
+      "source": "/play/prive-city-casino",
+      "destination": "https://www.privecity.com/en",
+      "permanent": true
+    },
+    {
+      "source": "/play/spin-ace-casino",
+      "destination": "https://www.spin-ace.com/",
+      "permanent": true
+    },
+    {
+      "source": "/play/casiyou-casino",
+      "destination": "https://www.casiyou.com/en",
+      "permanent": true
     }
   ]
 }
