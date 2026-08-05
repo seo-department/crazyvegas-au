@@ -791,6 +791,10 @@ function timeAgo(dateString: string) {
         color: #60a5fa;
     }
     @media (max-width: 768px) {
+        div#main-content {
+    max-width: 100% !important;
+    overflow: hidden !important;
+} 
         .top-utility-bar-inner {
             justify-content: center;
         }
@@ -7645,7 +7649,7 @@ function timeAgo(dateString: string) {
     }
     .mobile-menu-toggle {
         display: none;
-        background: 0 0;
+        background: #0f172a;
         border: none;
         color: #fff;
         font-size: 24px;
@@ -7654,6 +7658,41 @@ function timeAgo(dateString: string) {
     @media (max-width: 991px) {
         .mobile-menu-toggle {
             display: block;
+        }
+
+        .nav-dropdown-menu.mega-menu,
+        .nav-dropdown:hover .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(1)
+            .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(2)
+            .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(3)
+            .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(1):hover
+            .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(2):hover
+            .nav-dropdown-menu.mega-menu,
+        .header-nav
+            .nav-dropdown:nth-last-of-type(3):hover
+            .nav-dropdown-menu.mega-menu {
+            left: 0 !important;
+            right: auto !important;
+            transform: none !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+        }
+
+        .nav-dropdown-menu.mega-menu {
+            display: none !important;
+        }
+        .nav-dropdown.open .nav-dropdown-menu.mega-menu {
+            display: flex !important;
         }
 
         /* Apply mobile styles to both header-nav and the header-right wrapper */
@@ -7665,7 +7704,7 @@ function timeAgo(dateString: string) {
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: #0f172a;
+            background-color: #f8fafc;
             padding: 20px;
             box-sizing: border-box;
             z-index: 999;

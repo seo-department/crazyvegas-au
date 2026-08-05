@@ -623,7 +623,10 @@ const blogPosts = recentPosts.slice(3, 7)
 						<p>
 							<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
 							should always be seen as entertainment, not a way to
-							make money. Laws regarding online gambling vary
+							make money. Laws regarding online gambling vary by country,
+							so always ensure you meet the <a
+								href="/gambling-laws/">legal gambling age</a
+							> and comply with your local regulations before playing.
 							<button
 								class="show-more-link show-more-btn"
 								onclick="toggleContent(this)"
@@ -636,11 +639,8 @@ const blogPosts = recentPosts.slice(3, 7)
 							style="display: none; margin-top: 1rem;"
 						>
 							<p>
-								by country, so always ensure you meet the <a
-									href="/gambling-laws/">legal gambling age</a
-								> and comply with your local regulations before playing.
-								Gambling can be addictive; we encourage you to set
-								personal limits and <a
+								Gambling can be addictive; we encourage you to
+								set personal limits and <a
 									href="/gambling-addiction/"
 									>seek professional help</a
 								> if needed.
@@ -1134,6 +1134,18 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: 500;
 	}
 	@media (max-width: 640px) {
+
+		.author-reviewer-bar {
+    margin-top: 11px;
+}
+
+.author-reviewer-bar {
+    margin-bottom: -5px !important;
+}
+
+.space-organizations-3-archive-items.box-100.relative {
+    margin-top: -47px !important;
+}
 		.site-author-card {
 			flex-direction: column;
 			align-items: center;
@@ -1572,8 +1584,9 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	.hero-disclaimer-box {
-		max-width: 1200px;
-		margin: 0 auto 0rem;
+		max-width: 1467px;
+		margin-left: 4px !important;
+		margin: 0 auto;
 		font-size: 0.95rem;
 		color: #94a3b8;
 		line-height: 1.6;
@@ -1935,8 +1948,8 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	span.author-tooltip-wrap a {
-    color: #1e293b !important;
-}
+		color: #1e293b !important;
+	}
 
 	/* =========================================
        GREEN FEATURE BOX (Alert Info)
@@ -2578,10 +2591,8 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	.hero-right {
-    margin-top: 64px !important;
-}
-
-
+		margin-top: 64px !important;
+	}
 
 	/* =========================================
        NEW SPLIT HERO LAYOUT (Dark Theme)
@@ -4104,13 +4115,14 @@ const blogPosts = recentPosts.slice(3, 7)
 
 	/* --- Adjust Left Column (Breaking Stories) Sizing --- */
 
-	/* Reduce padding inside the breaking story cards */
-	.breaking-story-card {
-		padding: 16px !important;
-		gap: 16px !important;
-		margin-bottom: 12px !important; /* Tighter gap between rows */
-	}
+	@media (min-width: 601px) {
+    .breaking-story-image {
+        width: 220px !important;
+        min-width: 220px !important;
+    }
 
+	
+}
 	/* Shrink the thumbnail image slightly */
 	.breaking-story-image {
 		width: 220px !important; /* Reduced from default */
@@ -4510,6 +4522,12 @@ const blogPosts = recentPosts.slice(3, 7)
        MOBILE RESPONSIVENESS
     ========================================= */
 	@media (max-width: 768px) {
+
+		div#main-content {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
 		.cus-casino-float-image.right {
 			float: none;
 			margin: 0 auto 2rem auto;
