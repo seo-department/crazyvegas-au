@@ -499,71 +499,68 @@ const blogPosts = recentPosts.slice(3, 7)
 							</div>
 						</div>
 
-						<div class="share-block">
-							<button
-								class="share-toggle-btn"
-								id="shareToggleBtn"
-								aria-label="Share this page"
-								aria-expanded="false"
+						<div class="share-popup" id="sharePopup" hidden>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Facebook"
+								class="share-fb"
+								data-share="facebook"
 							>
-								<i class="fa-solid fa-share"></i>
-							</button>
-							<div class="share-popup" id="sharePopup" hidden>
-								<a
-									href="https://www.facebook.com/aucrazyvegas/"
-									target="_blank"
-									rel="noopener"
-									aria-label="Facebook"
-									class="share-fb"
-								>
-									<i class="fa-brands fa-facebook-f"></i>
-								</a>
-								<a
-									href="https://x.com/aucrazyvegas"
-									target="_blank"
-									rel="noopener"
-									aria-label="X"
-									class="share-x"
-								>
-									<i class="fa-brands fa-x-twitter"></i>
-								</a>
-								<a
-									href="https://www.instagram.com/aucrazyvegas/"
-									target="_blank"
-									rel="noopener"
-									aria-label="Instagram"
-									class="share-ig"
-								>
-									<i class="fa-brands fa-instagram"></i>
-								</a>
-								<a
-									href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
-									target="_blank"
-									rel="noopener"
-									aria-label="YouTube"
-									class="share-yt"
-								>
-									<i class="fa-brands fa-youtube"></i>
-								</a>
-								<a
-									href="https://au.pinterest.com/aucrazyvegas/"
-									target="_blank"
-									rel="noopener"
-									aria-label="Pinterest"
-									class="share-pin"
-								>
-									<i class="fa-brands fa-pinterest"></i>
-								</a>
-								<a
-									href="https://www.reddit.com/user/aucrazy_vegas/"
-									target="_blank"
-									rel="noopener"
-									aria-label="Reddit"
-									class="share-reddit"
-								>
-									<i class="fa-brands fa-reddit-alien"></i>
-								</a>
-							</div>
+								<i class="fa-brands fa-facebook-f"></i>
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on X"
+								class="share-x"
+								data-share="x"
+							>
+								<i class="fa-brands fa-x-twitter"></i>
+							</a>
+
+							
+							<a
+								href="https://www.instagram.com/aucrazyvegas/"
+								target="_blank"
+								rel="noopener"
+								aria-label="Instagram"
+								class="share-ig"
+							>
+								<i class="fa-brands fa-instagram"></i>
+							</a>
+							<a
+								href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
+								target="_blank"
+								rel="noopener"
+								aria-label="YouTube"
+								class="share-yt"
+							>
+								<i class="fa-brands fa-youtube"></i>
+							</a>
+
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Pinterest"
+								class="share-pin"
+								data-share="pinterest"
+							>
+								<i class="fa-brands fa-pinterest"></i>
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Reddit"
+								class="share-reddit"
+								data-share="reddit"
+							>
+								<i class="fa-brands fa-reddit-alien"></i>
+							</a>
 						</div>
 					</div>
 
@@ -5250,6 +5247,9 @@ const blogPosts = recentPosts.slice(3, 7)
 		color: #0f172a;
 	}
 
+	
+
+
 	.author-block,
 	.reviewer-block {
 		display: flex;
@@ -5263,7 +5263,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		height: 48px;
 		border-radius: 6px;
 		object-fit: cover;
-		background: #fff;
+		background: #fff !important;
 		padding: 2px;
 		flex-shrink: 0;
 	}
@@ -5300,7 +5300,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		padding-left: 24px;
 	}
 	.fact-checked-text {
-		display: flex;
+		display: block;
 		flex-direction: column;
 		line-height: 1.2;
 		font-weight: 800;
