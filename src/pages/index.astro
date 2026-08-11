@@ -847,348 +847,358 @@ const blogPosts = recentPosts.slice(3, 7)
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
-		<div class="hero-bottom-meta-section">
-			<div class="hero-disclaimer-box desktop-dis">
-				<div class="disclaimer-cl">
-					<p>
-						<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
-						should always be seen as entertainment, not a way to make
-						money. Laws regarding online gambling vary by country, so
-						always ensure you meet the <a href="/gambling-laws/"
-							>legal gambling age</a
-						> and comply with your local regulations before playing.
-					</p>
+			<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
+			<div class="hero-bottom-meta-section">
+				<div class="hero-disclaimer-box desktop-dis">
+					<div class="disclaimer-cl">
+						<p>
+							<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
+							should always be seen as entertainment, not a way to
+							make money. Laws regarding online gambling vary by country,
+							so always ensure you meet the <a
+								href="/gambling-laws/">legal gambling age</a
+							> and comply with your local regulations before playing.
+						</p>
 
-					<p>
-						Gambling can be addictive; we encourage you to set
-						personal limits and <a href="/gambling-addiction/"
-							>seek professional help</a
-						> if needed.
-					</p>
+						<p>
+							Gambling can be addictive; we encourage you to set
+							personal limits and <a href="/gambling-addiction/"
+								>seek professional help</a
+							> if needed.
+						</p>
 
-					<p>
-						Some of the links on Crazy Vegas are affiliate links.
-						This means we may earn a commission (at no additional
-						cost to you) if you click through and make a deposit at
-						a partner site. Our reviews and recommendations are
-						based on independent research and a strict <a
-							href="/editorial-policy/">editorial process</a
-						> to ensure accuracy, impartiality, and trustworthiness.
-						You can learn more about our evaluation process on our
-						<a href="/how-we-rate-casinos/">How We Rate</a> page.
-					</p>
+						<p>
+							Some of the links on Crazy Vegas are affiliate
+							links. This means we may earn a commission (at no
+							additional cost to you) if you click through and
+							make a deposit at a partner site. Our reviews and
+							recommendations are based on independent research
+							and a strict <a href="/editorial-policy/"
+								>editorial process</a
+							> to ensure accuracy, impartiality, and trustworthiness.
+							You can learn more about our evaluation process on our
+							<a href="/how-we-rate-casinos/">How We Rate</a> page.
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</header>
 
+	<main class="home-wrapper" id="content">
+		<article class="home-container wp-content" set:html={fixedContent} />
 
-<main class="home-wrapper" id="content">
-	<article class="home-container wp-content" set:html={fixedContent} />
+		{
+			recentPosts.length >= 4 && (
+				<section class="full-width-discovery-section">
+					<div class="discovery-container">
+						<div class="discovery-columns">
+							<div class="discovery-left-col">
+								<h2 class="discovery-section-title">
+									Read today's breaking stories
+								</h2>
+								<div class="breaking-stories-list">
+									{breakingStories.map((story: any) => {
+										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+										let relativeUri = story.uri
+											? story.uri.replace(
+													/https?:\/\/[^\/]+/g,
+													"",
+												)
+											: "/"
+										const cleanSlug = relativeUri.replace(
+											/^\/|\/$/g,
+											"",
+										)
+										const storyLink = `/${cleanSlug}/`
 
-	{
-		recentPosts.length >= 4 && (
-			<section class="full-width-discovery-section">
-				<div class="discovery-container">
-					<div class="discovery-columns">
-						<div class="discovery-left-col">
-							<h2 class="discovery-section-title">
-								Read today's breaking stories
-							</h2>
-							<div class="breaking-stories-list">
-								{breakingStories.map((story: any) => {
-									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-									let relativeUri = story.uri
-										? story.uri.replace(
-												/https?:\/\/[^\/]+/g,
-												"",
+										const storyDate = new Date(
+											story.date,
+										).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})
+
+										let storyImage =
+											story.featuredImage?.node
+												?.sourceUrl ||
+											"https://via.placeholder.com/300x150"
+
+										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+										try {
+											const parsedUrl = new URL(
+												storyImage,
 											)
-										: "/"
-									const cleanSlug = relativeUri.replace(
-										/^\/|\/$/g,
-										"",
-									)
-									const storyLink = `/${cleanSlug}/`
+											storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
+										} catch (e) {}
 
-									const storyDate = new Date(
-										story.date,
-									).toLocaleDateString("en-US", {
-										year: "numeric",
-										month: "short",
-										day: "numeric",
-									})
+										const authorObj = story.author?.node
+										const recAuthorName = authorObj
+											? authorObj.firstName &&
+												authorObj.lastName
+												? `${authorObj.firstName} ${authorObj.lastName}`
+												: authorObj.name
+											: "Editorial Team"
+										let recAuthorAvatar =
+											authorObj?.avatar?.url ||
+											`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
 
-									let storyImage =
-										story.featuredImage?.node?.sourceUrl ||
-										"https://via.placeholder.com/300x150"
-
-									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-									try {
-										const parsedUrl = new URL(storyImage)
-										storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
-									} catch (e) {}
-
-									const authorObj = story.author?.node
-									const recAuthorName = authorObj
-										? authorObj.firstName &&
-											authorObj.lastName
-											? `${authorObj.firstName} ${authorObj.lastName}`
-											: authorObj.name
-										: "Editorial Team"
-									let recAuthorAvatar =
-										authorObj?.avatar?.url ||
-										`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-									return (
-										<div class="breaking-story-card">
-											<div class="breaking-story-image">
-												<a
-													href={storyLink}
-													class="thumbnail-link"
-												>
-													<img
-														src={storyImage}
-														alt={
-															story.featuredImage
-																?.node
-																?.altText ||
-															story.title
-														}
-														loading="lazy"
-														referrerpolicy="no-referrer"
-													/>
-												</a>
-											</div>
-											<div class="breaking-story-content">
-												<div class="card-meta-top">
-													<span class="card-category">
-														News
-													</span>
-													<span class="card-date">
-														{storyDate}
-													</span>
-												</div>
-												<a
-													href={storyLink}
-													class="card-title-link"
-												>
-													<h3
-														set:html={story.title}
-													/>
-												</a>
-												<div class="card-meta-bottom">
-													<img
-														src={recAuthorAvatar}
-														alt={recAuthorName}
-														class="card-author-avatar"
-													/>
-													<span>
-														{recAuthorName} • 10 min
-														read
-													</span>
-												</div>
-											</div>
-										</div>
-									)
-								})}
-							</div>
-						</div>
-
-						<div class="discovery-right-col">
-							<h2 class="discovery-section-title">
-								Discover our blogs
-							</h2>
-							<div class="discover-blogs-list">
-								{blogPosts.map((blogPost: any) => {
-									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-									let relativeUri = blogPost.uri
-										? blogPost.uri.replace(
-												/https?:\/\/[^\/]+/g,
-												"",
-											)
-										: "/"
-									const cleanSlug = relativeUri.replace(
-										/^\/|\/$/g,
-										"",
-									)
-									const blogLink = `/${cleanSlug}/`
-
-									const blogDate = new Date(
-										blogPost.date,
-									).toLocaleDateString("en-US", {
-										year: "numeric",
-										month: "short",
-										day: "numeric",
-									})
-
-									let blogImage =
-										blogPost.featuredImage?.node
-											?.sourceUrl ||
-										"https://via.placeholder.com/150"
-
-									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-									try {
-										const parsedUrl = new URL(blogImage)
-										blogImage = parsedUrl.pathname
-									} catch (e) {}
-
-									const authorObj = blogPost.author?.node
-									const blogAuthorName = authorObj
-										? authorObj.firstName &&
-											authorObj.lastName
-											? `${authorObj.firstName} ${authorObj.lastName}`
-											: authorObj.name
-										: "Editorial Team"
-									let blogAuthorAvatar =
-										authorObj?.avatar?.url ||
-										`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-									return (
-										<div class="blog-post-card">
-											<div class="blog-post-image">
-												<a href={blogLink}>
-													<img
-														src={blogImage}
-														alt={
-															blogPost
-																.featuredImage
-																?.node
-																?.altText ||
-															blogPost.title
-														}
-														loading="lazy"
-														referrerpolicy="no-referrer"
-													/>
-												</a>
-											</div>
-											<div class="blog-post-content">
-												<a
-													href={blogLink}
-													class="blog-title-link"
-												>
-													<h3
-														set:html={
-															blogPost.title
-														}
-													/>
-												</a>
-												<div class="blog-meta">
-													<div class="blog-meta-author">
+										return (
+											<div class="breaking-story-card">
+												<div class="breaking-story-image">
+													<a
+														href={storyLink}
+														class="thumbnail-link"
+													>
 														<img
-															src={
-																blogAuthorAvatar
+															src={storyImage}
+															alt={
+																story
+																	.featuredImage
+																	?.node
+																	?.altText ||
+																story.title
 															}
-															alt={blogAuthorName}
-															class="blog-author-avatar"
+															loading="lazy"
+															referrerpolicy="no-referrer"
 														/>
-														<span>
-															{blogAuthorName} •{" "}
-															{blogDate}
+													</a>
+												</div>
+												<div class="breaking-story-content">
+													<div class="card-meta-top">
+														<span class="card-category">
+															News
+														</span>
+														<span class="card-date">
+															{storyDate}
 														</span>
 													</div>
 													<a
-														href={blogLink}
-														class="blog-read-more"
+														href={storyLink}
+														class="card-title-link"
 													>
-														Read{" "}
-														<i class="fa-solid fa-arrow-right" />
+														<h3
+															set:html={
+																story.title
+															}
+														/>
 													</a>
+													<div class="card-meta-bottom">
+														<img
+															src={
+																recAuthorAvatar
+															}
+															alt={recAuthorName}
+															class="card-author-avatar"
+														/>
+														<span>
+															{recAuthorName} • 10
+															min read
+														</span>
+													</div>
 												</div>
 											</div>
-										</div>
-									)
-								})}
+										)
+									})}
+								</div>
+							</div>
+
+							<div class="discovery-right-col">
+								<h2 class="discovery-section-title">
+									Discover our blogs
+								</h2>
+								<div class="discover-blogs-list">
+									{blogPosts.map((blogPost: any) => {
+										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+										let relativeUri = blogPost.uri
+											? blogPost.uri.replace(
+													/https?:\/\/[^\/]+/g,
+													"",
+												)
+											: "/"
+										const cleanSlug = relativeUri.replace(
+											/^\/|\/$/g,
+											"",
+										)
+										const blogLink = `/${cleanSlug}/`
+
+										const blogDate = new Date(
+											blogPost.date,
+										).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})
+
+										let blogImage =
+											blogPost.featuredImage?.node
+												?.sourceUrl ||
+											"https://via.placeholder.com/150"
+
+										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+										try {
+											const parsedUrl = new URL(blogImage)
+											blogImage = parsedUrl.pathname
+										} catch (e) {}
+
+										const authorObj = blogPost.author?.node
+										const blogAuthorName = authorObj
+											? authorObj.firstName &&
+												authorObj.lastName
+												? `${authorObj.firstName} ${authorObj.lastName}`
+												: authorObj.name
+											: "Editorial Team"
+										let blogAuthorAvatar =
+											authorObj?.avatar?.url ||
+											`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+										return (
+											<div class="blog-post-card">
+												<div class="blog-post-image">
+													<a href={blogLink}>
+														<img
+															src={blogImage}
+															alt={
+																blogPost
+																	.featuredImage
+																	?.node
+																	?.altText ||
+																blogPost.title
+															}
+															loading="lazy"
+															referrerpolicy="no-referrer"
+														/>
+													</a>
+												</div>
+												<div class="blog-post-content">
+													<a
+														href={blogLink}
+														class="blog-title-link"
+													>
+														<h3
+															set:html={
+																blogPost.title
+															}
+														/>
+													</a>
+													<div class="blog-meta">
+														<div class="blog-meta-author">
+															<img
+																src={
+																	blogAuthorAvatar
+																}
+																alt={
+																	blogAuthorName
+																}
+																class="blog-author-avatar"
+															/>
+															<span>
+																{blogAuthorName}{" "}
+																• {blogDate}
+															</span>
+														</div>
+														<a
+															href={blogLink}
+															class="blog-read-more"
+														>
+															Read{" "}
+															<i class="fa-solid fa-arrow-right" />
+														</a>
+													</div>
+												</div>
+											</div>
+										)
+									})}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-		)
-	}
-</main>
+				</section>
+			)
+		}
+	</main>
 
-<section class="site-trust-section">
-	<div class="site-trust-container">
-		<div class="site-author-card">
-			<img
-				src={authorAvatar}
-				alt={authorName}
-				class="site-author-avatar"
-				referrerpolicy="no-referrer"
-			/>
-			<div class="site-author-info">
-				<h3 class="site-author-name">
-					<a href={authorLink}>{authorName}</a>
-				</h3>
-				<p class="site-author-bio" set:html={authorBio} />
-				<div class="site-author-socials">
-					{
-						authorTwitter && (
-							<a
-								href={authorTwitter}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="Twitter"
-							>
-								<i class="fa-brands fa-twitter" />
-							</a>
-						)
-					}
-					{
-						authorFacebook && (
-							<a
-								href={authorFacebook}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="Facebook"
-							>
-								<i class="fa-brands fa-facebook-f" />
-							</a>
-						)
-					}
-					{
-						authorInstagram && (
-							<a
-								href={authorInstagram}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="Instagram"
-							>
-								<i class="fa-brands fa-instagram" />
-							</a>
-						)
-					}
-					{
-						authorLinkedIn && (
-							<a
-								href={authorLinkedIn}
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label="LinkedIn"
-							>
-								<i class="fa-brands fa-linkedin-in" />
-							</a>
-						)
-					}
+	<section class="site-trust-section">
+		<div class="site-trust-container">
+			<div class="site-author-card">
+				<img
+					src={authorAvatar}
+					alt={authorName}
+					class="site-author-avatar"
+					referrerpolicy="no-referrer"
+				/>
+				<div class="site-author-info">
+					<h3 class="site-author-name">
+						<a href={authorLink}>{authorName}</a>
+					</h3>
+					<p class="site-author-bio" set:html={authorBio} />
+					<div class="site-author-socials">
+						{
+							authorTwitter && (
+								<a
+									href={authorTwitter}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Twitter"
+								>
+									<i class="fa-brands fa-twitter" />
+								</a>
+							)
+						}
+						{
+							authorFacebook && (
+								<a
+									href={authorFacebook}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Facebook"
+								>
+									<i class="fa-brands fa-facebook-f" />
+								</a>
+							)
+						}
+						{
+							authorInstagram && (
+								<a
+									href={authorInstagram}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="Instagram"
+								>
+									<i class="fa-brands fa-instagram" />
+								</a>
+							)
+						}
+						{
+							authorLinkedIn && (
+								<a
+									href={authorLinkedIn}
+									target="_blank"
+									rel="noopener noreferrer"
+									aria-label="LinkedIn"
+								>
+									<i class="fa-brands fa-linkedin-in" />
+								</a>
+							)
+						}
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="site-trust-statement">
-			<p>
-				<b>Crazy Vegas</b> delivers real money online casino reviews, comparisons,
-				and payout data that Australian players can actually rely on. Our
-				team backs every review with real deposits, real withdrawals, and
-				over a decade of experience testing the AU market. We're committed
-				to clear, honest, and independently tested coverage of online casinos
-				in Australia.
-			</p>
+			<div class="site-trust-statement">
+				<p>
+					<b>Crazy Vegas</b> delivers real money online casino reviews,
+					comparisons, and payout data that Australian players can actually
+					rely on. Our team backs every review with real deposits, real
+					withdrawals, and over a decade of experience testing the AU market.
+					We're committed to clear, honest, and independently tested coverage
+					of online casinos in Australia.
+				</p>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 </Layout>
 <style is:global>
 	/* Styling to ensure the generated TOC supports 2 columns on desktop */
@@ -5601,43 +5611,44 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	@media (max-width: 900px) {
-  .author-reviewer-bar {
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    flex-wrap: nowrap !important;
-    gap: 8px !important;
-    overflow-x: auto !important;
-  }
+		.author-reviewer-bar {
+			flex-direction: row !important;
+			align-items: center !important;
+			justify-content: flex-start !important;
+			flex-wrap: nowrap !important;
+			gap: 8px !important;
+			overflow-x: auto !important;
+		}
 
-  .mobi-hp {
-    margin-top: -28px !important;
-    margin-bottom: 32px !important;
-}
+		.mobi-hp {
+			margin-top: -28px !important;
+			margin-bottom: 32px !important;
+		}
 
-  .update-block,
-  .author-block,
-  .reviewer-block,
-  .fact-checked-block {
-    width: auto !important;
-    flex: 0 0 auto !important;
-    padding: 0 8px !important;
-    margin: 0 !important;
-    border: none !important;
-  }
+		.update-block,
+		.author-block,
+		.reviewer-block,
+		.fact-checked-block {
+			width: auto !important;
+			flex: 0 0 auto !important;
+			padding: 0 8px !important;
+			margin: 0 !important;
+			border: none !important;
+		}
 
-  .author-avatar, .reviewer-avatar {
-    width: 32px;
-    height: 32px;
-  }
+		.author-avatar,
+		.reviewer-avatar {
+			width: 32px;
+			height: 32px;
+		}
 
-  .update-label,
-  .author-role,
-  .reviewer-role,
-  .fact-checked-text {
-    display: none;
-  }
-}
+		.update-label,
+		.author-role,
+		.reviewer-role,
+		.fact-checked-text {
+			display: none;
+		}
+	}
 
 	.share-popup {
 		position: absolute;
