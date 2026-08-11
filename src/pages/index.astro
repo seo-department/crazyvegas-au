@@ -453,7 +453,12 @@ const blogPosts = recentPosts.slice(3, 7)
 							class="cus-banner"
 							aria-live="polite"
 						>
-							<p class="hero-lead-text">
+							<!-- 🔧 FIX: Was <p class="hero-lead-text"> wrapping THREE more <p> tags.
+							     A <p> can never contain another <p> — the browser auto-closes the
+							     outer tag the instant it sees the first inner <p>, which silently
+							     breaks the DOM and can throw off surrounding height/margins.
+							     Changed the wrapper to a <div> so the inner <p> tags nest legally. -->
+							<div class="hero-lead-text">
 								<p>
 									Finding the best online casinos in Australia
 									comes down to one question: will it pay you
@@ -489,7 +494,7 @@ const blogPosts = recentPosts.slice(3, 7)
 									here is tested for real money play, not just
 									browsing.
 								</p>
-							</p>
+							</div>
 
 							<!-- Hidden Expandable Content -->
 							<div
@@ -879,7 +884,7 @@ const blogPosts = recentPosts.slice(3, 7)
 			</div>
 		</div>
 	</header>
-</Layout>
+
 
 <main class="home-wrapper" id="content">
 	<article class="home-container wp-content" set:html={fixedContent} />
@@ -1184,7 +1189,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		</div>
 	</div>
 </section>
-
+</Layout>
 <style is:global>
 	/* Styling to ensure the generated TOC supports 2 columns on desktop */
 	@media (min-width: 768px) {
