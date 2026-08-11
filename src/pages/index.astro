@@ -428,152 +428,6 @@ const blogPosts = recentPosts.slice(3, 7)
 							"Best Online Casinos in the USA for Real Money"}
 					/>
 
-					<div class="author-reviewer-bar">
-						<div class="update-block">
-							<div class="update-flag">
-								<i class="fa-solid fa-flag"></i>
-							</div>
-							<div class="update-text">
-								<span class="update-label">Updated on</span>
-								<span class="update-date">{formattedDate}</span>
-							</div>
-						</div>
-
-						<div class="author-block">
-							<img
-								src={authorAvatar}
-								alt={authorName}
-								class="author-avatar"
-								width="48"
-								height="48"
-								loading="lazy"
-							/>
-							<div class="author-text">
-								<span class="author-tooltip-wrap">
-									<a
-										class="fn url author-name-link"
-										href={authorLink}
-										rel="author">{authorName}</a
-									>
-									<span class="author-tooltip-popup"
-										>{authorBio}</span
-									>
-								</span>
-								<span class="author-role">Gambling Writer</span>
-							</div>
-						</div>
-
-						<div class="fact-checked-block">
-							<div class="fact-checked-text">
-								<span>FACT</span>
-								<span>CHECKED</span>
-							</div>
-							<div class="fact-checked-icon">
-								<i class="fa-solid fa-check-double"></i>
-							</div>
-						</div>
-
-						<div class="reviewer-block">
-							<img
-								src={reviewerAvatar}
-								alt={reviewerName}
-								class="reviewer-avatar"
-								width="48"
-								height="48"
-								loading="lazy"
-							/>
-							<div class="reviewer-text">
-								<span class="author-tooltip-wrap">
-									<a
-										href={reviewerLink}
-										class="reviewer-name-link"
-										>{reviewerName}</a
-									>
-									<span class="author-tooltip-popup"
-										>{reviewerBio}</span
-									>
-								</span>
-								<span class="reviewer-role"
-									>Gambling Expert</span
-								>
-							</div>
-						</div>
-
-						<div class="share-block">
-							<!-- This is the blue forward/share button you lost -->
-							<button
-								class="share-toggle-btn"
-								id="shareToggleBtn"
-								aria-label="Share this page"
-								aria-expanded="false"
-							>
-								<i class="fa-solid fa-share"></i>
-							</button>
-
-							<!-- This is the popup containing the individual social icons -->
-							<div class="share-popup" id="sharePopup" hidden>
-								<a
-									href="#"
-									target="_blank"
-									rel="noopener"
-									aria-label="Share on Facebook"
-									class="share-fb"
-									data-share="facebook"
-								>
-									<i class="fa-brands fa-facebook-f"></i>
-								</a>
-								<a
-									href="#"
-									target="_blank"
-									rel="noopener"
-									aria-label="Share on X"
-									class="share-x"
-									data-share="x"
-								>
-									<i class="fa-brands fa-x-twitter"></i>
-								</a>
-								<a
-									href="https://www.instagram.com/aucrazyvegas/"
-									target="_blank"
-									rel="noopener"
-									aria-label="Instagram"
-									class="share-ig"
-								>
-									<i class="fa-brands fa-instagram"></i>
-								</a>
-								<a
-									href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
-									target="_blank"
-									rel="noopener"
-									aria-label="YouTube"
-									class="share-yt"
-								>
-									<i class="fa-brands fa-youtube"></i>
-								</a>
-								<a
-									href="#"
-									target="_blank"
-									rel="noopener"
-									aria-label="Share on Pinterest"
-									class="share-pin"
-									data-share="pinterest"
-								>
-									<i class="fa-brands fa-pinterest"></i>
-								</a>
-								<a
-									href="#"
-									target="_blank"
-									rel="noopener"
-									aria-label="Share on Reddit"
-									class="share-reddit"
-									data-share="reddit"
-								>
-									<i class="fa-brands fa-reddit-alien"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-
 					<!-- <div class="hero-r-mobile">
                         <div class="hero-right">
                             <a
@@ -670,6 +524,159 @@ const blogPosts = recentPosts.slice(3, 7)
 							</div>
 						</div>
 					</div>
+
+					<div class="hd-in-mobi">
+						<div class="author-reviewer-bar">
+							<div class="update-block">
+								<div class="update-flag">
+									<i class="fa-solid fa-flag"></i>
+								</div>
+								<div class="update-text">
+									<span class="update-label">Updated on</span>
+									<span class="update-date"
+										>{formattedDate}</span
+									>
+								</div>
+							</div>
+
+							<div class="author-block">
+								<img
+									src={authorAvatar}
+									alt={authorName}
+									class="author-avatar"
+									width="48"
+									height="48"
+									loading="lazy"
+								/>
+								<div class="author-text">
+									<span class="author-tooltip-wrap">
+										<a
+											class="fn url author-name-link"
+											href={authorLink}
+											rel="author">{authorName}</a
+										>
+										<span class="author-tooltip-popup"
+											>{authorBio}</span
+										>
+									</span>
+									<span class="author-role"
+										>Gambling Writer</span
+									>
+								</div>
+							</div>
+
+							<div class="fact-checked-block">
+								<div class="fact-checked-text">
+									<span>FACT</span>
+									<span>CHECKED</span>
+								</div>
+								<div class="fact-checked-icon">
+									<i class="fa-solid fa-check-double"></i>
+								</div>
+							</div>
+
+							<div class="reviewer-block">
+								<img
+									src={reviewerAvatar}
+									alt={reviewerName}
+									class="reviewer-avatar"
+									width="48"
+									height="48"
+									loading="lazy"
+								/>
+								<div class="reviewer-text">
+									<span class="author-tooltip-wrap">
+										<a
+											href={reviewerLink}
+											class="reviewer-name-link"
+											>{reviewerName}</a
+										>
+										<span class="author-tooltip-popup"
+											>{reviewerBio}</span
+										>
+									</span>
+									<span class="reviewer-role"
+										>Gambling Expert</span
+									>
+								</div>
+							</div>
+
+							<div class="share-block">
+								<!-- This is the blue forward/share button you lost -->
+								<button
+									class="share-toggle-btn"
+									id="shareToggleBtn"
+									aria-label="Share this page"
+									aria-expanded="false"
+								>
+									<i class="fa-solid fa-share"></i>
+								</button>
+
+								<!-- This is the popup containing the individual social icons -->
+								<div class="share-popup" id="sharePopup" hidden>
+									<a
+										href="#"
+										target="_blank"
+										rel="noopener"
+										aria-label="Share on Facebook"
+										class="share-fb"
+										data-share="facebook"
+									>
+										<i class="fa-brands fa-facebook-f"></i>
+									</a>
+									<a
+										href="#"
+										target="_blank"
+										rel="noopener"
+										aria-label="Share on X"
+										class="share-x"
+										data-share="x"
+									>
+										<i class="fa-brands fa-x-twitter"></i>
+									</a>
+									<a
+										href="https://www.instagram.com/aucrazyvegas/"
+										target="_blank"
+										rel="noopener"
+										aria-label="Instagram"
+										class="share-ig"
+									>
+										<i class="fa-brands fa-instagram"></i>
+									</a>
+									<a
+										href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
+										target="_blank"
+										rel="noopener"
+										aria-label="YouTube"
+										class="share-yt"
+									>
+										<i class="fa-brands fa-youtube"></i>
+									</a>
+									<a
+										href="#"
+										target="_blank"
+										rel="noopener"
+										aria-label="Share on Pinterest"
+										class="share-pin"
+										data-share="pinterest"
+									>
+										<i class="fa-brands fa-pinterest"></i>
+									</a>
+									<a
+										href="#"
+										target="_blank"
+										rel="noopener"
+										aria-label="Share on Reddit"
+										class="share-reddit"
+										data-share="reddit"
+									>
+										<i class="fa-brands fa-reddit-alien"
+										></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<!-- RIGHT COLUMN: Modern CTA Card with Animations -->
@@ -691,358 +698,492 @@ const blogPosts = recentPosts.slice(3, 7)
 				</div>
 			</div>
 
-			<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
-			<div class="hero-bottom-meta-section">
-				<div class="hero-disclaimer-box desktop-dis">
-					<div class="disclaimer-cl">
-						<p>
-							<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
-							should always be seen as entertainment, not a way to
-							make money. Laws regarding online gambling vary by country,
-							so always ensure you meet the <a
-								href="/gambling-laws/">legal gambling age</a
-							> and comply with your local regulations before playing.
-						</p>
-
-						<p>
-							Gambling can be addictive; we encourage you to set
-							personal limits and <a href="/gambling-addiction/"
-								>seek professional help</a
-							> if needed.
-						</p>
-
-						<p>
-							Some of the links on Crazy Vegas are affiliate
-							links. This means we may earn a commission (at no
-							additional cost to you) if you click through and
-							make a deposit at a partner site. Our reviews and
-							recommendations are based on independent research
-							and a strict <a href="/editorial-policy/"
-								>editorial process</a
-							> to ensure accuracy, impartiality, and trustworthiness.
-							You can learn more about our evaluation process on our
-							<a href="/how-we-rate-casinos/">How We Rate</a> page.
-						</p>
+			<div class="mobi-hp">
+				<div class="author-reviewer-bar">
+					<div class="update-block">
+						<div class="update-flag">
+							<i class="fa-solid fa-flag"></i>
+						</div>
+						<div class="update-text">
+							<span class="update-label">Updated on</span>
+							<span class="update-date">{formattedDate}</span>
+						</div>
 					</div>
+
+					<div class="author-block">
+						<img
+							src={authorAvatar}
+							alt={authorName}
+							class="author-avatar"
+							width="48"
+							height="48"
+							loading="lazy"
+						/>
+						<div class="author-text">
+							<span class="author-tooltip-wrap">
+								<a
+									class="fn url author-name-link"
+									href={authorLink}
+									rel="author">{authorName}</a
+								>
+								<span class="author-tooltip-popup"
+									>{authorBio}</span
+								>
+							</span>
+							<span class="author-role">Gambling Writer</span>
+						</div>
+					</div>
+
+					<div class="fact-checked-block">
+						<div class="fact-checked-text">
+							<span>FACT</span>
+							<span>CHECKED</span>
+						</div>
+						<div class="fact-checked-icon">
+							<i class="fa-solid fa-check-double"></i>
+						</div>
+					</div>
+
+					<div class="reviewer-block">
+						<img
+							src={reviewerAvatar}
+							alt={reviewerName}
+							class="reviewer-avatar"
+							width="48"
+							height="48"
+							loading="lazy"
+						/>
+						<div class="reviewer-text">
+							<span class="author-tooltip-wrap">
+								<a
+									href={reviewerLink}
+									class="reviewer-name-link">{reviewerName}</a
+								>
+								<span class="author-tooltip-popup"
+									>{reviewerBio}</span
+								>
+							</span>
+							<span class="reviewer-role">Gambling Expert</span>
+						</div>
+					</div>
+
+					<div class="share-block">
+						<!-- This is the blue forward/share button you lost -->
+						<button
+							class="share-toggle-btn"
+							id="shareToggleBtn"
+							aria-label="Share this page"
+							aria-expanded="false"
+						>
+							<i class="fa-solid fa-share"></i>
+						</button>
+
+						<!-- This is the popup containing the individual social icons -->
+						<div class="share-popup" id="sharePopup" hidden>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Facebook"
+								class="share-fb"
+								data-share="facebook"
+							>
+								<i class="fa-brands fa-facebook-f"></i>
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on X"
+								class="share-x"
+								data-share="x"
+							>
+								<i class="fa-brands fa-x-twitter"></i>
+							</a>
+							<a
+								href="https://www.instagram.com/aucrazyvegas/"
+								target="_blank"
+								rel="noopener"
+								aria-label="Instagram"
+								class="share-ig"
+							>
+								<i class="fa-brands fa-instagram"></i>
+							</a>
+							<a
+								href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
+								target="_blank"
+								rel="noopener"
+								aria-label="YouTube"
+								class="share-yt"
+							>
+								<i class="fa-brands fa-youtube"></i>
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Pinterest"
+								class="share-pin"
+								data-share="pinterest"
+							>
+								<i class="fa-brands fa-pinterest"></i>
+							</a>
+							<a
+								href="#"
+								target="_blank"
+								rel="noopener"
+								aria-label="Share on Reddit"
+								class="share-reddit"
+								data-share="reddit"
+							>
+								<i class="fa-brands fa-reddit-alien"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
+		<div class="hero-bottom-meta-section">
+			<div class="hero-disclaimer-box desktop-dis">
+				<div class="disclaimer-cl">
+					<p>
+						<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
+						should always be seen as entertainment, not a way to make
+						money. Laws regarding online gambling vary by country, so
+						always ensure you meet the <a href="/gambling-laws/"
+							>legal gambling age</a
+						> and comply with your local regulations before playing.
+					</p>
+
+					<p>
+						Gambling can be addictive; we encourage you to set
+						personal limits and <a href="/gambling-addiction/"
+							>seek professional help</a
+						> if needed.
+					</p>
+
+					<p>
+						Some of the links on Crazy Vegas are affiliate links.
+						This means we may earn a commission (at no additional
+						cost to you) if you click through and make a deposit at
+						a partner site. Our reviews and recommendations are
+						based on independent research and a strict <a
+							href="/editorial-policy/">editorial process</a
+						> to ensure accuracy, impartiality, and trustworthiness.
+						You can learn more about our evaluation process on our
+						<a href="/how-we-rate-casinos/">How We Rate</a> page.
+					</p>
 				</div>
 			</div>
 		</div>
 	</header>
+</Layout>
 
-	<main class="home-wrapper" id="content">
-		<article class="home-container wp-content" set:html={fixedContent} />
+<main class="home-wrapper" id="content">
+	<article class="home-container wp-content" set:html={fixedContent} />
 
-		{
-			recentPosts.length >= 4 && (
-				<section class="full-width-discovery-section">
-					<div class="discovery-container">
-						<div class="discovery-columns">
-							<div class="discovery-left-col">
-								<h2 class="discovery-section-title">
-									Read today's breaking stories
-								</h2>
-								<div class="breaking-stories-list">
-									{breakingStories.map((story: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = story.uri
-											? story.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const storyLink = `/${cleanSlug}/`
-
-										const storyDate = new Date(
-											story.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
-
-										let storyImage =
-											story.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/300x150"
-
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(
-												storyImage,
+	{
+		recentPosts.length >= 4 && (
+			<section class="full-width-discovery-section">
+				<div class="discovery-container">
+					<div class="discovery-columns">
+						<div class="discovery-left-col">
+							<h2 class="discovery-section-title">
+								Read today's breaking stories
+							</h2>
+							<div class="breaking-stories-list">
+								{breakingStories.map((story: any) => {
+									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+									let relativeUri = story.uri
+										? story.uri.replace(
+												/https?:\/\/[^\/]+/g,
+												"",
 											)
-											storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
-										} catch (e) {}
+										: "/"
+									const cleanSlug = relativeUri.replace(
+										/^\/|\/$/g,
+										"",
+									)
+									const storyLink = `/${cleanSlug}/`
 
-										const authorObj = story.author?.node
-										const recAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let recAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+									const storyDate = new Date(
+										story.date,
+									).toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})
 
-										return (
-											<div class="breaking-story-card">
-												<div class="breaking-story-image">
-													<a
-														href={storyLink}
-														class="thumbnail-link"
-													>
-														<img
-															src={storyImage}
-															alt={
-																story
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																story.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
+									let storyImage =
+										story.featuredImage?.node?.sourceUrl ||
+										"https://via.placeholder.com/300x150"
+
+									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+									try {
+										const parsedUrl = new URL(storyImage)
+										storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
+									} catch (e) {}
+
+									const authorObj = story.author?.node
+									const recAuthorName = authorObj
+										? authorObj.firstName &&
+											authorObj.lastName
+											? `${authorObj.firstName} ${authorObj.lastName}`
+											: authorObj.name
+										: "Editorial Team"
+									let recAuthorAvatar =
+										authorObj?.avatar?.url ||
+										`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+									return (
+										<div class="breaking-story-card">
+											<div class="breaking-story-image">
+												<a
+													href={storyLink}
+													class="thumbnail-link"
+												>
+													<img
+														src={storyImage}
+														alt={
+															story.featuredImage
+																?.node
+																?.altText ||
+															story.title
+														}
+														loading="lazy"
+														referrerpolicy="no-referrer"
+													/>
+												</a>
+											</div>
+											<div class="breaking-story-content">
+												<div class="card-meta-top">
+													<span class="card-category">
+														News
+													</span>
+													<span class="card-date">
+														{storyDate}
+													</span>
 												</div>
-												<div class="breaking-story-content">
-													<div class="card-meta-top">
-														<span class="card-category">
-															News
-														</span>
-														<span class="card-date">
-															{storyDate}
-														</span>
-													</div>
-													<a
-														href={storyLink}
-														class="card-title-link"
-													>
-														<h3
-															set:html={
-																story.title
-															}
-														/>
-													</a>
-													<div class="card-meta-bottom">
+												<a
+													href={storyLink}
+													class="card-title-link"
+												>
+													<h3
+														set:html={story.title}
+													/>
+												</a>
+												<div class="card-meta-bottom">
+													<img
+														src={recAuthorAvatar}
+														alt={recAuthorName}
+														class="card-author-avatar"
+													/>
+													<span>
+														{recAuthorName} • 10 min
+														read
+													</span>
+												</div>
+											</div>
+										</div>
+									)
+								})}
+							</div>
+						</div>
+
+						<div class="discovery-right-col">
+							<h2 class="discovery-section-title">
+								Discover our blogs
+							</h2>
+							<div class="discover-blogs-list">
+								{blogPosts.map((blogPost: any) => {
+									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+									let relativeUri = blogPost.uri
+										? blogPost.uri.replace(
+												/https?:\/\/[^\/]+/g,
+												"",
+											)
+										: "/"
+									const cleanSlug = relativeUri.replace(
+										/^\/|\/$/g,
+										"",
+									)
+									const blogLink = `/${cleanSlug}/`
+
+									const blogDate = new Date(
+										blogPost.date,
+									).toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})
+
+									let blogImage =
+										blogPost.featuredImage?.node
+											?.sourceUrl ||
+										"https://via.placeholder.com/150"
+
+									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+									try {
+										const parsedUrl = new URL(blogImage)
+										blogImage = parsedUrl.pathname
+									} catch (e) {}
+
+									const authorObj = blogPost.author?.node
+									const blogAuthorName = authorObj
+										? authorObj.firstName &&
+											authorObj.lastName
+											? `${authorObj.firstName} ${authorObj.lastName}`
+											: authorObj.name
+										: "Editorial Team"
+									let blogAuthorAvatar =
+										authorObj?.avatar?.url ||
+										`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+									return (
+										<div class="blog-post-card">
+											<div class="blog-post-image">
+												<a href={blogLink}>
+													<img
+														src={blogImage}
+														alt={
+															blogPost
+																.featuredImage
+																?.node
+																?.altText ||
+															blogPost.title
+														}
+														loading="lazy"
+														referrerpolicy="no-referrer"
+													/>
+												</a>
+											</div>
+											<div class="blog-post-content">
+												<a
+													href={blogLink}
+													class="blog-title-link"
+												>
+													<h3
+														set:html={
+															blogPost.title
+														}
+													/>
+												</a>
+												<div class="blog-meta">
+													<div class="blog-meta-author">
 														<img
 															src={
-																recAuthorAvatar
+																blogAuthorAvatar
 															}
-															alt={recAuthorName}
-															class="card-author-avatar"
+															alt={blogAuthorName}
+															class="blog-author-avatar"
 														/>
 														<span>
-															{recAuthorName} • 10
-															min read
+															{blogAuthorName} •{" "}
+															{blogDate}
 														</span>
 													</div>
-												</div>
-											</div>
-										)
-									})}
-								</div>
-							</div>
-
-							<div class="discovery-right-col">
-								<h2 class="discovery-section-title">
-									Discover our blogs
-								</h2>
-								<div class="discover-blogs-list">
-									{blogPosts.map((blogPost: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = blogPost.uri
-											? blogPost.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const blogLink = `/${cleanSlug}/`
-
-										const blogDate = new Date(
-											blogPost.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
-
-										let blogImage =
-											blogPost.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/150"
-
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(blogImage)
-											blogImage = parsedUrl.pathname
-										} catch (e) {}
-
-										const authorObj = blogPost.author?.node
-										const blogAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let blogAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-										return (
-											<div class="blog-post-card">
-												<div class="blog-post-image">
-													<a href={blogLink}>
-														<img
-															src={blogImage}
-															alt={
-																blogPost
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																blogPost.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
-												</div>
-												<div class="blog-post-content">
 													<a
 														href={blogLink}
-														class="blog-title-link"
+														class="blog-read-more"
 													>
-														<h3
-															set:html={
-																blogPost.title
-															}
-														/>
+														Read{" "}
+														<i class="fa-solid fa-arrow-right" />
 													</a>
-													<div class="blog-meta">
-														<div class="blog-meta-author">
-															<img
-																src={
-																	blogAuthorAvatar
-																}
-																alt={
-																	blogAuthorName
-																}
-																class="blog-author-avatar"
-															/>
-															<span>
-																{blogAuthorName}{" "}
-																• {blogDate}
-															</span>
-														</div>
-														<a
-															href={blogLink}
-															class="blog-read-more"
-														>
-															Read{" "}
-															<i class="fa-solid fa-arrow-right" />
-														</a>
-													</div>
 												</div>
 											</div>
-										)
-									})}
-								</div>
+										</div>
+									)
+								})}
 							</div>
 						</div>
 					</div>
-				</section>
-			)
-		}
-	</main>
+				</div>
+			</section>
+		)
+	}
+</main>
 
-	<section class="site-trust-section">
-		<div class="site-trust-container">
-			<div class="site-author-card">
-				<img
-					src={authorAvatar}
-					alt={authorName}
-					class="site-author-avatar"
-					referrerpolicy="no-referrer"
-				/>
-				<div class="site-author-info">
-					<h3 class="site-author-name">
-						<a href={authorLink}>{authorName}</a>
-					</h3>
-					<p class="site-author-bio" set:html={authorBio} />
-					<div class="site-author-socials">
-						{
-							authorTwitter && (
-								<a
-									href={authorTwitter}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="Twitter"
-								>
-									<i class="fa-brands fa-twitter" />
-								</a>
-							)
-						}
-						{
-							authorFacebook && (
-								<a
-									href={authorFacebook}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="Facebook"
-								>
-									<i class="fa-brands fa-facebook-f" />
-								</a>
-							)
-						}
-						{
-							authorInstagram && (
-								<a
-									href={authorInstagram}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="Instagram"
-								>
-									<i class="fa-brands fa-instagram" />
-								</a>
-							)
-						}
-						{
-							authorLinkedIn && (
-								<a
-									href={authorLinkedIn}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label="LinkedIn"
-								>
-									<i class="fa-brands fa-linkedin-in" />
-								</a>
-							)
-						}
-					</div>
+<section class="site-trust-section">
+	<div class="site-trust-container">
+		<div class="site-author-card">
+			<img
+				src={authorAvatar}
+				alt={authorName}
+				class="site-author-avatar"
+				referrerpolicy="no-referrer"
+			/>
+			<div class="site-author-info">
+				<h3 class="site-author-name">
+					<a href={authorLink}>{authorName}</a>
+				</h3>
+				<p class="site-author-bio" set:html={authorBio} />
+				<div class="site-author-socials">
+					{
+						authorTwitter && (
+							<a
+								href={authorTwitter}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Twitter"
+							>
+								<i class="fa-brands fa-twitter" />
+							</a>
+						)
+					}
+					{
+						authorFacebook && (
+							<a
+								href={authorFacebook}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Facebook"
+							>
+								<i class="fa-brands fa-facebook-f" />
+							</a>
+						)
+					}
+					{
+						authorInstagram && (
+							<a
+								href={authorInstagram}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Instagram"
+							>
+								<i class="fa-brands fa-instagram" />
+							</a>
+						)
+					}
+					{
+						authorLinkedIn && (
+							<a
+								href={authorLinkedIn}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="LinkedIn"
+							>
+								<i class="fa-brands fa-linkedin-in" />
+							</a>
+						)
+					}
 				</div>
 			</div>
-
-			<div class="site-trust-statement">
-				<p>
-					<b>Crazy Vegas</b> delivers real money online casino reviews,
-					comparisons, and payout data that Australian players can actually
-					rely on. Our team backs every review with real deposits, real
-					withdrawals, and over a decade of experience testing the AU market.
-					We're committed to clear, honest, and independently tested coverage
-					of online casinos in Australia.
-				</p>
-			</div>
 		</div>
-	</section>
-</Layout>
+
+		<div class="site-trust-statement">
+			<p>
+				<b>Crazy Vegas</b> delivers real money online casino reviews, comparisons,
+				and payout data that Australian players can actually rely on. Our
+				team backs every review with real deposits, real withdrawals, and
+				over a decade of experience testing the AU market. We're committed
+				to clear, honest, and independently tested coverage of online casinos
+				in Australia.
+			</p>
+		</div>
+	</div>
+</section>
 
 <style is:global>
 	/* Styling to ensure the generated TOC supports 2 columns on desktop */
@@ -1062,6 +1203,10 @@ const blogPosts = recentPosts.slice(3, 7)
 		color: #2563eb !important;
 		transform: translateX(4px);
 	}
+
+	.author-reviewer-bar {
+		margin-bottom: 30px !important;
+	}
 	/* =========================================
        HERO DISCLAIMER BOX
     ========================================= */
@@ -1076,8 +1221,12 @@ const blogPosts = recentPosts.slice(3, 7)
 		gap: 24px;
 		padding: 16px 20px;
 		background: rgba(15, 23, 42, 0.6);
-		border-radius: 10px;
+		border-radius: 11px;
 		flex-wrap: wrap;
+	}
+
+	.mobi-hp {
+		display: none;
 	}
 
 	/* =========================================
@@ -1184,6 +1333,14 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: 500;
 	}
 	@media (max-width: 640px) {
+		.hd-in-mobi {
+			display: none !important;
+		}
+
+		.mobi-hp {
+			display: block !important;
+		}
+
 		.author-reviewer-bar {
 			margin-top: 11px;
 		}
@@ -1352,10 +1509,12 @@ const blogPosts = recentPosts.slice(3, 7)
 			text-wrap: balance;
 		}
 		.author-reviewer-bar {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 16px;
-			padding: 16px;
+			flex-direction: row;
+			align-items: center;
+			justify-content: flex-start;
+			flex-wrap: nowrap;
+			gap: 8px;
+			overflow-x: auto;
 		}
 
 		.author-block,
@@ -1383,6 +1542,43 @@ const blogPosts = recentPosts.slice(3, 7)
 
 		.reviewer-twitter {
 			margin-left: auto;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.author-avatar,
+		.reviewer-avatar {
+			width: 32px;
+			height: 32px;
+		}
+		.update-block,
+		.author-block,
+		.reviewer-block,
+		.fact-checked-block {
+			padding: 0 8px !important;
+			margin: 0 !important;
+			border: none !important;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.update-label,          /* "Updated on" text */
+  .author-role,           /* "Gambling Writer" */
+  .reviewer-role,         /* "Gambling Expert" */
+  .fact-checked-text {
+			/* "FACT CHECKED" */
+			display: none;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.share-block {
+			margin-left: auto;
+			flex-shrink: 0;
+		}
+		.share-toggle-btn {
+			width: 36px;
+			height: 36px;
 		}
 	}
 
@@ -5223,7 +5419,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		background: #ffffff !important;
 		border: 1px solid #e2e8f0;
 		border-left: 3px solid #dc2626;
-		border-radius: 4px;
+		border-radius: 11px;
 		flex-wrap: wrap;
 		position: relative;
 	}
@@ -5400,24 +5596,43 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	@media (max-width: 900px) {
-		.author-reviewer-bar {
-			flex-direction: column;
-			align-items: stretch;
-			gap: 16px;
-		}
-		.update-block,
-		.author-block,
-		.reviewer-block,
-		.fact-checked-block {
-			border: none !important;
-			padding: 0 !important;
-			margin: 0 !important;
-		}
-		.share-block {
-			margin-left: 0;
-			align-self: flex-end;
-		}
-	}
+  .author-reviewer-bar {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+  }
+
+  .mobi-hp {
+    margin-top: -28px !important;
+    margin-bottom: 32px !important;
+}
+
+  .update-block,
+  .author-block,
+  .reviewer-block,
+  .fact-checked-block {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    padding: 0 8px !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  .author-avatar, .reviewer-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .update-label,
+  .author-role,
+  .reviewer-role,
+  .fact-checked-text {
+    display: none;
+  }
+}
 
 	.share-popup {
 		position: absolute;
