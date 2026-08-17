@@ -668,8 +668,8 @@
     },
     {
       "source": "/play/1red-casino/",
-      "destination": "https://1redlink.com/h9b16c670",
-      "permanent": false
+      "destination": "https://1redlink.com/abw5iszqdf?utm_source=cpa&utm_medium=affiliate",
+      "permanent": true
     },
     {
       "source": "/play/lucky-hunter-casino/",
@@ -2504,6 +2504,11 @@
     {
       "source": "/play/casiyou-casino",
       "destination": "https://www.casiyou.com/en",
+      "permanent": true
+    },
+    {
+      "source": "/play/bearo-casino",
+      "destination": "https://bro.kronvax.com/?mid=378403_2198998&utm_source=cpa&utm_medium=affiliate",
       "permanent": true
     }
   ]
