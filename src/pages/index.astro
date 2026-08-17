@@ -273,15 +273,13 @@ const [
 
 const currentYear = new Date().getFullYear().toString()
 const pageNode = homepageSeo?.nodeByUri
-const yoastTitle = (
-	pageNode?.seo?.title ||
-	pageNode?.title ||
-	"Crazy Vegas — Best Online Casinos in Australia"
-).replaceAll("[year]", currentYear)
-const yoastDesc = (pageNode?.seo?.metaDesc || "").replaceAll(
-	"[year]",
-	currentYear,
-)
+
+// 🔒 Hardcoded per request — the homepage title/description are fixed,
+// not pulled from Yoast/WP. Schema still comes from WP below.
+const yoastTitle = "Crazy Vegas - Top Online Casinos & Pokies Reviewer 2026"
+const yoastDesc =
+	"Best online casinos & pokies reviews for Australian players. Verified bonuses, honest ratings, and fast-payout picks from the Crazy Vegas team."
+
 let yoastSchema = pageNode?.seo?.schema?.raw || undefined
 if (yoastSchema) {
 	yoastSchema = yoastSchema.replaceAll(wpDomain, LIVE_DOMAIN)
@@ -1755,6 +1753,18 @@ const qaSubCategories = Array.from(
 			height: 20px;
 		}
 	}
+
+	.hp-hero-content p, h2 {
+    color: #fff !important;
+}
+
+.hp-guide-meta {
+    display: none !important;
+}
+
+.hp-container.hp-promo-inner p {
+    display: block;
+}
 </style>
 
 <script>
