@@ -265,6 +265,47 @@ const heroStory = newsPosts[0]
 const thumbGridStories = newsPosts.slice(1, 5) // 4 items, left column under hero
 const midColStories = newsPosts.slice(5, 8) // 3 items, middle column stack
 
+// --- Guarantee filter coverage for every visible pill ---
+// The "latest 30 posts overall" pool won't necessarily contain any posts
+// from a given category if that category's posts simply aren't among the
+// most recently published site-wide — even though the category genuinely
+// has posts. So, in addition to the latest posts, pull a handful directly
+// FROM each category shown as a pill, and merge everything together
+// (de-duped by uri) into one pool the client-side filter can draw from.
+const newsPillCategories = allCategories.slice(0, 7)
+const pillCategoryPostsRaw = await Promise.all(
+	newsPillCategories.map((cat: any) => fetchPostsByCategory(cat.slug, 8)),
+)
+const newsFilterSourceMap = new Map<string, any>()
+for (const p of [...latestPosts, ...pillCategoryPostsRaw.flat()]) {
+	if (p?.uri) newsFilterSourceMap.set(p.uri, p)
+}
+const newsFilterSourcePosts = Array.from(newsFilterSourceMap.values())
+
+// --- Serialized pool for client-side category filtering ---
+// The pill filter needs to rebuild ALL THREE news columns together (hero +
+// thumbnail grid + middle column) from whichever posts match the selected
+// category — not just hide/show the posts that happened to be picked for
+// the "All News" view. Otherwise picking a category with none of those
+// exact 8 posts leaves a column looking broken/empty even when matching
+// posts exist elsewhere in the pool.
+const newsFilterPool = newsFilterSourcePosts.map((p: any) => ({
+	uri: relLink(p.uri),
+	title: p.title || "",
+	excerpt: stripWp(p.excerpt || ""),
+	image: relImage(p.featuredImage?.node?.sourceUrl),
+	imageAlt: p.featuredImage?.node?.altText || p.title || "",
+	date: fmtDate(p.date),
+	category: primaryCategory(p),
+	categories: (p.categories?.nodes || []).map((c: any) => c.slug),
+}))
+// Escape "<" so this can't break out of the <script type="application/json">
+// tag it's embedded in, regardless of what WP content contains.
+const newsFilterPoolJson = JSON.stringify(newsFilterPool).replace(
+	/</g,
+	"\\u003c",
+)
+
 // --- MOST POPULAR: same pool, ranked by comment count (client-computed at build time) ---
 const mostPopular = [...latestPosts]
 	.sort((a, b) => (b.commentCount || 0) - (a.commentCount || 0))
@@ -337,53 +378,49 @@ const qaSubCategories = Array.from(
 
 						<div class="hp-news-grid">
 							<!-- LEFT COLUMN: hero card + 2x2 thumbnail grid -->
-							<div class="hp-news-left" id="newsMain">
-								{heroStory && (
-									<a
-										href={relLink(heroStory.uri)}
-										class="hp-hero-card"
-										data-categories={heroStory.categories?.nodes
-											.map((c: any) => c.slug)
-											.join(",")}
-									>
-										<div class="hp-hero-image">
-											<img
-												src={relImage(
-													heroStory.featuredImage
-														?.node?.sourceUrl,
-												)}
-												alt={heroStory.featuredImage
-													?.node?.altText ||
-													heroStory.title}
-												referrerpolicy="no-referrer"
-											/>
-											<span class="hp-hero-badge">
-												Breaking
-											</span>
-										</div>
-										<div class="hp-hero-content">
-											<h2 set:html={heroStory.title} />
-											<span class="hp-hero-cat">
-												{primaryCategory(heroStory)}
-											</span>
-											<p
-												class="hp-hero-excerpt"
-												set:html={stripWp(
-													heroStory.excerpt || "",
-												)}
-											/>
-										</div>
-									</a>
-								)}
+							<div class="hp-news-left">
+								<div id="newsHeroSlot">
+									{heroStory && (
+										<a
+											href={relLink(heroStory.uri)}
+											class="hp-hero-card"
+										>
+											<div class="hp-hero-image">
+												<img
+													src={relImage(
+														heroStory.featuredImage
+															?.node?.sourceUrl,
+													)}
+													alt={heroStory.featuredImage
+														?.node?.altText ||
+														heroStory.title}
+													referrerpolicy="no-referrer"
+												/>
+												<span class="hp-hero-badge">
+													Breaking
+												</span>
+											</div>
+											<div class="hp-hero-content">
+												<h2 set:html={heroStory.title} />
+												<span class="hp-hero-cat">
+													{primaryCategory(heroStory)}
+												</span>
+												<p
+													class="hp-hero-excerpt"
+													set:html={stripWp(
+														heroStory.excerpt || "",
+													)}
+												/>
+											</div>
+										</a>
+									)}
+								</div>
 
-								<div class="hp-thumb-grid">
+								<div class="hp-thumb-grid" id="newsThumbSlot">
 									{thumbGridStories.map((story: any) => (
 										<a
 											href={relLink(story.uri)}
 											class="hp-thumb-item"
-											data-categories={story.categories?.nodes
-												.map((c: any) => c.slug)
-												.join(",")}
 										>
 											<div class="hp-thumb-image">
 												<img
@@ -409,14 +446,11 @@ const qaSubCategories = Array.from(
 							</div>
 
 							<!-- MIDDLE COLUMN: stacked image-top cards -->
-							<div class="hp-mid-col">
+							<div class="hp-mid-col" id="newsMidSlot">
 								{midColStories.map((story: any) => (
 									<a
 										href={relLink(story.uri)}
 										class="hp-mid-card"
-										data-categories={story.categories?.nodes
-											.map((c: any) => c.slug)
-											.join(",")}
 									>
 										<div class="hp-mid-image">
 											<img
@@ -440,7 +474,7 @@ const qaSubCategories = Array.from(
 								))}
 							</div>
 
-							<!-- RIGHT COLUMN: Most Popular plain list -->
+							<!-- RIGHT COLUMN: Most Popular plain list (unaffected by the filter) -->
 							<aside class="hp-news-sidebar">
 								<h3 class="hp-sidebar-title">
 									Most Popular
@@ -460,7 +494,17 @@ const qaSubCategories = Array.from(
 								</div>
 							</aside>
 						</div>
+
+						<p class="hp-news-empty" id="newsEmptyState" hidden>
+							No stories in this category yet — check back soon.
+						</p>
 					</div>
+
+					<script
+						type="application/json"
+						id="newsFilterData"
+						set:html={newsFilterPoolJson}
+					/>
 				</section>
 			)
 		}
@@ -1196,6 +1240,13 @@ const qaSubCategories = Array.from(
 		letter-spacing: 0.4px;
 	}
 
+	.hp-news-empty {
+		text-align: center;
+		color: #64748b;
+		font-size: 0.95rem;
+		padding: 2rem 0 0.5rem 0;
+	}
+
 	/* ---------- In-Depth ---------- */
 	.hp-indepth-grid {
 		display: grid;
@@ -1636,8 +1687,7 @@ const qaSubCategories = Array.from(
 </style>
 
 <script>
-	// ---- Generic pill filter (works for both News and Q&A grids) ----
-	function setupPillFilter(pillsId: string, itemsSelector: string) {
+	function setupSimplePillFilter(pillsId: string, itemsSelector: string) {
 		const pillsWrap = document.getElementById(pillsId)
 		if (!pillsWrap) return
 
@@ -1661,8 +1711,133 @@ const qaSubCategories = Array.from(
 		})
 	}
 
-	setupPillFilter("newsPills", "#newsMain [data-categories]")
-	setupPillFilter("qaPills", "#qaGrid [data-categories]")
+	setupSimplePillFilter("qaPills", "#qaGrid [data-categories]")
+
+	// ---- Today's News: rebuild ALL THREE columns together on pill click ----
+	// (Hiding pre-placed cards independently caused empty-looking columns
+	// whenever the "All News" 8-post selection didn't include a match for
+	// the chosen category — see comment on newsFilterPool in the frontmatter.)
+	type NewsItem = {
+		uri: string
+		title: string
+		excerpt: string
+		image: string
+		imageAlt: string
+		date: string
+		category: string
+		categories: string[]
+	}
+
+	function escapeHtml(str: string) {
+		return str.replace(
+			/[&<>"']/g,
+			c =>
+				({
+					"&": "&amp;",
+					"<": "&lt;",
+					">": "&gt;",
+					'"': "&quot;",
+					"'": "&#39;",
+				})[c] as string,
+		)
+	}
+
+	function heroHtml(item: NewsItem) {
+		return `
+			<a href="${item.uri}" class="hp-hero-card">
+				<div class="hp-hero-image">
+					<img src="${item.image}" alt="${escapeHtml(item.imageAlt)}" referrerpolicy="no-referrer" />
+					<span class="hp-hero-badge">Breaking</span>
+				</div>
+				<div class="hp-hero-content">
+					<h2>${item.title}</h2>
+					<span class="hp-hero-cat">${escapeHtml(item.category)}</span>
+					<p class="hp-hero-excerpt">${item.excerpt}</p>
+				</div>
+			</a>
+		`
+	}
+
+	function thumbHtml(item: NewsItem) {
+		return `
+			<a href="${item.uri}" class="hp-thumb-item">
+				<div class="hp-thumb-image">
+					<img src="${item.image}" alt="${escapeHtml(item.imageAlt)}" referrerpolicy="no-referrer" />
+				</div>
+				<div class="hp-thumb-content">
+					<h3>${item.title}</h3>
+					<span class="hp-thumb-cat">${escapeHtml(item.category)}</span>
+				</div>
+			</a>
+		`
+	}
+
+	function midHtml(item: NewsItem) {
+		return `
+			<a href="${item.uri}" class="hp-mid-card">
+				<div class="hp-mid-image">
+					<img src="${item.image}" alt="${escapeHtml(item.imageAlt)}" referrerpolicy="no-referrer" />
+				</div>
+				<h3>${item.title}</h3>
+				<span class="hp-mid-cat">${escapeHtml(item.category)}</span>
+				<span class="hp-mid-date">${escapeHtml(item.date)}</span>
+			</a>
+		`
+	}
+
+	function setupNewsFilter() {
+		const pillsWrap = document.getElementById("newsPills")
+		const dataEl = document.getElementById("newsFilterData")
+		const heroSlot = document.getElementById("newsHeroSlot")
+		const thumbSlot = document.getElementById("newsThumbSlot")
+		const midSlot = document.getElementById("newsMidSlot")
+		const emptyState = document.getElementById("newsEmptyState")
+		if (!pillsWrap || !dataEl || !heroSlot || !thumbSlot || !midSlot) return
+
+		let pool: NewsItem[] = []
+		try {
+			pool = JSON.parse(dataEl.textContent || "[]")
+		} catch {
+			return
+		}
+
+		pillsWrap.addEventListener("click", e => {
+			const btn = (e.target as HTMLElement).closest(
+				"[data-filter]",
+			) as HTMLElement | null
+			if (!btn) return
+
+			pillsWrap
+				.querySelectorAll(".hp-pill")
+				.forEach(p => p.classList.remove("hp-pill-active"))
+			btn.classList.add("hp-pill-active")
+
+			const filter = btn.dataset.filter
+			const matches =
+				filter === "all"
+					? pool
+					: pool.filter(p => p.categories.includes(filter!))
+
+			const hero = matches[0]
+			const thumbs = matches.slice(1, 5)
+			const mids = matches.slice(5, 8)
+
+			if (matches.length === 0) {
+				heroSlot.innerHTML = ""
+				thumbSlot.innerHTML = ""
+				midSlot.innerHTML = ""
+				if (emptyState) emptyState.hidden = false
+				return
+			}
+			if (emptyState) emptyState.hidden = true
+
+			heroSlot.innerHTML = hero ? heroHtml(hero) : ""
+			thumbSlot.innerHTML = thumbs.map(thumbHtml).join("")
+			midSlot.innerHTML = mids.map(midHtml).join("")
+		})
+	}
+
+	setupNewsFilter()
 
 	// ---- Guides tab toggle ----
 	document.querySelectorAll(".hp-guides-tabs .hp-tab").forEach(tab => {
