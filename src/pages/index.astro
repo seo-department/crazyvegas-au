@@ -154,14 +154,42 @@ async function fetchTeamUsers(first = 8) {
 		}
 	`)
 	const nodes = data?.users?.nodes || []
-	// Only show users who look like actual content contributors
-	return nodes.filter((u: any) =>
-		u.roles?.nodes?.some((r: any) =>
-			["author", "editor", "administrator", "contributor"].includes(
-				r.name?.toLowerCase(),
-			),
-		),
-	)
+	// 🔒 WPGraphQL often restricts the `roles` field for unauthenticated
+	// requests, returning an empty roles list even for real admins/authors.
+	// If roles come back empty, we assume the user is legit rather than
+	// silently filtering out your whole team — we only exclude someone if
+	// we can positively confirm they're a subscriber.
+	return nodes.filter((u: any) => {
+		const roles = (u.roles?.nodes || []).map((r: any) =>
+			r.name?.toLowerCase(),
+		)
+		if (roles.length === 0) return true
+		return !roles.includes("subscriber")
+	})
+}
+
+// Known real photos + on-site titles for specific authors, keyed by their
+// WP username/slug (lowercase). Falls back to WP's own avatar + a generic
+// title for anyone not listed here — add new authors here as needed.
+const TEAM_OVERRIDES: Record<string, { avatar?: string; role: string }> = {
+	caleb: {
+		avatar: "/wp-content/uploads/2026/03/caleb-daly.png",
+		role: "Casino Expert",
+	},
+	daphne: {
+		avatar: "/wp-content/uploads/2026/03/daphne-hutchens.png",
+		role: "Editorial Lead",
+	},
+	kayla: {
+		avatar: "/wp-content/uploads/2026/03/kayla-mcbrien.png",
+		role: "Senior Casino Analyst",
+	},
+	mason: {
+		avatar: "/wp-content/uploads/2026/03/mason-j.png",
+		role: "iGaming Specialist",
+	},
+	casey: { role: "Contributor" },
+	joseph: { role: "Contributor" },
 }
 
 // --- Small shared helpers for turning WP data into safe display data ---
@@ -898,7 +926,7 @@ const qaSubCategories = Array.from(
 		<!-- ================= ABOUT (TEAM) ================= -->
 		{
 			teamUsers.length > 0 && (
-				<section class="hp-section hp-section-muted" aria-label="Our team">
+				<section class="hp-section" aria-label="Our team">
 					<div class="hp-container">
 						<div class="hp-section-header">
 							<span class="hp-eyebrow">About</span>
@@ -907,32 +935,43 @@ const qaSubCategories = Array.from(
 								independent voices.
 							</p>
 							<a href="/about-us/" class="hp-more-link">
-								All Editors{" "}
-								<i class="fa-solid fa-arrow-right" />
+								More <i class="fa-solid fa-arrow-right" />
 							</a>
 						</div>
 
 						<div class="hp-team-grid">
-							{teamUsers.map((user: any) => (
-								<a
-									href={`/about-us/${user.slug}/`}
-									class="hp-team-card"
-								>
-									<img
-										src={relImage(
-											user.avatar?.url,
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=f1f5f9&color=1e293b&bold=true`,
-										)}
-										alt={user.name}
-										referrerpolicy="no-referrer"
-									/>
-									<h4>{user.name}</h4>
-									<span>
-										{user.roles?.nodes?.[0]?.name ||
-											"Contributor"}
-									</span>
-								</a>
-							))}
+							{teamUsers.map((user: any) => {
+								const key = (user.slug || "").toLowerCase()
+								const override = TEAM_OVERRIDES[key]
+								const avatarSrc =
+									override?.avatar ||
+									relImage(
+										user.avatar?.url,
+										`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=f1f5f9&color=1e293b&bold=true`,
+									)
+								const role =
+									override?.role ||
+									user.roles?.nodes?.[0]?.name ||
+									"Contributor"
+								return (
+									<a
+										href={`/author/${user.slug}/`}
+										class="hp-team-card"
+									>
+										<div class="hp-team-photo">
+											<img
+												src={avatarSrc}
+												alt={user.name}
+												referrerpolicy="no-referrer"
+											/>
+										</div>
+										<div class="hp-team-info">
+											<h4>{user.name}</h4>
+											<span>{role}</span>
+										</div>
+									</a>
+								)
+							})}
 						</div>
 					</div>
 				</section>
@@ -967,6 +1006,8 @@ const qaSubCategories = Array.from(
 		justify-content: space-between;
 		gap: 0.75rem;
 		margin-bottom: 1.5rem;
+		padding-bottom: 0.85rem;
+		border-bottom: 1px solid #0f172a;
 	}
 
 	.hp-eyebrow {
@@ -1606,40 +1647,70 @@ const qaSubCategories = Array.from(
 	.hp-team-grid {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 1.5rem;
+		gap: 1.25rem;
 	}
 	.hp-team-card {
-		text-align: center;
+		display: flex;
+		align-items: stretch;
+		gap: 1rem;
 		text-decoration: none;
 		background: #fff;
 		border: 1px solid #e2e8f0;
-		border-radius: 12px;
-		padding: 1.5rem 1rem;
+		padding: 1rem;
 		transition:
 			transform 0.2s ease,
-			box-shadow 0.2s ease;
+			box-shadow 0.2s ease,
+			border-color 0.2s ease;
 	}
 	.hp-team-card:hover {
 		transform: translateY(-3px);
 		box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.1);
+		border-color: #cbd5e1;
 	}
-	.hp-team-card img {
-		width: 72px;
-		height: 72px;
-		border-radius: 50%;
+	.hp-team-photo {
+		position: relative;
+		flex-shrink: 0;
+		width: 84px;
+		height: 100px;
+	}
+	.hp-team-photo::before {
+		content: "";
+		position: absolute;
+		left: -18px;
+		bottom: -14px;
+		width: 60px;
+		height: 60px;
+		background: #dc2626;
+		transform: rotate(45deg);
+		z-index: 0;
+	}
+	.hp-team-photo img {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
 		object-fit: cover;
-		margin: 0 auto 0.75rem auto;
-		display: block;
+		filter: grayscale(1);
 	}
-	.hp-team-card h4 {
-		font-size: 0.95rem;
+	.hp-team-info {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-width: 0;
+	}
+	.hp-team-info h4 {
+		font-size: 1rem;
 		font-weight: 800;
 		color: #0f172a;
-		margin: 0 0 0.25rem 0;
+		margin: 0 0 0.4rem 0;
+		padding-bottom: 0.4rem;
+		border-bottom: 1px solid #cbd5e1;
+		line-height: 1.3;
 	}
-	.hp-team-card span {
-		font-size: 0.78rem;
+	.hp-team-info span {
+		font-size: 0.85rem;
 		color: #64748b;
+		font-style: italic;
 	}
 
 	/* ---------- Responsive ---------- */
@@ -1687,6 +1758,7 @@ const qaSubCategories = Array.from(
 </style>
 
 <script>
+	// ---- Simple pill filter (Q&A grid — safe to just hide/show cards) ----
 	function setupSimplePillFilter(pillsId: string, itemsSelector: string) {
 		const pillsWrap = document.getElementById(pillsId)
 		if (!pillsWrap) return

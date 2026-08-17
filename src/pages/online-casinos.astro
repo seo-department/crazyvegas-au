@@ -81,7 +81,7 @@ const response = await fetch(wpUrl, {
 	body: JSON.stringify({
 		query: `
             query GetHomeAndPosts {
-                nodeByUri(uri: "/") {
+                nodeByUri(uri: "/online-casinos/") {
                     ... on Page {
                         title
                         content
