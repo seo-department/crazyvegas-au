@@ -236,7 +236,15 @@ function fmtDate(dateStr: string) {
 }
 
 function primaryCategory(post: any) {
-	return post?.categories?.nodes?.[0]?.name || "News"
+	const cats = post?.categories?.nodes || []
+	// WPGraphQL returns categories in taxonomy order, not assignment order —
+	// "News" (the site's oldest/default category) tends to come first
+	// regardless of what's actually most relevant. So instead of trusting
+	// array position, explicitly skip "News" whenever a more specific
+	// category is also assigned, and only fall back to it if it's the
+	// post's only category.
+	const nonNews = cats.find((c: any) => c.name?.toLowerCase() !== "news")
+	return nonNews?.name || cats[0]?.name || "News"
 }
 
 // =====================================================================
@@ -347,13 +355,27 @@ const moreNews = latestPosts.filter((p: any) => !usedUris.has(p.uri)).slice(0, 6
 const guidesNewest = [...guidesPostsRaw].sort(
 	(a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
 )
-const guidesPopular = [...guidesPostsRaw].sort(
-	(a, b) => (b.commentCount || 0) - (a.commentCount || 0),
-)
+const guidesPopular = [...guidesPostsRaw].sort((a, b) => {
+	const diff = (b.commentCount || 0) - (a.commentCount || 0)
+	// Most posts have 0 comments, so this sort is usually a no-op and the
+	// tab ends up in the same date-desc order the posts were fetched in —
+	// identical to "Newest". Tie-break with oldest-first so it's actually
+	// a different order until real comment-count data exists.
+	return diff !== 0
+		? diff
+		: new Date(a.date).getTime() - new Date(b.date).getTime()
+})
 const guidesTopPicks = guidesPostsRaw.filter((p: any) =>
 	p.categories?.nodes?.some((c: any) => c.slug === "top-picks"),
 )
-const guidesTopPicksFinal = guidesTopPicks.length ? guidesTopPicks : guidesNewest
+// No "top-picks" category exists yet, so instead of silently falling back
+// to the same array/order as "Newest", use alphabetical order — visibly
+// distinct until you tag specific guides with a "top-picks" category.
+const guidesTopPicksFinal = guidesTopPicks.length
+	? guidesTopPicks
+	: [...guidesPostsRaw].sort((a, b) =>
+			(a.title || "").localeCompare(b.title || ""),
+		)
 
 // --- Q&As: category pills built from whatever sub-categories exist on qa posts ---
 const qaSubCategories = Array.from(
@@ -1490,7 +1512,7 @@ div#newsMidSlot {
 	}
 	.hp-guide-content h3 {
 		font-size: 0.98rem;
-		font-weight: 700;
+		font-weight: 500;
 		color: #0f172a;
 		margin: 0.4rem 0 0.75rem 0;
 		line-height: 1.35;
@@ -1656,7 +1678,7 @@ div#newsMidSlot {
 	}
 	.hp-more-news-card h3 {
 		font-size: 1rem;
-		font-weight: 700;
+		font-weight: 500;
 		color: #0f172a;
 		margin: 0.4rem 0;
 		line-height: 1.4;
@@ -1701,15 +1723,18 @@ div#newsMidSlot {
 	}
 	.hp-team-photo::before {
 		content: "";
-		position: absolute;
-		left: -18px;
-		bottom: -14px;
-		width: 60px;
-		height: 60px;
-		background: #dc2626;
-		transform: rotate(45deg);
-		z-index: 0;
+    position: absolute;
+    left: -6px;
+    bottom: 10px;
+    width: 91px;
+    height: 83px;
+    background: #dc2626;
+    transform: rotate(45deg);
+    z-index: 0;
 	}
+
+	
+
 	.hp-team-photo img {
 		position: relative;
 		z-index: 1;
