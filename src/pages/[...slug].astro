@@ -1017,69 +1017,70 @@ fixedContent = stripWp(fixedContent)
                         </div>
                     </div>
 
-                    <div class="review-hero-author">
-                        <div
-                            class="meta-author vcard author"
-                            itemscope
-                            itemtype="https://schema.org/Person"
-                        >
-                            <a
-                                href={authorLink}
-                                class="author-image-link"
-                                aria-label={`View ${authorName}'s profile`}
-                            >
-                                <img
-                                    src={authorAvatar}
-                                    alt={authorName}
-                                    class="meta-avatar"
-                                    referrerpolicy="no-referrer"
-                                />
-                            </a>
-                            <div>
-                                <span class="meta-name">
-                                    By{" "}
+                    <div class="review-gi-byline-wrap">
+                        <div class="gi-byline-bar review-byline-bar">
+                            <div class="gi-byline-updated">
+                                <i class="fa-solid fa-calendar-days" />
+                                <div>
+                                    <span class="gi-byline-label">
+                                        Updated on
+                                    </span>
+                                    <span class="gi-byline-value">
+                                        {formattedDate}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="gi-byline-person">
+                                <a
+                                    href={authorLink}
+                                    aria-label={`View ${authorName}'s profile`}
+                                >
+                                    <img
+                                        src={authorAvatar}
+                                        alt={authorName}
+                                        class="gi-byline-avatar"
+                                        referrerpolicy="no-referrer"
+                                    />
+                                </a>
+                                <div>
                                     <a
                                         href={authorLink}
-                                        class="author-text-link url fn"
-                                        itemprop="url"
+                                        class="gi-byline-name-link"
                                     >
                                         <span class="author-tooltip-wrap">
-                                            <strong itemprop="name">
-                                                {authorName}
-                                            </strong>
+                                            <strong>{authorName}</strong>
                                             <span
                                                 class="author-tooltip-popup"
                                                 set:html={authorBio}
                                             />
                                         </span>
                                     </a>
-                                </span>
-
-                                <span class="meta-date">
-                                    Updated: {formattedDate}
-                                </span>
+                                    <span class="gi-byline-role">
+                                        Casino Writer
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="meta-reviewer">
-                            <a
-                                href={reviewerLink}
-                                class="author-image-link"
-                                aria-label={`View ${reviewerName}'s profile`}
-                            >
-                                <img
-                                    src={reviewerAvatar}
-                                    alt={reviewerName}
-                                    class="meta-avatar"
-                                    referrerpolicy="no-referrer"
-                                />
-                            </a>
-                            <div>
-                                <span class="meta-name">
-                                    Reviewed by{" "}
+                            <div class="gi-byline-person gi-byline-checker">
+                                <span class="gi-fact-checked">
+                                    <i class="fa-solid fa-check" /> Fact Checked
+                                </span>
+                                <a
+                                    href={reviewerLink}
+                                    aria-label={`View ${reviewerName}'s profile`}
+                                >
+                                    <img
+                                        src={reviewerAvatar}
+                                        alt={reviewerName}
+                                        class="gi-byline-avatar"
+                                        referrerpolicy="no-referrer"
+                                    />
+                                </a>
+                                <div>
                                     <a
                                         href={reviewerLink}
-                                        class="author-text-link"
+                                        class="gi-byline-name-link"
                                     >
                                         <span class="author-tooltip-wrap">
                                             <strong>{reviewerName}</strong>
@@ -1089,58 +1090,103 @@ fixedContent = stripWp(fixedContent)
                                             />
                                         </span>
                                     </a>
-                                </span>
+                                    <span class="gi-byline-role">
+                                        Casino Expert
+                                    </span>
+                                </div>
+                            </div>
 
-                                <span class="meta-date">Casino Expert</span>
+                            <div class="gi-share-wrap">
+                                <button
+                                    class="gi-share-toggle"
+                                    aria-label="Share this article"
+                                    aria-expanded="false"
+                                    data-gi-share-toggle
+                                >
+                                    <i class="fa-solid fa-share-nodes" />
+                                </button>
+                                <div class="gi-share-menu" data-gi-share-menu>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="facebook"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-facebook-f" />{" "}
+                                        Facebook
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="x"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-x-twitter" /> X
+                                        (Twitter)
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="whatsapp"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-whatsapp" />{" "}
+                                        WhatsApp
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="messenger"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-facebook-messenger" />{" "}
+                                        Messenger
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="reddit"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-reddit-alien" />{" "}
+                                        Reddit
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="linkedin"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i class="fa-brands fa-linkedin-in" />{" "}
+                                        LinkedIn
+                                    </a>
+                                    <a
+                                        class="gi-share-item"
+                                        data-gi-share="email"
+                                    >
+                                        <i class="fa-solid fa-envelope" /> Email
+                                    </a>
+                                    <button
+                                        type="button"
+                                        class="gi-share-item gi-share-copy"
+                                        data-gi-share="copy"
+                                    >
+                                        <i class="fa-solid fa-link" /> Copy link
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="meta-share">
-                            {twitterLink && (
-                                <a
-                                    href={twitterLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="share-btn twitter"
-                                    aria-label="Twitter"
-                                >
-                                    <i class="fa-brands fa-twitter" />
-                                </a>
-                            )}
-                            {facebookLink && (
-                                <a
-                                    href={facebookLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="share-btn facebook"
-                                    aria-label="Facebook"
-                                >
-                                    <i class="fa-brands fa-facebook-f" />
-                                </a>
-                            )}
-                            {instagramLink && (
-                                <a
-                                    href={instagramLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="share-btn instagram"
-                                    aria-label="Instagram"
-                                >
-                                    <i class="fa-brands fa-instagram" />
-                                </a>
-                            )}
-                            {linkedinLink && (
-                                <a
-                                    href={linkedinLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="share-btn linkedin"
-                                    aria-label="LinkedIn"
-                                >
-                                    <i class="fa-brands fa-linkedin-in" />
-                                </a>
-                            )}
-                        </div>
+                        <p class="gi-editorial-note">
+                            <strong>Editorial Statement:</strong> We
+                            independently review and select all operators. While
+                            we may earn commissions from affiliate links or paid
+                            placements, these never influence our editors'
+                            opinions or evaluations. Every platform is assessed
+                            against our own standards, and we highlight both
+                            strengths and shortcomings, regardless of any
+                            commercial relationship.
+                        </p>
                     </div>
                 </div>
             </header>
@@ -1342,10 +1388,9 @@ fixedContent = stripWp(fixedContent)
                         review and select all operators. While we may earn
                         commissions from affiliate links or paid placements,
                         these never influence our editors' opinions or
-                        evaluations. Every platform is assessed against our{" "}
-                        own standards, and
-                        we highlight both strengths and shortcomings, regardless
-                        of any commercial relationship.
+                        evaluations. Every platform is assessed against our own
+                        standards, and we highlight both strengths and
+                        shortcomings, regardless of any commercial relationship.
                     </p>
                 </div>
             </header>
@@ -1931,6 +1976,12 @@ fixedContent = stripWp(fixedContent)
         scroll-behavior: smooth;
     }
 
+header.modern-review-hero {
+    border-bottom: 1px solid #b3babd;
+}
+.review-hero-card.flexbox {
+    margin-bottom: 3rem;
+}
     /* =========================================
        TABLE OF CONTENTS (TOC) STYLES — used for inline [casino_toc] shortcode
     ========================================= */
@@ -2121,7 +2172,7 @@ fixedContent = stripWp(fixedContent)
         font-size: 15px;
         line-height: 1.7;
         color: #475569;
-        max-width: 900px;
+        max-width: 100%;
         margin: 0 0 1.5rem 0;
     }
 
@@ -2131,8 +2182,8 @@ fixedContent = stripWp(fixedContent)
         gap: 2rem;
         flex-wrap: wrap;
         padding: 1.25rem 0;
-        border-top: 1px solid #f1f5f9;
-        border-bottom: 1px solid #f1f5f9;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
         margin-bottom: 1rem;
     }
 
@@ -3426,9 +3477,9 @@ fixedContent = stripWp(fixedContent)
             max-width: 100% !important;
         }
 
-
         .offers tr.card {
-    display: block !important;}
+            display: block !important;
+        }
 
         .wp-content ol.wp-block-list li {
             padding: 1.25rem 1.25rem 1.25rem 3.75rem !important;
@@ -3465,18 +3516,17 @@ fixedContent = stripWp(fixedContent)
         }
     }
 
-
     @media (max-width: 600px) {
-    .card-bonus .bonus {
-        font-size: 16px; 
-        white-space: normal;
-        overflow-wrap: break-word; 
-        padding: 0 10px; 
+        .card-bonus .bonus {
+            font-size: 16px;
+            white-space: normal;
+            overflow-wrap: break-word;
+            padding: 0 10px;
+        }
+        td.card_middle {
+            margin-top: 8px;
+        }
     }
-    td.card_middle {
-    margin-top: 8px;
-}
-}
 
     /* --- MODERN CASINO REVIEW HERO (unchanged, review-only) --- */
     .modern-review-hero {
@@ -3494,11 +3544,7 @@ fixedContent = stripWp(fixedContent)
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(
-            circle,
-            rgba(14, 165, 233, 0.1) 0%,
-            transparent 60%
-        );
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
         pointer-events: none;
     }
 
@@ -3588,7 +3634,7 @@ fixedContent = stripWp(fixedContent)
     }
 
     .dark-breadcrumbs .current {
-        color: #f8fafc !important;
+        color: #585b60 !important;
     }
 
     .review-hero-card {
@@ -4430,7 +4476,7 @@ fixedContent = stripWp(fixedContent)
         font-size: 15px;
         line-height: 1.7;
         color: #475569;
-        max-width: 900px;
+        max-width: 100%;
         margin: 0 0 1.5rem 0;
     }
 
@@ -4440,8 +4486,8 @@ fixedContent = stripWp(fixedContent)
         gap: 2rem;
         flex-wrap: wrap;
         padding: 1.25rem 0;
-        border-top: 1px solid #f1f5f9;
-        border-bottom: 1px solid #f1f5f9;
+        border-top: 1px solid #e2e8f0;
+        border-bottom: 1px solid #e2e8f0;
         margin-bottom: 1rem;
     }
 
