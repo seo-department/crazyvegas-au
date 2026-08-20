@@ -32,7 +32,8 @@ export async function getStaticPaths() {
                         posts(first: 70, after: $after) {
                             pageInfo { hasNextPage endCursor }
                             nodes {
-                                uri title content date modified
+                                uri title content date modified customSidebar
+                                sidebarMenus { name items { label uri } }
                                 featuredImage { node { sourceUrl altText } }
                                 author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
@@ -103,7 +104,8 @@ export async function getStaticPaths() {
                         pages(first: 70, after: $after) {
                             pageInfo { hasNextPage endCursor }
                             nodes {
-                                uri title content date modified
+                                uri title content date modified customSidebar
+                                sidebarMenus { name items { label uri } }
                                 featuredImage { node { sourceUrl altText } }
                                 author { node { name firstName lastName uri url description avatar { url } seo { social { facebook twitter instagram linkedIn } } } }
                                 seo { 
@@ -398,6 +400,12 @@ const category = pathSegments.length > 1 ? pathSegments[0] : "guide"
 const cleanCategoryName = category.replace(/-/g, " ")
 
 const currentYear = new Date().getFullYear().toString()
+
+// Heading is intentionally fixed to "Most Popular" regardless of which
+// Custom Sidebar (sitemap, or any future one) is actually assigned to the
+// page — post.customSidebar is still used below to decide WHETHER to
+// show the box, just not what to label it.
+const SIDEBAR_BOX_HEADING = "Most Popular"
 
 // 🚨 NEW: Sidebar "Most Popular" links (static site nav data — edit the
 // hrefs/labels below to point at your real category/hub pages).
@@ -1486,10 +1494,10 @@ fixedContent = stripWp(fixedContent)
                             <i class="fa-solid fa-shield-halved" /> Mission
                             Statement
                         </div>
-                        <h3 class="gi-mission-title">
+                        <div class="gi-mission-title">
                             Crazy Vegas is Australia's independent guide to real
                             money online casinos
-                        </h3>
+                        </div>
                         <ul class="gi-mission-list">
                             <li>Trusted reviews from AU iGaming specialists</li>
                             <li>
@@ -1504,13 +1512,37 @@ fixedContent = stripWp(fixedContent)
                         </a>
                     </div>
 
+                    {post.customSidebar && post.sidebarMenus?.length > 0 && (
+                        <div class="gi-sidebar-box gi-sitemap-box">
+                            <div class="gi-sidebar-heading">
+                                {SIDEBAR_BOX_HEADING}
+                            </div>
+                            {post.sidebarMenus.map((menu: any) => (
+                                <div class="gi-popular-group">
+                                    <div class="gi-popular-group-title">
+                                        {menu.name}
+                                    </div>
+                                    <ul class="gi-popular-list">
+                                        {menu.items.map((item: any) => (
+                                            <li>
+                                                <a href={stripWp(item.uri)}>
+                                                    {item.label}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
                     {/* <div class="gi-sidebar-box">
-                        <h3 class="gi-sidebar-heading">Most Popular</h3>
+                        <div class="gi-sidebar-heading">Most Popular</div>
                         {POPULAR_LINKS.map(group => (
                             <div class="gi-popular-group">
-                                <h4 class="gi-popular-group-title">
+                                <div class="gi-popular-group-title">
                                     {group.heading}
-                                </h4>
+                                </div>
                                 <ul class="gi-popular-list">
                                     {group.links.map(link => (
                                         <li>
@@ -1526,9 +1558,9 @@ fixedContent = stripWp(fixedContent)
 
                     {tocItems.length > 0 && (
                         <div class="gi-sidebar-box gi-toc-box">
-                            <h3 class="gi-sidebar-heading">
+                            <div class="gi-sidebar-heading">
                                 Table of Contents
-                            </h3>
+                            </div>
                             <ul class="gi-toc-sidebar-list">
                                 <li
                                     class="gi-toc-current"
@@ -2337,7 +2369,7 @@ header.modern-review-hero {
         max-width: 1400px;
         margin: 0 auto;
         padding: 0 1rem;
-        align-items: start;
+        align-items: stretch;
     }
 
     .gi-page-grid .post-wrapper,
@@ -2353,6 +2385,7 @@ header.modern-review-hero {
         flex-direction: column;
         gap: 1.5rem;
         padding-top: 24px;
+        align-self: start; 
     }
 
     .gi-mission-box {
@@ -2441,15 +2474,29 @@ header.modern-review-hero {
     }
 
     .gi-sidebar-heading {
-        font-size: 0.78rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.85rem;
         font-weight: 800;
-        letter-spacing: 0.5px;
+        font-style: italic;
+        letter-spacing: 0.4px;
         text-transform: uppercase;
-        color: #dc2626;
+        color: #0f172a;
         margin: 0 0 1rem 0;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid #dc2626;
+        border-bottom: 1px solid #1f2937;
+        width: 100%;
+    }
+
+    .gi-sidebar-heading::before {
+        content: "";
         display: inline-block;
+        flex-shrink: 0;
+        width: 20px;
+        height: 10px;
+        border-radius: 2px;
+        background: #dc2626;
     }
 
     .gi-popular-group {
