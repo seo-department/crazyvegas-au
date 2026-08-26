@@ -288,6 +288,169 @@ const reviewerSlug = reviewerName
 	.replace(/(^-|-$)+/g, "")
 const reviewerLink = `/about-us/${reviewerSlug}/`
 
+// --- 🚨 NEW: RICH AUTHOR/REVIEWER HOVER TOOLTIP ---
+// Same enrichment used on posts/pages/reviews: latest posts + WP
+// registration date, built into a wider hover card.
+
+const tooltipSafeHeaders = {
+	"Content-Type": "application/json",
+	"User-Agent":
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+}
+
+function truncateText(text: string, maxChars = 130): string {
+	const clean = (text || "").trim()
+	if (clean.length <= maxChars) return clean
+	const cut = clean.slice(0, maxChars)
+	const lastSpace = cut.lastIndexOf(" ")
+	return `${cut.slice(0, lastSpace > 0 ? lastSpace : maxChars)}…`
+}
+
+async function fetchTooltipPersonData(displayName: string, currentUri: string) {
+	const fallback = {
+		sinceLabel: null as string | null,
+		posts: [] as { title: string; uri: string }[],
+	}
+	if (!displayName) return fallback
+
+	try {
+		const response = await fetch(wpUrl, {
+			method: "POST",
+			headers: tooltipSafeHeaders,
+			body: JSON.stringify({
+				query: `
+                    query AuthorTooltipData($search: String!) {
+                        users(where: { search: $search }, first: 10) {
+                            nodes {
+                                name
+                                registeredDate
+                                posts(first: 6) {
+                                    nodes { title uri }
+                                }
+                            }
+                        }
+                    }
+                `,
+				variables: { search: displayName },
+			}),
+		})
+
+		const contentType = response.headers.get("content-type")
+		if (!response.ok || !contentType?.includes("application/json")) {
+			return fallback
+		}
+
+		const result = await response.json()
+
+		if (result.errors) {
+			console.warn(
+				"⚠️ GRAPHQL TOOLTIP USERS ERROR for",
+				displayName,
+				JSON.stringify(result.errors),
+			)
+			return fallback
+		}
+
+		const candidates = result?.data?.users?.nodes || []
+		const user =
+			candidates.find(
+				(u: any) =>
+					(u.name || "").trim().toLowerCase() ===
+					displayName.trim().toLowerCase(),
+			) || candidates[0]
+
+		if (!user) return fallback
+
+		const sinceLabel = user.registeredDate
+			? new Date(user.registeredDate).toLocaleDateString("en-US", {
+					year: "numeric",
+					month: "short",
+				})
+			: null
+
+		const posts = (user.posts?.nodes || [])
+			.filter((p: any) => p.uri && p.uri !== currentUri)
+			.slice(0, 5)
+			.map((p: any) => ({
+				title: p.title,
+				uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
+			}))
+
+		return { sinceLabel, posts }
+	} catch (e) {
+		console.warn("⚠️ Could not fetch tooltip data for", displayName, e)
+		return { sinceLabel: null, posts: [] }
+	}
+}
+
+function buildTooltipHtml(opts: {
+	roleLabel: string
+	name: string
+	avatar: string
+	bio: string
+	since: string | null
+	posts: { title: string; uri: string }[]
+	profileLink: string
+}): string {
+	const { roleLabel, name, avatar, bio, since, posts, profileLink } = opts
+
+	const sinceHtml = since
+		? `<div class="atp-since"><span class="atp-since-label">Part of the Team Since</span><span class="atp-since-value">${since}</span></div>`
+		: ""
+
+	const postsHtml =
+		posts.length > 0
+			? `
+        <div class="atp-section-label">Has Also Written</div>
+        <ul class="atp-posts-list">
+            ${posts.map(p => `<li><a href="${p.uri}">${p.title}</a></li>`).join("")}
+        </ul>`
+			: ""
+
+	return `
+        <div class="atp-header">
+            <img src="${avatar}" alt="${name}" class="atp-avatar" referrerpolicy="no-referrer" />
+            <div class="atp-header-text">
+                <span class="atp-role">${roleLabel}</span>
+                <strong class="atp-name">${name}</strong>
+            </div>
+            ${sinceHtml}
+        </div>
+        <div class="atp-section-label">About ${roleLabel === "Author" ? "Author" : "Reviewer"}</div>
+        <p class="atp-bio">${truncateText(bio.replace(/<\/?[^>]+(>|$)/g, ""), 130)}</p>
+        ${postsHtml}
+        <a href="${profileLink}" class="atp-profile-btn">
+            ${roleLabel === "Author" ? "Author" : "Reviewer"} Profile
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+    `
+}
+
+const [authorTooltipInfo, reviewerTooltipInfo] = await Promise.all([
+	fetchTooltipPersonData(authorName, "/"),
+	fetchTooltipPersonData(reviewerName, "/"),
+])
+
+const authorTooltipHtml = buildTooltipHtml({
+	roleLabel: "Author",
+	name: authorName,
+	avatar: authorAvatar,
+	bio: authorBio,
+	since: authorTooltipInfo.sinceLabel,
+	posts: authorTooltipInfo.posts,
+	profileLink: authorLink,
+})
+
+const reviewerTooltipHtml = buildTooltipHtml({
+	roleLabel: "Reviewer",
+	name: reviewerName,
+	avatar: reviewerAvatar,
+	bio: reviewerBio,
+	since: reviewerTooltipInfo.sinceLabel,
+	posts: reviewerTooltipInfo.posts,
+	profileLink: reviewerLink,
+})
+
 const rawDate = page?.modified || page?.date || new Date().toISOString()
 const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
 	year: "numeric",
@@ -557,9 +720,10 @@ const blogPosts = recentPosts.slice(3, 7)
 											href={authorLink}
 											rel="author">{authorName}</a
 										>
-										<span class="author-tooltip-popup"
-											>{authorBio}</span
-										>
+										<span
+											class="author-tooltip-popup"
+											set:html={authorTooltipHtml}
+										/>
 									</span>
 									<span class="author-role"
 										>Gambling Writer</span
@@ -593,9 +757,10 @@ const blogPosts = recentPosts.slice(3, 7)
 											class="reviewer-name-link"
 											>{reviewerName}</a
 										>
-										<span class="author-tooltip-popup"
-											>{reviewerBio}</span
-										>
+										<span
+											class="author-tooltip-popup"
+											set:html={reviewerTooltipHtml}
+										/>
 									</span>
 									<span class="reviewer-role"
 										>Gambling Expert</span
@@ -728,9 +893,10 @@ const blogPosts = recentPosts.slice(3, 7)
 									href={authorLink}
 									rel="author">{authorName}</a
 								>
-								<span class="author-tooltip-popup"
-									>{authorBio}</span
-								>
+								<span
+									class="author-tooltip-popup"
+									set:html={authorTooltipHtml}
+								/>
 							</span>
 							<span class="author-role">Gambling Writer</span>
 						</div>
@@ -761,9 +927,10 @@ const blogPosts = recentPosts.slice(3, 7)
 									href={reviewerLink}
 									class="reviewer-name-link">{reviewerName}</a
 								>
-								<span class="author-tooltip-popup"
-									>{reviewerBio}</span
-								>
+								<span
+									class="author-tooltip-popup"
+									set:html={reviewerTooltipHtml}
+								/>
 							</span>
 							<span class="reviewer-role">Gambling Expert</span>
 						</div>
@@ -1374,21 +1541,21 @@ const blogPosts = recentPosts.slice(3, 7)
 		}
 	}
 
-	.author-tooltip-popup {
+		.author-tooltip-popup {
 		position: absolute;
-		top: 130%; /* was: bottom: 130% */
+		top: 130%;
 		left: 50%;
-		transform: translateX(-50%) translateY(-6px); /* was: translateY(6px) */
-		width: max-content;
-		max-width: 260px;
+		transform: translateX(-50%) translateY(-6px);
+		width: 360px;
+		max-width: 90vw;
 		background: #ffffff;
 		color: #334155;
 		font-size: 0.85rem;
 		font-weight: 400;
 		line-height: 1.5;
 		text-align: left;
-		padding: 14px 16px;
-		border-radius: 10px;
+		padding: 18px 20px;
+		border-radius: 12px;
 		box-shadow:
 			0 10px 25px -5px rgba(0, 0, 0, 0.25),
 			0 4px 6px -2px rgba(0, 0, 0, 0.1);
@@ -1405,23 +1572,142 @@ const blogPosts = recentPosts.slice(3, 7)
 	.author-tooltip-popup::after {
 		content: "";
 		position: absolute;
-		bottom: 100%; /* was: top: 100% */
+		bottom: 100%;
 		left: 50%;
 		transform: translateX(-50%);
 		border-width: 6px;
 		border-style: solid;
-		border-color: transparent transparent #ffffff transparent; /* was: #ffffff transparent transparent transparent */
+		border-color: transparent transparent #ffffff transparent;
 	}
 
 	.author-tooltip-wrap:hover .author-tooltip-popup {
 		opacity: 1;
 		visibility: visible;
 		transform: translateX(-50%) translateY(0);
+		pointer-events: auto;
+	}
+
+	.author-tooltip-popup strong {
+		color: #0f172a;
+		font-weight: 700;
+	}
+
+	.atp-header {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		margin-bottom: 12px;
+	}
+	.atp-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+	.atp-header-text {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.3;
+		flex: 1;
+		min-width: 0;
+	}
+	.atp-role {
+		font-size: 0.72rem;
+		color: #94a3b8;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.3px;
+	}
+	.atp-name {
+		font-size: 0.95rem;
+		color: #0f172a;
+		font-weight: 800;
+	}
+	.atp-since {
+		text-align: right;
+		flex-shrink: 0;
+		display: flex;
+		flex-direction: column;
+		line-height: 1.3;
+	}
+	.atp-since-label {
+		font-size: 0.68rem;
+		color: #94a3b8;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.3px;
+		white-space: nowrap;
+	}
+	.atp-since-value {
+		font-size: 0.82rem;
+		color: #0f172a;
+		font-weight: 700;
+	}
+	.atp-section-label {
+		font-size: 0.68rem;
+		color: #94a3b8;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.4px;
+		margin: 12px 0 6px 0;
+		padding-top: 10px;
+		border-top: 1px solid #f1f5f9;
+	}
+	.atp-header + .atp-section-label {
+		padding-top: 0;
+		border-top: none;
+		margin-top: 0;
+	}
+	.atp-bio {
+		margin: 0;
+		font-size: 0.85rem;
+		line-height: 1.55;
+		color: #475569;
+	}
+	.atp-posts-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.atp-posts-list a {
+		font-size: 0.83rem;
+		color: #dc2626;
+		text-decoration: none;
+		line-height: 1.4;
+		display: block;
+	}
+	.atp-posts-list a:hover {
+		text-decoration: underline;
+	}
+	.atp-profile-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		margin-top: 14px;
+		padding: 10px;
+		border: 1px solid #e2e8f0;
+		border-radius: 8px;
+		text-decoration: none;
+		color: #dc2626;
+		font-weight: 700;
+		font-size: 0.85rem;
+		transition: background 0.2s ease;
+	}
+	.atp-profile-btn:hover {
+		background: #fef2f2;
+	}
+	.atp-profile-btn i {
+		font-size: 0.75rem;
 	}
 
 	@media (max-width: 600px) {
 		.author-tooltip-popup {
-			max-width: 220px;
+			width: 300px;
 			left: 0;
 			transform: translateY(6px);
 		}
@@ -4789,7 +5075,7 @@ const blogPosts = recentPosts.slice(3, 7)
 	@media (max-width: 768px) {
 		div#main-content {
 			max-width: 100% !important;
-			overflow: hidden !important;
+			overflow-x: hidden !important;
 		}
 
 		.cus-casino-float-image.right {
@@ -5646,6 +5932,10 @@ const blogPosts = recentPosts.slice(3, 7)
 			display: none;
 		}
 	}
+
+	ul.atp-posts-list li {
+    border-bottom: 1px solid #e9effb;
+}
 
 	.share-popup {
 		position: absolute;
