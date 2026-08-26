@@ -461,9 +461,11 @@ const POPULAR_LINKS = [
     },
 ]
 
-// Only the standard post/page template gets the new hero + sidebar layout.
-// Reviews and Games keep their own purpose-built hero/layout.
-const useSidebarLayout = !isGame && !isReview
+// The standard sidebar layout now also applies to Casino Reviews (they
+// keep their own purpose-built hero above, but share the same
+// Mission/Sitemap/TOC sidebar as posts and pages). Games still get their
+// own dedicated hero/layout with no sidebar.
+const useSidebarLayout = !isGame
 
 const yoastTitle = (post.seo?.title || post.title || "").replaceAll(
     "[year]",
@@ -2369,6 +2371,7 @@ header.modern-review-hero {
         max-width: 1400px;
         margin: 0 auto;
         padding: 0 1rem;
+        align-items: start;
         align-items: stretch;
     }
 
@@ -2382,10 +2385,13 @@ header.modern-review-hero {
         position: sticky;
         top: 1.5rem;
         display: flex;
+        align-self: start !important;
         flex-direction: column;
         gap: 1.5rem;
         padding-top: 24px;
-        align-self: start; 
+        max-height: calc(100vh - 3rem);
+        overflow-y: auto;
+        scrollbar-width: thin;
     }
 
     .gi-mission-box {
@@ -2570,6 +2576,8 @@ header.modern-review-hero {
         .gi-sidebar {
             position: static;
             padding-top: 0;
+            max-height: none;
+            overflow-y: visible;
         }
     }
 

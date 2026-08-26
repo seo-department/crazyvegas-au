@@ -501,15 +501,18 @@ function timeAgo(dateString: string) {
                                 <a href="/privacy-policy/">Privacy Policy</a>
                             </li>
                             <li>
-                                <a href="/copyright-policy/">Copyright Policy</a>
+                                <a href="/copyright-policy/">Copyright Policy</a
+                                >
                             </li>
                             <li>
                                 <a href="/editorial-policy/">Editorial Policy</a
                                 >
                             </li>
                             <li><a href="/terms-of-use/">Terms of Use</a></li>
-                            <li><a href="/affiliate-disclosure/">Affiliate Disclosure</a></li>
-                            
+                            <li>
+                                <a href="/affiliate-disclosure/"
+                                    >Affiliate Disclosure</a>
+                            </li>
                         </ul>
                     </div>
 
@@ -752,8 +755,8 @@ function timeAgo(dateString: string) {
     }
 
     div#main-content {
-    overflow: hidden !important;
-}
+        overflow: clip !important;
+    }
 
     iframe {
         width: 100% !important;
@@ -801,7 +804,7 @@ function timeAgo(dateString: string) {
     @media (max-width: 768px) {
         div#main-content {
             max-width: 100% !important;
-            overflow: hidden !important;
+            overflow: clip !important;
         }
         .top-utility-bar-inner {
             justify-content: center;
@@ -1295,8 +1298,8 @@ function timeAgo(dateString: string) {
     }
 
     .gi-page-grid {
-    margin-top: -23px !important;
-}
+        margin-top: -23px !important;
+    }
 
     /* ===== Back to top button ===== */
     .scroll-top-btn {
