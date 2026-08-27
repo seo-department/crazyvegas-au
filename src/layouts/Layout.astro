@@ -825,13 +825,6 @@ function timeAgo(dateString: string) {
 }
 
 
-a.nav-link span {
-    color: #0f172a !important;
-    text-decoration: none;
-    font-size: 1rem ;
-    font-weight: 700;
-}
-
 
     @media (max-width: 768px) {
         div#main-content {
@@ -1225,8 +1218,8 @@ a.nav-link span {
 
         /* Standard centering for items on the left side of the nav */
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
+        
+        
 
         display: flex;
         flex-direction: row;
@@ -1371,7 +1364,6 @@ a.nav-link span {
     }
 
     .nav-dropdown-menu.mega-menu {
-        display: grid !important;
         grid-template-columns: repeat(var(--mega-columns, 2), 1fr) !important;
         gap: 0 1.5rem !important;
         width: max-content !important;
@@ -5055,7 +5047,7 @@ a.nav-link span {
     }
     .nav-dropdown-menu.mega-menu {
         flex-direction: row;
-        min-width: 480px;
+      
         padding: 1.5rem;
         gap: 2rem;
         left: -50%;
@@ -15805,6 +15797,79 @@ a.nav-link span {
     #toc_container .toc_list a:hover {
         text-decoration: underline;
     }
+
+
+
+
+
+
+/* ==============================================================
+   ULTIMATE MEGA MENU GRID & NO-CUTOFF FIX
+============================================================== */
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw;
+}
+
+/* Force CSS Grid based on Astro variable */
+nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
+    display: grid !important;
+    grid-template-columns: repeat(var(--mega-columns, 3), minmax(180px, 1fr)) !important;
+    gap: 1.5rem 2.5rem !important;
+    
+    width: max-content !important;
+    max-width: 85vw !important; 
+    
+    /* Adds scrollbar on small screens */
+    max-height: 75vh !important; 
+    overflow-y: auto !important; 
+    overflow-x: hidden !important;
+    
+    padding: 1.5rem 1.5rem 2rem 1.5rem !important; 
+    box-sizing: border-box !important;
+    
+    position: absolute !important;
+}
+
+nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu div.mega-column {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    height: max-content !important; 
+}
+
+/* Desktop Alignment Magic */
+@media (min-width: 992px) {
+    nav.header-nav { position: relative !important; }
+    nav.header-nav .nav-dropdown { position: static !important; }
+    
+    /* Left side menus: anchor left */
+    nav.header-nav .nav-dropdown:nth-child(1) div.nav-dropdown-menu.mega-menu,
+    nav.header-nav .nav-dropdown:nth-child(2) div.nav-dropdown-menu.mega-menu {
+        left: 0 !important;
+        right: auto !important;
+        transform: translateY(15px) !important;
+    }
+
+    /* Right side menus: anchor right */
+    nav.header-nav .nav-dropdown:nth-child(3) div.nav-dropdown-menu.mega-menu,
+    nav.header-nav .nav-dropdown:nth-child(4) div.nav-dropdown-menu.mega-menu {
+        left: auto !important;
+        right: 0 !important;
+        transform: translateY(15px) !important;
+    }
+
+    nav.header-nav .nav-dropdown:hover div.nav-dropdown-menu.mega-menu {
+        transform: translateY(0) !important;
+    }
+}
+
+/* Clean scrollbar for the menu internals */
+nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar { width: 6px; }
+nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-track { background: transparent; margin-bottom: 10px; }
+nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+    
 </style>
 
 <script is:inline>

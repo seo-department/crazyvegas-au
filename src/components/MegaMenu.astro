@@ -3,8 +3,7 @@ import { getPrimaryMenu } from "../lib/menu.js"
 
 const menuTree = await getPrimaryMenu()
 
-// Fallback: only push "Online Pokies" if WP's primary-menu doesn't already
-// have it, so it always appears without risking a duplicate.
+// Fallback: only push "Online Pokies" if WP's primary-menu doesn't already have it
 const hasOnlinePokies = menuTree.some(
     item =>
         item.url === "/online-pokies/" ||
@@ -18,14 +17,14 @@ if (!hasOnlinePokies) {
         url: "/online-pokies/",
         meta: {},
         children: [
-            { id: "manual-new-online-pokies", label: "New Online Pokies", url: "/new-online-pokies/", meta: {}, children: [] },
-            { id: "manual-pokies-strategy", label: "Pokies Strategy", url: "/online-pokies/strategy/", meta: {}, children: [] },
-            { id: "manual-progressive-jackpots", label: "Progressive Jackpots", url: "/online-pokies/progressive-jackpots/", meta: {}, children: [] },
+            { id: "manual-new-online-pokies", label: "New Online Pokies", url: "/new-online-pokies/", meta: { column: 1 }, children: [] },
+            { id: "manual-pokies-strategy", label: "Pokies Strategy", url: "/online-pokies/strategy/", meta: { column: 1 }, children: [] },
+            { id: "manual-progressive-jackpots", label: "Progressive Jackpots", url: "/online-pokies/progressive-jackpots/", meta: { column: 2 }, children: [] },
             {
                 id: "manual-free-pokies",
                 label: "Free Pokies",
                 url: "/online-pokies/free/",
-                meta: {},
+                meta: { column: 3 },
                 children: [
                     { id: "manual-game-cleopatra", label: "Legend of Cleopatra Megaways", url: "/game/legend-of-cleopatra-megaways/", meta: {}, children: [] },
                     { id: "manual-game-elvis-frog", label: "Elvis Frog Trueways", url: "/game/elvis-frog-trueways/", meta: {}, children: [] },
@@ -43,19 +42,34 @@ if (!hasOnlinePokies) {
     })
 }
 
-// Splits a flat array into N even chunks
-function chunkArray(arr, size) {
-    const out = []
-    for (let i = 0; i < arr.length; i += size) {
-        out.push(arr.slice(i, i + size))
-    }
-    return out
+// Fallback: only push "Executives" if WP's primary-menu doesn't already have it
+const hasExecutives = menuTree.some(
+    item =>
+        item.url === "/executives/" ||
+        item.label?.toLowerCase() === "executives",
+)
+
+if (!hasExecutives) {
+    menuTree.push({
+        id: "manual-executives",
+        label: "Executives",
+        url: "/executives/",
+        meta: {},
+        children: [
+            {
+                id: "manual-bruce-mathieson-jnr",
+                label: "Bruce Mathieson Jnr",
+                url: "/executives/bruce-mathieson-jnr/",
+                meta: {},
+                children: [],
+            },
+        ],
+    })
 }
 
-const MAX_PER_COLUMN = 8   // items before we start splitting
-const MAX_COLUMNS = 4      // never generate more than this many columns
+const MAX_PER_COLUMN = 4   
+const MAX_COLUMNS = 3      
 
-// A parent's "weight" includes itself + all its nested children
 function itemWeight(child) {
     return 1 + (child.children?.length || 0)
 }
@@ -64,8 +78,7 @@ function buildColumns(children) {
     const hasExplicitColumns = children.some(c => c.meta?.column != null)
     const totalWeight = children.reduce((sum, c) => sum + itemWeight(c), 0)
 
-    // Only respect explicit columns for lists that are short by weight
-    if (hasExplicitColumns && totalWeight <= MAX_PER_COLUMN) {
+    if (hasExplicitColumns) {
         const columns = new Map()
         for (const child of children) {
             const colKey = child.meta?.column ?? 1
@@ -75,14 +88,11 @@ function buildColumns(children) {
         return [...columns.entries()].sort((a, b) => a[0] - b[0])
     }
 
-    // Auto-balance by weight (accounts for grandchildren height)
     if (totalWeight > MAX_PER_COLUMN) {
-        const numColumns = Math.min(MAX_COLUMNS, Math.ceil(totalWeight / MAX_PER_COLUMN))
+        const numColumns = Math.min(MAX_COLUMNS, Math.ceil(totalWeight / 2))
         const columns = Array.from({ length: numColumns }, () => [])
         const weights = new Array(numColumns).fill(0)
 
-        // Sort heaviest-first so big items get placed before the greedy fill
-        // has already committed to an uneven distribution
         const sorted = [...children].sort((a, b) => itemWeight(b) - itemWeight(a))
 
         for (const child of sorted) {
@@ -91,7 +101,6 @@ function buildColumns(children) {
             weights[lightest] += itemWeight(child)
         }
 
-        // Re-sort each column back to original menu order so items don't look shuffled
         for (const col of columns) {
             col.sort((a, b) => children.indexOf(a) - children.indexOf(b))
         }
@@ -99,7 +108,6 @@ function buildColumns(children) {
         return columns.map((chunk, idx) => [idx + 1, chunk]).filter(([, c]) => c.length > 0)
     }
 
-    // Short list, no need to split
     return [[1, children]]
 }
 ---
@@ -109,7 +117,7 @@ function buildColumns(children) {
         const icon = top.meta?.icon
         const color = top.meta?.color
 
-        if (top.children.length === 0) {
+        if (top.children && top.children.length === 0) {
             return (
                 <div class="nav-dropdown">
                     <a class="nav-link" href={top.url}>
@@ -145,7 +153,8 @@ function buildColumns(children) {
                                         {child.meta?.icon && <i class={child.meta.icon} />}
                                         <span set:html={child.label} />
                                     </a>
-                                    {child.children.length > 0 &&
+                                    {/* Added safety checks to prevent crashes if a WP item has no children */}
+                                    {child.children && child.children.length > 0 &&
                                         child.children.map((grandchild) => (
                                             <a href={grandchild.url} style="padding-left: 2rem; font-size: 0.85rem;">
                                                 <span set:html={grandchild.label} />
