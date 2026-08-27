@@ -3,46 +3,45 @@ import { getPrimaryMenu } from "../lib/menu.js"
 
 const menuTree = await getPrimaryMenu()
 
-// TEMP: manual fallback until "Online Pokies" is added to the primary-menu in WP
-menuTree.push({
-    id: "manual-online-pokies",
-    label: "Online Pokies",
-    url: "/online-pokies/",
-    meta: {},
-    children: [
-        { id: "manual-new-online-pokies", label: "New Online Pokies", url: "/new-online-pokies/", meta: {}, children: [] },
-        { id: "manual-pokies-strategy", label: "Pokies Strategy", url: "/online-pokies/strategy/", meta: {}, children: [] },
-        { id: "manual-progressive-jackpots", label: "Progressive Jackpots", url: "/online-pokies/progressive-jackpots/", meta: {}, children: [] },
-        {
-            id: "manual-free-pokies",
-            label: "Free Pokies",
-            url: "/online-pokies/free/",
-            meta: {},
-            children: [
-                { id: "manual-game-cleopatra", label: "Legend of Cleopatra Megaways", url: "/game/legend-of-cleopatra-megaways/", meta: {}, children: [] },
-                { id: "manual-game-elvis-frog", label: "Elvis Frog Trueways", url: "/game/elvis-frog-trueways/", meta: {}, children: [] },
-                { id: "manual-game-3-witches", label: "3 Witches", url: "/game/3-witches/", meta: {}, children: [] },
-                { id: "manual-game-black-wolf-2", label: "Black Wolf 2", url: "/game/black-wolf-2/", meta: {}, children: [] },
-                { id: "manual-game-aztec-magic-deluxe", label: "Aztec Magic Deluxe", url: "/game/aztec-magic-deluxe/", meta: {}, children: [] },
-                { id: "manual-game-wolf-treasure", label: "Wolf Treasure", url: "/game/wolf-treasure/", meta: {}, children: [] },
-                { id: "manual-game-green-chilli", label: "Green Chilli", url: "/game/green-chilli/", meta: {}, children: [] },
-                { id: "manual-game-coin-volcano", label: "Coin Volcano", url: "/game/coin-volcano/", meta: {}, children: [] },
-                { id: "manual-game-aztec-fire", label: "Aztec Fire: Hold and Win", url: "/game/aztec-fire-hold-and-win/", meta: {}, children: [] },
-                { id: "manual-game-coin-strike", label: "Coin Strike: Hold and Win", url: "/game/coin-strike-hold-and-win/", meta: {}, children: [] },
-            ],
-        },
-    ],
-})
+// Fallback: only push "Online Pokies" if WP's primary-menu doesn't already
+// have it, so it always appears without risking a duplicate.
+const hasOnlinePokies = menuTree.some(
+    item =>
+        item.url === "/online-pokies/" ||
+        item.label?.toLowerCase() === "online pokies",
+)
 
-// TEMP: manual fallback for /executives/ — add it last so it's the final
-// top-level item in the nav.
-menuTree.push({
-    id: "manual-executives",
-    label: "Executives",
-    url: "/executives/",
-    meta: {},
-    children: [],
-})
+if (!hasOnlinePokies) {
+    menuTree.push({
+        id: "manual-online-pokies",
+        label: "Online Pokies",
+        url: "/online-pokies/",
+        meta: {},
+        children: [
+            { id: "manual-new-online-pokies", label: "New Online Pokies", url: "/new-online-pokies/", meta: {}, children: [] },
+            { id: "manual-pokies-strategy", label: "Pokies Strategy", url: "/online-pokies/strategy/", meta: {}, children: [] },
+            { id: "manual-progressive-jackpots", label: "Progressive Jackpots", url: "/online-pokies/progressive-jackpots/", meta: {}, children: [] },
+            {
+                id: "manual-free-pokies",
+                label: "Free Pokies",
+                url: "/online-pokies/free/",
+                meta: {},
+                children: [
+                    { id: "manual-game-cleopatra", label: "Legend of Cleopatra Megaways", url: "/game/legend-of-cleopatra-megaways/", meta: {}, children: [] },
+                    { id: "manual-game-elvis-frog", label: "Elvis Frog Trueways", url: "/game/elvis-frog-trueways/", meta: {}, children: [] },
+                    { id: "manual-game-3-witches", label: "3 Witches", url: "/game/3-witches/", meta: {}, children: [] },
+                    { id: "manual-game-black-wolf-2", label: "Black Wolf 2", url: "/game/black-wolf-2/", meta: {}, children: [] },
+                    { id: "manual-game-aztec-magic-deluxe", label: "Aztec Magic Deluxe", url: "/game/aztec-magic-deluxe/", meta: {}, children: [] },
+                    { id: "manual-game-wolf-treasure", label: "Wolf Treasure", url: "/game/wolf-treasure/", meta: {}, children: [] },
+                    { id: "manual-game-green-chilli", label: "Green Chilli", url: "/game/green-chilli/", meta: {}, children: [] },
+                    { id: "manual-game-coin-volcano", label: "Coin Volcano", url: "/game/coin-volcano/", meta: {}, children: [] },
+                    { id: "manual-game-aztec-fire", label: "Aztec Fire: Hold and Win", url: "/game/aztec-fire-hold-and-win/", meta: {}, children: [] },
+                    { id: "manual-game-coin-strike", label: "Coin Strike: Hold and Win", url: "/game/coin-strike-hold-and-win/", meta: {}, children: [] },
+                ],
+            },
+        ],
+    })
+}
 
 // Splits a flat array into N even chunks
 function chunkArray(arr, size) {
