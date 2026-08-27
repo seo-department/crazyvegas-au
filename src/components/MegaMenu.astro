@@ -34,6 +34,16 @@ menuTree.push({
     ],
 })
 
+// TEMP: manual fallback for /executives/ — add it last so it's the final
+// top-level item in the nav.
+menuTree.push({
+    id: "manual-executives",
+    label: "Executives",
+    url: "/executives/",
+    meta: {},
+    children: [],
+})
+
 // Splits a flat array into N even chunks
 function chunkArray(arr, size) {
     const out = []
