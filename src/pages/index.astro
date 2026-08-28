@@ -611,16 +611,196 @@ const blogPosts = recentPosts.slice(3, 7)
                     </div> -->
 
 					<div class="hero-intro-box">
+						<div class="hd-in-mobi">
+							<div class="author-reviewer-bar">
+								<div class="update-block">
+									<div class="update-text">
+										<span class="update-label"
+											>Updated on</span
+										>
+										<span class="update-date"
+											>{formattedDate}</span
+										>
+									</div>
+								</div>
+
+								<div class="author-block">
+									<img
+										src={authorAvatar}
+										alt={authorName}
+										class="author-avatar"
+										width="48"
+										height="48"
+										loading="lazy"
+									/>
+									<div class="author-text">
+										<span class="author-tooltip-wrap">
+											<a
+												class="fn url author-name-link"
+												href={authorLink}
+												rel="author">{authorName}</a
+											>
+											<span
+												class="author-tooltip-popup"
+												set:html={authorTooltipHtml}
+											/>
+										</span>
+										<span class="author-role"
+											>Gambling Writer</span
+										>
+									</div>
+								</div>
+
+								<div class="fact-checked-block">
+									<div class="fact-checked-text">
+										<span>FACT</span>
+										<span>CHECKED</span>
+									</div>
+									<div class="fact-checked-icon">
+										<i class="fa-solid fa-check-double"></i>
+									</div>
+								</div>
+
+								<div class="reviewer-block">
+									<img
+										src={reviewerAvatar}
+										alt={reviewerName}
+										class="reviewer-avatar"
+										width="48"
+										height="48"
+										loading="lazy"
+									/>
+									<div class="reviewer-text">
+										<span class="author-tooltip-wrap">
+											<a
+												href={reviewerLink}
+												class="reviewer-name-link"
+												>{reviewerName}</a
+											>
+											<span
+												class="author-tooltip-popup"
+												set:html={reviewerTooltipHtml}
+											/>
+										</span>
+										<span class="reviewer-role"
+											>Gambling Expert</span
+										>
+									</div>
+								</div>
+
+								<div class="share-block">
+									<!-- This is the blue forward/share button you lost -->
+									<button
+										class="share-toggle-btn"
+										id="shareToggleBtn"
+										aria-label="Share this page"
+										aria-expanded="false"
+									>
+										<i class="fa-solid fa-share"></i>
+									</button>
+
+									<!-- This is the popup containing the individual social icons -->
+									<div
+										class="share-popup"
+										id="sharePopup"
+										hidden
+									>
+										<a
+											href="#"
+											target="_blank"
+											rel="noopener"
+											aria-label="Share on Facebook"
+											class="share-fb"
+											data-share="facebook"
+										>
+											<i class="fa-brands fa-facebook-f"
+											></i>
+										</a>
+										<a
+											href="#"
+											target="_blank"
+											rel="noopener"
+											aria-label="Share on X"
+											class="share-x"
+											data-share="x"
+										>
+											<i class="fa-brands fa-x-twitter"
+											></i>
+										</a>
+										<a
+											href="https://www.instagram.com/aucrazyvegas/"
+											target="_blank"
+											rel="noopener"
+											aria-label="Instagram"
+											class="share-ig"
+										>
+											<i class="fa-brands fa-instagram"
+											></i>
+										</a>
+										<a
+											href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
+											target="_blank"
+											rel="noopener"
+											aria-label="YouTube"
+											class="share-yt"
+										>
+											<i class="fa-brands fa-youtube"></i>
+										</a>
+										<a
+											href="#"
+											target="_blank"
+											rel="noopener"
+											aria-label="Share on Pinterest"
+											class="share-pin"
+											data-share="pinterest"
+										>
+											<i class="fa-brands fa-pinterest"
+											></i>
+										</a>
+										<a
+											href="#"
+											target="_blank"
+											rel="noopener"
+											aria-label="Share on Reddit"
+											class="share-reddit"
+											data-share="reddit"
+										>
+											<i class="fa-brands fa-reddit-alien"
+											></i>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
+			<div class="hero-bottom-meta-section">
+
+
+
+				<div class="hero-disclaimer-box desktop-dis">
+
+
+
+					
+
+					
+					<div class="disclaimer-cl">
+						<p>
+							<b>Editorial Statement:</b> We independently review and select all operators. While we may earn commissions from affiliate links or paid placements, these never influence our editors' opinions or evaluations. Every platform is assessed against our own standards, and we highlight both strengths and shortcomings, regardless of any commercial relationship.
+						</p>
+
+					</div>
+
+					
+				</div>
+			</div>
+
 						<div
 							id="cus-banner-1"
 							class="cus-banner"
 							aria-live="polite"
 						>
-							<!-- 🔧 FIX: Was <p class="hero-lead-text"> wrapping THREE more <p> tags.
-							     A <p> can never contain another <p> — the browser auto-closes the
-							     outer tag the instant it sees the first inner <p>, which silently
-							     breaks the DOM and can throw off surrounding height/margins.
-							     Changed the wrapper to a <div> so the inner <p> tags nest legally. -->
 							<div class="hero-lead-text">
 								<p>
 									Finding the <b
@@ -633,7 +813,7 @@ const blogPosts = recentPosts.slice(3, 7)
 								</p>
 
 								<p>
-									At Crazy Vegas, <i
+									At <b>Crazy Vegas</b>, <i
 										>we’ve tested 150+ top-rated Australian</i
 									> online casino sites, and in our opinion, the
 									cashout test matters most. We check AUD banking
@@ -644,23 +824,7 @@ const blogPosts = recentPosts.slice(3, 7)
 									whatever the welcome offer promises.
 								</p>
 
-								<p>
-									Not every Aussie online casino is strong for
-									the same reason, and in our experience,
-									that’s fine. While some of you want the
-									strongest all-around value, others want the
-									deepest online pokies and casino games
-									library. Some care most about the cleanest
-									live casino or the fastest withdrawal.
-									Others want something that works well on
-									mobile. We cover the lot, and every pick
-									here is tested for real money play, not just
-									browsing. We’re upfront about the
-									trade-offs, too. No Australian online casino
-									on this page is perfect. We’ll tell you who
-									each one suits and who it doesn’t, before
-									you deposit.
-								</p>
+								
 							</div>
 
 							<!-- Hidden Expandable Content -->
@@ -669,20 +833,7 @@ const blogPosts = recentPosts.slice(3, 7)
 								class="cus-hidden"
 								style="display: none;"
 							>
-								<p>
-									Not every Aussie online casino is strong for
-									the same reason, and in our experience,
-									that’s fine. While some of you want the
-									strongest all-around value, others want the
-									deepest online pokies and casino games
-									library. Some care most about the cleanest
-									live casino or the fastest withdrawal.
-									Others want something that works well on
-									mobile. We cover the lot, and every pick
-									here is tested for real money play, not just
-									browsing.
-								</p>
-
+								
 								<p>
 									We’re upfront about the trade-offs, too. No
 									Australian online casino on this page is
@@ -692,158 +843,6 @@ const blogPosts = recentPosts.slice(3, 7)
 
 								<div class="table-responsive">
 									<!-- Keep your existing table exactly as it was here -->
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="hd-in-mobi">
-						<div class="author-reviewer-bar">
-							<div class="update-block">
-								<div class="update-text">
-									<span class="update-label">Updated on</span>
-									<span class="update-date"
-										>{formattedDate}</span
-									>
-								</div>
-							</div>
-
-							<div class="author-block">
-								<img
-									src={authorAvatar}
-									alt={authorName}
-									class="author-avatar"
-									width="48"
-									height="48"
-									loading="lazy"
-								/>
-								<div class="author-text">
-									<span class="author-tooltip-wrap">
-										<a
-											class="fn url author-name-link"
-											href={authorLink}
-											rel="author">{authorName}</a
-										>
-										<span
-											class="author-tooltip-popup"
-											set:html={authorTooltipHtml}
-										/>
-									</span>
-									<span class="author-role"
-										>Gambling Writer</span
-									>
-								</div>
-							</div>
-
-							<div class="fact-checked-block">
-								<div class="fact-checked-text">
-									<span>FACT</span>
-									<span>CHECKED</span>
-								</div>
-								<div class="fact-checked-icon">
-									<i class="fa-solid fa-check-double"></i>
-								</div>
-							</div>
-
-							<div class="reviewer-block">
-								<img
-									src={reviewerAvatar}
-									alt={reviewerName}
-									class="reviewer-avatar"
-									width="48"
-									height="48"
-									loading="lazy"
-								/>
-								<div class="reviewer-text">
-									<span class="author-tooltip-wrap">
-										<a
-											href={reviewerLink}
-											class="reviewer-name-link"
-											>{reviewerName}</a
-										>
-										<span
-											class="author-tooltip-popup"
-											set:html={reviewerTooltipHtml}
-										/>
-									</span>
-									<span class="reviewer-role"
-										>Gambling Expert</span
-									>
-								</div>
-							</div>
-
-							<div class="share-block">
-								<!-- This is the blue forward/share button you lost -->
-								<button
-									class="share-toggle-btn"
-									id="shareToggleBtn"
-									aria-label="Share this page"
-									aria-expanded="false"
-								>
-									<i class="fa-solid fa-share"></i>
-								</button>
-
-								<!-- This is the popup containing the individual social icons -->
-								<div class="share-popup" id="sharePopup" hidden>
-									<a
-										href="#"
-										target="_blank"
-										rel="noopener"
-										aria-label="Share on Facebook"
-										class="share-fb"
-										data-share="facebook"
-									>
-										<i class="fa-brands fa-facebook-f"></i>
-									</a>
-									<a
-										href="#"
-										target="_blank"
-										rel="noopener"
-										aria-label="Share on X"
-										class="share-x"
-										data-share="x"
-									>
-										<i class="fa-brands fa-x-twitter"></i>
-									</a>
-									<a
-										href="https://www.instagram.com/aucrazyvegas/"
-										target="_blank"
-										rel="noopener"
-										aria-label="Instagram"
-										class="share-ig"
-									>
-										<i class="fa-brands fa-instagram"></i>
-									</a>
-									<a
-										href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
-										target="_blank"
-										rel="noopener"
-										aria-label="YouTube"
-										class="share-yt"
-									>
-										<i class="fa-brands fa-youtube"></i>
-									</a>
-									<a
-										href="#"
-										target="_blank"
-										rel="noopener"
-										aria-label="Share on Pinterest"
-										class="share-pin"
-										data-share="pinterest"
-									>
-										<i class="fa-brands fa-pinterest"></i>
-									</a>
-									<a
-										href="#"
-										target="_blank"
-										rel="noopener"
-										aria-label="Share on Reddit"
-										class="share-reddit"
-										data-share="reddit"
-									>
-										<i class="fa-brands fa-reddit-alien"
-										></i>
-									</a>
 								</div>
 							</div>
 						</div>
@@ -869,188 +868,9 @@ const blogPosts = recentPosts.slice(3, 7)
 				</div>
 			</div>
 
-			<div class="mobi-hp">
-				<div class="author-reviewer-bar">
-					<div class="update-block">
-						<div class="update-flag">
-							<i class="fa-solid fa-flag"></i>
-						</div>
-						<div class="update-text">
-							<span class="update-label">Updated on</span>
-							<span class="update-date">{formattedDate}</span>
-						</div>
-					</div>
+			
 
-					<div class="author-block">
-						<img
-							src={authorAvatar}
-							alt={authorName}
-							class="author-avatar"
-							width="48"
-							height="48"
-							loading="lazy"
-						/>
-						<div class="author-text">
-							<span class="author-tooltip-wrap">
-								<a
-									class="fn url author-name-link"
-									href={authorLink}
-									rel="author">{authorName}</a
-								>
-								<span
-									class="author-tooltip-popup"
-									set:html={authorTooltipHtml}
-								/>
-							</span>
-							<span class="author-role">Gambling Writer</span>
-						</div>
-					</div>
-
-					<div class="fact-checked-block">
-						<div class="fact-checked-text">
-							<span>FACT</span>
-							<span>CHECKED</span>
-						</div>
-						<div class="fact-checked-icon">
-							<i class="fa-solid fa-check-double"></i>
-						</div>
-					</div>
-
-					<div class="reviewer-block">
-						<img
-							src={reviewerAvatar}
-							alt={reviewerName}
-							class="reviewer-avatar"
-							width="48"
-							height="48"
-							loading="lazy"
-						/>
-						<div class="reviewer-text">
-							<span class="author-tooltip-wrap">
-								<a
-									href={reviewerLink}
-									class="reviewer-name-link">{reviewerName}</a
-								>
-								<span
-									class="author-tooltip-popup"
-									set:html={reviewerTooltipHtml}
-								/>
-							</span>
-							<span class="reviewer-role">Gambling Expert</span>
-						</div>
-					</div>
-
-					<div class="share-block">
-						<!-- This is the blue forward/share button you lost -->
-						<button
-							class="share-toggle-btn"
-							id="shareToggleBtn"
-							aria-label="Share this page"
-							aria-expanded="false"
-						>
-							<i class="fa-solid fa-share"></i>
-						</button>
-
-						<!-- This is the popup containing the individual social icons -->
-						<div class="share-popup" id="sharePopup" hidden>
-							<a
-								href="#"
-								target="_blank"
-								rel="noopener"
-								aria-label="Share on Facebook"
-								class="share-fb"
-								data-share="facebook"
-							>
-								<i class="fa-brands fa-facebook-f"></i>
-							</a>
-							<a
-								href="#"
-								target="_blank"
-								rel="noopener"
-								aria-label="Share on X"
-								class="share-x"
-								data-share="x"
-							>
-								<i class="fa-brands fa-x-twitter"></i>
-							</a>
-							<a
-								href="https://www.instagram.com/aucrazyvegas/"
-								target="_blank"
-								rel="noopener"
-								aria-label="Instagram"
-								class="share-ig"
-							>
-								<i class="fa-brands fa-instagram"></i>
-							</a>
-							<a
-								href="https://www.youtube.com/channel/UCT2G7nGduU-j2Qnjz_tp7Dg"
-								target="_blank"
-								rel="noopener"
-								aria-label="YouTube"
-								class="share-yt"
-							>
-								<i class="fa-brands fa-youtube"></i>
-							</a>
-							<a
-								href="#"
-								target="_blank"
-								rel="noopener"
-								aria-label="Share on Pinterest"
-								class="share-pin"
-								data-share="pinterest"
-							>
-								<i class="fa-brands fa-pinterest"></i>
-							</a>
-							<a
-								href="#"
-								target="_blank"
-								rel="noopener"
-								aria-label="Share on Reddit"
-								class="share-reddit"
-								data-share="reddit"
-							>
-								<i class="fa-brands fa-reddit-alien"></i>
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Meta & Disclaimer (Moved to bottom of hero, spanning full width) -->
-			<div class="hero-bottom-meta-section">
-				<div class="hero-disclaimer-box desktop-dis">
-					<div class="disclaimer-cl">
-						<p>
-							<b>Disclaimer:</b> 18+ Please Gamble Responsibly – Gambling
-							should always be seen as entertainment, not a way to
-							make money. Laws regarding online gambling vary by country,
-							so always ensure you meet the <a
-								href="/gambling-laws/">legal gambling age</a
-							> and comply with your local regulations before playing.
-						</p>
-
-						<p>
-							Gambling can be addictive; we encourage you to set
-							personal limits and <a href="/gambling-addiction/"
-								>seek professional help</a
-							> if needed.
-						</p>
-
-						<p>
-							Some of the links on Crazy Vegas are affiliate
-							links. This means we may earn a commission (at no
-							additional cost to you) if you click through and
-							make a deposit at a partner site. Our reviews and
-							recommendations are based on independent research
-							and a strict <a href="/editorial-policy/"
-								>editorial process</a
-							> to ensure accuracy, impartiality, and trustworthiness.
-							You can learn more about our evaluation process on our
-							<a href="/how-we-rate-casinos/">How We Rate</a> page.
-						</p>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 	</header>
 
@@ -1398,23 +1218,23 @@ const blogPosts = recentPosts.slice(3, 7)
 		max-width: 100%;
 	}
 
-	.author-reviewer-bar {
-		display: flex;
-		align-items: center;
-		gap: 24px;
-		padding: 16px 20px;
-		background: rgba(15, 23, 42, 0.6);
-		border-radius: 11px;
-		flex-wrap: wrap;
-	}
+	
 
 	.mobi-hp {
 		display: none;
 	}
 
+
+
 	/* =========================================
    AUTHOR/REVIEWER NAME HOVER TOOLTIP
 ========================================= */
+
+
+.hd-in-mobi {
+    margin-top: -41px;
+    margin-bottom: 37px;
+}
 	.author-tooltip-wrap {
 		position: relative;
 		display: inline-block;
@@ -1516,9 +1336,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: 500;
 	}
 	@media (max-width: 640px) {
-		.hd-in-mobi {
-			display: none !important;
-		}
+		
 
 		.mobi-hp {
 			display: block !important;
@@ -1782,9 +1600,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: 700;
 	}
 
-	.author-reviewer-bar {
-		border: 1px solid #e2e8f0;
-	}
+	
 
 	.reviewer-twitter {
 		margin-left: 8px;
@@ -2142,7 +1958,7 @@ const blogPosts = recentPosts.slice(3, 7)
 
 	.hero-disclaimer-box {
 		max-width: 1467px;
-		margin-left: 4px !important;
+		margin-left: 0px !important;
 		margin: 0 auto;
 		font-size: 0.95rem;
 		color: #94a3b8;
@@ -2154,8 +1970,12 @@ const blogPosts = recentPosts.slice(3, 7)
 	.hero-disclaimer-box p {
 		color: #0f172a !important;
 		line-height: 1.6;
-		margin-bottom: 1rem;
+		margin-bottom: 0rem;
 	}
+
+	h1.home-hero-title-us {
+    margin-bottom: 33px !important;
+}
 
 	.disclaimer-cl b {
 		color: #000 !important;
@@ -2199,11 +2019,11 @@ const blogPosts = recentPosts.slice(3, 7)
 		font-weight: bold;
 	}
 
-	.author-reviewer-bar {
+	/* .author-reviewer-bar {
 		border: 1px solid #d7e0f0 !important;
 		padding: 10px !important;
 		border-left: 3px solid #60a5fa !important;
-	}
+	} */
 
 	/* Convert link into a functional button */
 	button.show-more-link {
@@ -2652,9 +2472,13 @@ const blogPosts = recentPosts.slice(3, 7)
 	}
 
 	.disclaimer-cl p {
-		font-size: 14px !important;
+		font-size: 11px !important;
 		font-style: italic;
 	}
+
+	.disclaimer-cl p {
+    margin-bottom: -8px !important;
+}
 
 	.cus-hp-list li {
 		font-size: 0.85rem;
@@ -3155,7 +2979,7 @@ const blogPosts = recentPosts.slice(3, 7)
        NEW SPLIT HERO LAYOUT (Dark Theme)
     ========================================= */
 	header.new-split-hero {
-		padding: 4rem 1rem 2rem;
+		padding: 4rem 1rem 0rem;
 	}
 
 	.hero-columns {
@@ -3327,18 +3151,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		background: #facc15;
 	}
 
-	/* =========================================
-       BOTTOM META & DISCLAIMER
-    ========================================= */
-	.hero-bottom-meta-section {
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
-		padding-top: 1rem;
-		margin-top: -2rem;
-	}
-
-	.hero-disclaimer-box.desktop-dis {
-		margin-bottom: 12px;
-	}
+	
 
 	.author-reviewer-bar {
 		background: #f8fafc !important;
@@ -5713,18 +5526,7 @@ const blogPosts = recentPosts.slice(3, 7)
 		}
 	}
 
-	.author-reviewer-bar {
-		display: flex;
-		align-items: center;
-		gap: 0;
-		padding: 14px 20px !important;
-		background: #ffffff !important;
-		border: 1px solid #e2e8f0;
-		border-left: 3px solid #dc2626;
-		border-radius: 11px;
-		flex-wrap: wrap;
-		position: relative;
-	}
+	
 
 	.update-block {
 		display: flex;
@@ -5962,6 +5764,9 @@ const blogPosts = recentPosts.slice(3, 7)
 	.share-wa {
 		background: #25d366 !important;
 	}
+
+
+	
 </style>
 
 <script>
