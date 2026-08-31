@@ -711,7 +711,8 @@ const reviewerLink = `/about-us/${reviewerSlug}/`
 // "Has Also Written" links, "Author Profile" button) used for both the
 // byline author and the "Fact Checked by" reviewer.
 
-const tooltipWpUrl = "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
+const tooltipWpUrl =
+    "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
 const tooltipSafeHeaders = {
     "Content-Type": "application/json",
     "User-Agent":
@@ -728,7 +729,10 @@ function truncateText(text: string, maxChars = 130): string {
 }
 
 async function fetchTooltipPersonData(displayName: string, currentUri: string) {
-    const fallback = { sinceLabel: null as string | null, posts: [] as { title: string; uri: string }[] }
+    const fallback = {
+        sinceLabel: null as string | null,
+        posts: [] as { title: string; uri: string }[],
+    }
     if (!displayName) return fallback
 
     try {
@@ -801,9 +805,7 @@ async function fetchTooltipPersonData(displayName: string, currentUri: string) {
             .slice(0, 5)
             .map((p: any) => ({
                 title: p.title,
-                uri: stripWp(
-                    p.uri.replace(/https?:\/\/[^\/]+/g, ""),
-                ),
+                uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
             }))
 
         return { sinceLabel, posts }
@@ -834,10 +836,7 @@ function buildTooltipHtml(opts: {
         <div class="atp-section-label">Has Also Written</div>
         <ul class="atp-posts-list">
             ${posts
-                .map(
-                    p =>
-                        `<li><a href="${p.uri}">${p.title}</a></li>`,
-                )
+                .map(p => `<li><a href="${p.uri}">${p.title}</a></li>`)
                 .join("")}
         </ul>`
             : ""
@@ -1171,6 +1170,84 @@ fixedContent = stripWp(fixedContent)
 
                             <h1 class="review-title" set:html={displayTitle} />
 
+                            <div class="mob-meta-bar mob-meta-bar-review">
+                                <div class="mob-meta-toprow">
+                                    <div class="mob-meta-updated">
+                                        <span class="mob-meta-label">
+                                            Last updated:
+                                        </span>
+                                        <span class="mob-meta-value">
+                                            {formattedDate}
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="mob-meta-peoplerow">
+                                    <button
+                                        type="button"
+                                        class="mob-meta-person"
+                                        data-mob-target="mob-author-panel"
+                                    >
+                                        <span class="mob-meta-role-label">
+                                            Author
+                                        </span>
+                                        <span class="mob-meta-person-inner">
+                                            <img
+                                                src={authorAvatar}
+                                                alt={authorName}
+                                                class="mob-meta-avatar"
+                                                width="32"
+                                                height="32"
+                                                loading="lazy"
+                                                referrerpolicy="no-referrer"
+                                            />
+                                            <span class="mob-meta-name">
+                                                {authorName}
+                                            </span>
+                                        </span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        class="mob-meta-person"
+                                        data-mob-target="mob-reviewer-panel"
+                                    >
+                                        <span class="mob-meta-role-label">
+                                            <i class="fa-solid fa-circle-check mob-meta-check" />
+                                            Fact Checked by
+                                        </span>
+                                        <span class="mob-meta-person-inner">
+                                            <img
+                                                src={reviewerAvatar}
+                                                alt={reviewerName}
+                                                class="mob-meta-avatar"
+                                                width="32"
+                                                height="32"
+                                                loading="lazy"
+                                                referrerpolicy="no-referrer"
+                                            />
+                                            <span class="mob-meta-name">
+                                                {reviewerName}
+                                            </span>
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <div
+                                    class="mob-meta-panel"
+                                    id="mob-author-panel"
+                                    hidden
+                                    set:html={authorTooltipHtml}
+                                />
+                                <div
+                                    class="mob-meta-panel"
+                                    id="mob-reviewer-panel"
+                                    hidden
+                                    set:html={reviewerTooltipHtml}
+                                />
+                            </div>
+
                             <div class="review-badges flexbox">
                                 <span class="badge">
                                     <i class="fa-solid fa-bolt" /> Instant
@@ -1418,6 +1495,82 @@ fixedContent = stripWp(fixedContent)
                     </nav>
 
                     <h1 class="gi-title" set:html={displayTitle} />
+
+                    <div class="mob-meta-bar">
+                        <div class="mob-meta-toprow">
+                            <div class="mob-meta-updated">
+                                <span class="mob-meta-label">
+                                    Last updated:
+                                </span>
+                                <span class="mob-meta-value">
+                                    {formattedDate}
+                                </span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="mob-meta-peoplerow">
+                            <button
+                                type="button"
+                                class="mob-meta-person"
+                                data-mob-target="mob-author-panel"
+                            >
+                                <span class="mob-meta-role-label">Author</span>
+                                <span class="mob-meta-person-inner">
+                                    <img
+                                        src={authorAvatar}
+                                        alt={authorName}
+                                        class="mob-meta-avatar"
+                                        width="32"
+                                        height="32"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer"
+                                    />
+                                    <span class="mob-meta-name">
+                                        {authorName}
+                                    </span>
+                                </span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="mob-meta-person"
+                                data-mob-target="mob-reviewer-panel"
+                            >
+                                <span class="mob-meta-role-label">
+                                    <i class="fa-solid fa-circle-check mob-meta-check" />
+                                    Fact Checked by
+                                </span>
+                                <span class="mob-meta-person-inner">
+                                    <img
+                                        src={reviewerAvatar}
+                                        alt={reviewerName}
+                                        class="mob-meta-avatar"
+                                        width="32"
+                                        height="32"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer"
+                                    />
+                                    <span class="mob-meta-name">
+                                        {reviewerName}
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+
+                        <div
+                            class="mob-meta-panel"
+                            id="mob-author-panel"
+                            hidden
+                            set:html={authorTooltipHtml}
+                        />
+                        <div
+                            class="mob-meta-panel"
+                            id="mob-reviewer-panel"
+                            hidden
+                            set:html={reviewerTooltipHtml}
+                        />
+                    </div>
 
                     {yoastDesc && <p class="gi-dek">{yoastDesc}</p>}
 
@@ -2191,12 +2344,12 @@ fixedContent = stripWp(fixedContent)
         scroll-behavior: smooth;
     }
 
-header.modern-review-hero {
-    border-bottom: 1px solid #b3babd;
-}
-.review-hero-card.flexbox {
-    margin-bottom: 3rem;
-}
+    header.modern-review-hero {
+        border-bottom: 1px solid #b3babd;
+    }
+    .review-hero-card.flexbox {
+        margin-bottom: 3rem;
+    }
     /* =========================================
        TABLE OF CONTENTS (TOC) STYLES — used for inline [casino_toc] shortcode
     ========================================= */
@@ -2412,8 +2565,8 @@ header.modern-review-hero {
     }
 
     .gi-mission-box {
-    margin-bottom: 7px !important;
-}
+        margin-bottom: 7px !important;
+    }
 
     .atp-posts-list a {
         font-size: 0.83rem;
@@ -2472,7 +2625,7 @@ header.modern-review-hero {
     .gi-hero {
         background: #ffffff;
         border-bottom: 1px solid #e2e8f0;
-        padding: 0.5rem 1rem 0rem;
+        padding: 0.5rem 3px 0rem;
     }
 
     .gi-hero-inner {
@@ -2523,7 +2676,7 @@ header.modern-review-hero {
         line-height: 1.7;
         color: #475569;
         max-width: 100%;
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 0 0;
     }
 
     .gi-byline-bar {
@@ -2686,7 +2839,7 @@ header.modern-review-hero {
         gap: 2px;
         max-width: 1400px;
         margin: 0 auto;
-        padding: 0 1rem;
+        padding: 0 2px;
         align-items: stretch;
     }
 
@@ -2820,16 +2973,16 @@ header.modern-review-hero {
     }
 
     aside.gi-sidebar {
-    margin-top: 23px !important;
-}
+        margin-top: 23px !important;
+    }
 
-ul.atp-posts-list li {
-    border-bottom: 1px dotted #e2e8f0;
-}
+    ul.atp-posts-list li {
+        border-bottom: 1px dotted #e2e8f0;
+    }
 
-.gi-mission-box {
-    margin-top: -23px !important;
-}
+    .gi-mission-box {
+        margin-top: -23px !important;
+    }
 
     .gi-popular-group {
         margin-bottom: 1.1rem;
@@ -3925,7 +4078,11 @@ ul.atp-posts-list li {
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+        background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 0%,
+            transparent 60%
+        );
         pointer-events: none;
     }
 
@@ -4807,7 +4964,7 @@ ul.atp-posts-list li {
     .gi-hero {
         background: #ffffff;
         border-bottom: 1px solid #e2e8f0;
-        padding: 0.5rem 1rem 0rem;
+        padding: 0.5rem 3px 0rem;
     }
 
     .gi-hero-inner {
@@ -4858,7 +5015,7 @@ ul.atp-posts-list li {
         line-height: 1.7;
         color: #475569;
         max-width: 100%;
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 0 0;
     }
 
     .gi-byline-bar {
@@ -5092,6 +5249,157 @@ ul.atp-posts-list li {
             margin-left: 0;
         }
     }
+
+
+
+    .mob-meta-bar {
+	display: none;
+}
+
+@media (max-width: 600px) {
+	/* Hide the desktop byline bar + editorial note on mobile now that
+	   the new bar covers the same info */
+	.gi-byline-bar,
+	.gi-editorial-note {
+		display: none !important;
+	}
+
+	.mob-meta-bar {
+		display: block;
+		margin: 16px 0 20px 0;
+		padding: 4px 4px;
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 12px;
+	}
+
+	.mob-meta-bar-review {
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.mob-meta-bar-review .mob-meta-toprow,
+	.mob-meta-bar-review .mob-meta-label,
+	.mob-meta-bar-review .mob-meta-role-label {
+		border-color: rgba(255, 255, 255, 0.12);
+	}
+
+	.mob-meta-bar-review .mob-meta-value,
+	.mob-meta-bar-review .mob-meta-disclosure-link,
+	.mob-meta-bar-review .mob-meta-name {
+		color: #f8fafc;
+	}
+
+	.mob-meta-toprow {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-bottom: 12px;
+		margin-bottom: 12px;
+		border-bottom: 1px solid #e2e8f0;
+	}
+
+	.mob-meta-label {
+		display: block;
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: #64748b;
+	}
+
+	.mob-meta-value {
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 800;
+		color: #0f172a;
+	}
+
+	.mob-meta-disclosure {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.mob-meta-disclosure-link {
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: #0f172a;
+		text-decoration: underline;
+	}
+
+	.mob-meta-disclosure .cus-info-icon {
+		font-size: 0.9rem;
+	}
+
+	.mob-meta-peoplerow {
+		display: flex;
+		gap: 16px;
+	}
+
+	.mob-meta-person {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+		background: none;
+		border: none;
+		padding: 0;
+		text-align: left;
+		cursor: pointer;
+		font-family: inherit;
+	}
+
+	.mob-meta-role-label {
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: #64748b;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.mob-meta-check {
+		color: #2563eb;
+		font-size: 0.8rem;
+	}
+
+	.mob-meta-person-inner {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.mob-meta-avatar {
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		object-fit: cover;
+		flex-shrink: 0;
+	}
+
+	.mob-meta-name {
+		font-size: 0.9rem;
+		font-weight: 800;
+		color: #dc2626;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.mob-meta-panel {
+		margin-top: 14px;
+		padding: 16px;
+		background: #ffffff;
+		border: 1px solid #e2e8f0;
+		border-radius: 10px;
+		font-size: 0.85rem;
+	}
+
+	.mob-meta-panel[hidden] {
+		display: none;
+	}
+}
+
+
 </style>
 
 <script>
@@ -5120,4 +5428,42 @@ ul.atp-posts-list li {
             })
         })
     })
+</script>
+
+
+<script>
+	function initMobMeta() {
+		const buttons = document.querySelectorAll(
+			".mob-meta-person[data-mob-target]",
+		)
+		if (!buttons.length) return
+
+		buttons.forEach(btn => {
+			if (btn.dataset.bound === "true") return
+			btn.dataset.bound = "true"
+
+			btn.addEventListener("click", () => {
+				const targetId = btn.getAttribute("data-mob-target")
+				const target = document.getElementById(targetId)
+				if (!target) return
+
+				const isOpen = !target.hasAttribute("hidden")
+
+				document
+					.querySelectorAll(".mob-meta-panel")
+					.forEach(p => p.setAttribute("hidden", ""))
+
+				if (!isOpen) {
+					target.removeAttribute("hidden")
+				}
+			})
+		})
+	}
+
+	if (document.readyState !== "loading") {
+		initMobMeta()
+	} else {
+		document.addEventListener("DOMContentLoaded", initMobMeta)
+	}
+	document.addEventListener("astro:page-load", initMobMeta)
 </script>
