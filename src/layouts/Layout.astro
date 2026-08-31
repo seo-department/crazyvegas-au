@@ -188,7 +188,10 @@ function timeAgo(dateString: string) {
         <script is:inline>
             ;(function (w, d, s, l, i) {
                 w[l] = w[l] || []
-                w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
+                w[l].push({
+                    "gtm.start": new Date().getTime(),
+                    event: "gtm.js",
+                })
                 var f = d.getElementsByTagName(s)[0],
                     j = d.createElement(s),
                     dl = l != "dataLayer" ? "&l=" + l : ""
@@ -536,7 +539,8 @@ function timeAgo(dateString: string) {
                             <li><a href="/terms-of-use/">Terms of Use</a></li>
                             <li>
                                 <a href="/affiliate-disclosure/"
-                                    >Affiliate Disclosure</a>
+                                    >Affiliate Disclosure</a
+                                >
                             </li>
                         </ul>
                     </div>
@@ -820,11 +824,9 @@ function timeAgo(dateString: string) {
     }
 
     img.aligncenter {
-    margin-right: auto !important;
-    margin-left: auto !important;
-}
-
-
+        margin-right: auto !important;
+        margin-left: auto !important;
+    }
 
     @media (max-width: 768px) {
         div#main-content {
@@ -895,8 +897,8 @@ function timeAgo(dateString: string) {
     }
 
     .hero-right img {
-    width: 85%;
-}
+        width: 85%;
+    }
 
     /* ===== Casino card grid — scoped to .space-shortcode-2 ===== */
 
@@ -987,7 +989,6 @@ function timeAgo(dateString: string) {
         .key-insights-box ul li {
             font-size: 0.95rem;
         }
-        
     }
 
     /* Grid container */
@@ -1223,8 +1224,6 @@ function timeAgo(dateString: string) {
 
         /* Standard centering for items on the left side of the nav */
         position: absolute;
-        
-        
 
         display: flex;
         flex-direction: row;
@@ -5052,7 +5051,7 @@ function timeAgo(dateString: string) {
     }
     .nav-dropdown-menu.mega-menu {
         flex-direction: row;
-      
+
         padding: 1.5rem;
         gap: 2rem;
         left: -50%;
@@ -11568,7 +11567,6 @@ function timeAgo(dateString: string) {
         align-items: center;
         gap: 0;
         padding: 14px 4px !important;
-        
     }
 
     .update-block {
@@ -11846,8 +11844,8 @@ function timeAgo(dateString: string) {
     }
 
     .disclaimer-cl p {
-    color: #737373 !important;
-}
+        color: #737373 !important;
+    }
 
     /* --- Main Banner Container --- */
     .cus-banner {
@@ -11903,8 +11901,6 @@ function timeAgo(dateString: string) {
     .disclaimer-cl {
         margin-bottom: 6px !important;
     }
-
- 
 
     .blog-post-content h3 {
         font-weight: 400;
@@ -12412,8 +12408,6 @@ function timeAgo(dateString: string) {
     a#cus-toggle-1 {
         color: #ffffff !important;
     }
-
-    
 
     /* Remove the default link underline from the button */
     a.cus-toggle {
@@ -15177,8 +15171,6 @@ function timeAgo(dateString: string) {
         margin-top: 6px !important;
     }
 
-   
-
     li {
         font-size: 15px !important;
     }
@@ -15478,8 +15470,8 @@ function timeAgo(dateString: string) {
     }
 
     .hero-bottom-meta-section {
-    margin-top: -25px;
-}
+        margin-top: -25px;
+    }
 
     .pre-footer {
         width: 100%;
@@ -15787,83 +15779,104 @@ function timeAgo(dateString: string) {
         text-decoration: underline;
     }
 
-
-
-
-
-
-/* ==============================================================
+    /* ==============================================================
    ULTIMATE MEGA MENU GRID & NO-CUTOFF FIX
 ============================================================== */
-html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw;
-}
-
-/* Force CSS Grid based on Astro variable */
-nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
-    display: grid !important;
-    grid-template-columns: repeat(var(--mega-columns, 3), minmax(180px, 1fr)) !important;
-    gap: 1.5rem 2.5rem !important;
-    
-    width: max-content !important;
-    max-width: 85vw !important; 
-    
-    /* Adds scrollbar on small screens */
-    max-height: 75vh !important; 
-    overflow-y: auto !important; 
-    overflow-x: hidden !important;
-    
-    padding: 1.5rem 1.5rem 2rem 1.5rem !important; 
-    box-sizing: border-box !important;
-    
-    position: absolute !important;
-}
-
-nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu div.mega-column {
-    display: flex !important;
-    flex-direction: column !important;
-    margin: 0 !important;
-    height: max-content !important; 
-}
-
-/* Desktop Alignment Magic */
-@media (min-width: 992px) {
-    nav.header-nav { position: relative !important; }
-    nav.header-nav .nav-dropdown { position: static !important; }
-    
-    /* Left side menus: anchor left */
-    nav.header-nav .nav-dropdown:nth-child(1) div.nav-dropdown-menu.mega-menu,
-    nav.header-nav .nav-dropdown:nth-child(2) div.nav-dropdown-menu.mega-menu {
-        left: 0 !important;
-        right: auto !important;
-        transform: translateY(15px) !important;
+    html,
+    body {
+        overflow-x: hidden !important;
+        max-width: 100vw;
     }
 
-    /* Right side menus: anchor right */
-    nav.header-nav .nav-dropdown:nth-child(3) div.nav-dropdown-menu.mega-menu,
-    nav.header-nav .nav-dropdown:nth-child(4) div.nav-dropdown-menu.mega-menu {
-        left: auto !important;
-        right: 0 !important;
-        transform: translateY(15px) !important;
+    /* Force CSS Grid based on Astro variable */
+    nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
+        display: grid !important;
+        grid-template-columns: repeat(
+            var(--mega-columns, 3),
+            minmax(180px, 1fr)
+        ) !important;
+        gap: 1.5rem 2.5rem !important;
+
+        width: max-content !important;
+        max-width: 85vw !important;
+
+        /* Adds scrollbar on small screens */
+        max-height: 75vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+
+        padding: 1.5rem 1.5rem 2rem 1.5rem !important;
+        box-sizing: border-box !important;
+
+        position: absolute !important;
     }
 
-    nav.header-nav .nav-dropdown:hover div.nav-dropdown-menu.mega-menu {
-        transform: translateY(0) !important;
+    nav.header-nav
+        .nav-dropdown
+        div.nav-dropdown-menu.mega-menu
+        div.mega-column {
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+        height: max-content !important;
     }
-}
 
-/* Clean scrollbar for the menu internals */
-nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar { width: 6px; }
-nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-track { background: transparent; margin-bottom: 10px; }
-nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    /* Desktop Alignment Magic */
+    @media (min-width: 992px) {
+        nav.header-nav {
+            position: relative !important;
+        }
+        nav.header-nav .nav-dropdown {
+            position: static !important;
+        }
 
+        /* Left side menus: anchor left */
+        nav.header-nav
+            .nav-dropdown:nth-child(1)
+            div.nav-dropdown-menu.mega-menu,
+        nav.header-nav
+            .nav-dropdown:nth-child(2)
+            div.nav-dropdown-menu.mega-menu {
+            left: 0 !important;
+            right: auto !important;
+            transform: translateY(15px) !important;
+        }
 
+        /* Right side menus: anchor right */
+        nav.header-nav
+            .nav-dropdown:nth-child(3)
+            div.nav-dropdown-menu.mega-menu,
+        nav.header-nav
+            .nav-dropdown:nth-child(4)
+            div.nav-dropdown-menu.mega-menu {
+            left: auto !important;
+            right: 0 !important;
+            transform: translateY(15px) !important;
+        }
 
+        nav.header-nav .nav-dropdown:hover div.nav-dropdown-menu.mega-menu {
+            transform: translateY(0) !important;
+        }
+    }
 
-
-
-    
+    /* Clean scrollbar for the menu internals */
+    nav.header-nav
+        .nav-dropdown
+        div.nav-dropdown-menu.mega-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+    nav.header-nav
+        .nav-dropdown
+        div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-track {
+        background: transparent;
+        margin-bottom: 10px;
+    }
+    nav.header-nav
+        .nav-dropdown
+        div.nav-dropdown-menu.mega-menu::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
 </style>
 
 <script is:inline>

@@ -4307,7 +4307,7 @@ fixedContent = stripWp(fixedContent)
         .review-hero-card {
             flex-direction: column;
             text-align: center;
-            padding: 24px;
+            padding: 4px;
         }
 
         .review-hero-rating {
@@ -5274,7 +5274,7 @@ fixedContent = stripWp(fixedContent)
 	}
 
 	.mob-meta-bar-review {
-		background: rgba(255, 255, 255, 0.05);
+		background: #f8fafc;
 		border: 1px solid rgba(255, 255, 255, 0.1);
 	}
 
@@ -5397,6 +5397,34 @@ fixedContent = stripWp(fixedContent)
 	.mob-meta-panel[hidden] {
 		display: none;
 	}
+}
+
+
+@media (max-width: 600px) {
+	.modern-review-hero .review-badges {
+		gap: 8px;
+		justify-content: flex-start;
+	}
+
+	.modern-review-hero .badge {
+		font-size: 12.5px;
+		padding: 5px 10px;
+		color: #334155;
+		background: #f1f5f9;
+		border: 1px solid #e2e8f0;
+	}
+
+    span.mob-meta-name {
+    color: #dc2626 !important;
+}
+
+span.mob-meta-value {
+    color: #0f172a !important;
+}
+
+.mob-meta-toprow {
+    border-bottom: 1px solid #dadada !important;
+}
 }
 
 
