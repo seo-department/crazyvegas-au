@@ -776,7 +776,7 @@ function timeAgo(dateString: string) {
     }
 
     div#main-content {
-        overflow: clip !important;
+        overflow-x: clip !important;
     }
 
     iframe {
@@ -15782,11 +15782,10 @@ function timeAgo(dateString: string) {
     /* ==============================================================
    ULTIMATE MEGA MENU GRID & NO-CUTOFF FIX
 ============================================================== */
-    html,
-    body {
-        overflow-x: hidden !important;
-        max-width: 100vw;
-    }
+    html, body {
+    overflow-x: clip !important;
+    max-width: 100vw;
+}
 
     /* Force CSS Grid based on Astro variable */
     nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
