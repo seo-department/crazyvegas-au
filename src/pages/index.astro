@@ -6017,7 +6017,7 @@ while ((m = h2Regex.exec(fixedContent)) !== null) {
 
 .gi-sidebar {
 	position: sticky;
-	top: 1.5rem;
+	top: calc(var(--sticky-nav-height, 0px) + 1.5rem);
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;

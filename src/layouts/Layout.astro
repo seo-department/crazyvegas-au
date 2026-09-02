@@ -16589,3 +16589,29 @@ ol li {
     }
     document.addEventListener("astro:page-load", initSharePopup)
 </script>
+
+
+<script>
+	function initStickyOffset() {
+		const nav = document.querySelector("header") // adjust selector if your sticky nav isn't the <header>
+		if (!nav) return
+
+		const setOffset = () => {
+			const height = nav.getBoundingClientRect().height
+			document.documentElement.style.setProperty(
+				"--sticky-nav-height",
+				`${height}px`,
+			)
+		}
+
+		setOffset()
+		window.addEventListener("resize", setOffset)
+	}
+
+	if (document.readyState !== "loading") {
+		initStickyOffset()
+	} else {
+		document.addEventListener("DOMContentLoaded", initStickyOffset)
+	}
+	document.addEventListener("astro:page-load", initStickyOffset)
+</script>
