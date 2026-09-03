@@ -200,6 +200,20 @@ function timeAgo(dateString: string) {
                 f.parentNode.insertBefore(j, f)
             })(window, document, "script", "dataLayer", "GTM-PX9ZD6K")
         </script>
+
+        <!-- OneSignal Push Notifications -->
+        <script
+            src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+            defer></script>
+        <script is:inline>
+            window.OneSignalDeferred = window.OneSignalDeferred || []
+            OneSignalDeferred.push(async function (OneSignal) {
+                await OneSignal.init({
+                    appId: "824692c8-a9b6-4703-a8db-34901546128b",
+                })
+            })
+        </script>
+
         <!-- End Google Tag Manager -->
 
         <meta charset="UTF-8" />
@@ -915,10 +929,9 @@ function timeAgo(dateString: string) {
             sans-serif;
     }
 
-
     table {
-    margin: 0px 0 !important;
-}
+        margin: 0px 0 !important;
+    }
 
     .key-insights-box {
         background-color: #f8f9fa;
@@ -1336,13 +1349,12 @@ function timeAgo(dateString: string) {
     }
 
     ul.gi-toc-sidebar-list li {
-    border-bottom: 1px solid #e9e9e9;
-}
+        border-bottom: 1px solid #e9e9e9;
+    }
 
-
-ol li {
-    line-height: 28px !important;
-}
+    ol li {
+        line-height: 28px !important;
+    }
 
     /* ===== Back to top button ===== */
     .scroll-top-btn {
@@ -15796,10 +15808,11 @@ ol li {
     /* ==============================================================
    ULTIMATE MEGA MENU GRID & NO-CUTOFF FIX
 ============================================================== */
-    html, body {
-    overflow-x: clip !important;
-    max-width: 100vw;
-}
+    html,
+    body {
+        overflow-x: clip !important;
+        max-width: 100vw;
+    }
 
     /* Force CSS Grid based on Astro variable */
     nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
@@ -16506,36 +16519,39 @@ ol li {
 <script is:inline>
     // Back to top
     function initScrollTop() {
-        const btn = document.getElementById("scroll-top-btn");
-        if (!btn || btn.dataset.bound === "true") return;
-        btn.dataset.bound = "true";
+        const btn = document.getElementById("scroll-top-btn")
+        if (!btn || btn.dataset.bound === "true") return
+        btn.dataset.bound = "true"
 
         const toggle = () => {
             // Check scroll position safely across all browser contexts
-            const scrollPos = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-            
-            if (scrollPos > 400) {
-                btn.classList.add("visible");
-            } else {
-                btn.classList.remove("visible");
-            }
-        };
+            const scrollPos =
+                window.scrollY ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop
 
-        window.addEventListener("scroll", toggle, { passive: true });
-        toggle();
+            if (scrollPos > 400) {
+                btn.classList.add("visible")
+            } else {
+                btn.classList.remove("visible")
+            }
+        }
+
+        window.addEventListener("scroll", toggle, { passive: true })
+        toggle()
 
         btn.addEventListener("click", () => {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+            window.scrollTo({ top: 0, behavior: "smooth" })
+        })
     }
 
     // Run immediately if ready, or wait for DOM / Astro View Transitions
     if (document.readyState !== "loading") {
-        initScrollTop();
+        initScrollTop()
     } else {
-        document.addEventListener("DOMContentLoaded", initScrollTop);
+        document.addEventListener("DOMContentLoaded", initScrollTop)
     }
-    document.addEventListener("astro:page-load", initScrollTop);
+    document.addEventListener("astro:page-load", initScrollTop)
 </script>
 
 <script>
@@ -16608,28 +16624,27 @@ ol li {
     document.addEventListener("astro:page-load", initSharePopup)
 </script>
 
-
 <script>
-	function initStickyOffset() {
-		const nav = document.querySelector("header") // adjust selector if your sticky nav isn't the <header>
-		if (!nav) return
+    function initStickyOffset() {
+        const nav = document.querySelector("header") // adjust selector if your sticky nav isn't the <header>
+        if (!nav) return
 
-		const setOffset = () => {
-			const height = nav.getBoundingClientRect().height
-			document.documentElement.style.setProperty(
-				"--sticky-nav-height",
-				`${height}px`,
-			)
-		}
+        const setOffset = () => {
+            const height = nav.getBoundingClientRect().height
+            document.documentElement.style.setProperty(
+                "--sticky-nav-height",
+                `${height}px`,
+            )
+        }
 
-		setOffset()
-		window.addEventListener("resize", setOffset)
-	}
+        setOffset()
+        window.addEventListener("resize", setOffset)
+    }
 
-	if (document.readyState !== "loading") {
-		initStickyOffset()
-	} else {
-		document.addEventListener("DOMContentLoaded", initStickyOffset)
-	}
-	document.addEventListener("astro:page-load", initStickyOffset)
+    if (document.readyState !== "loading") {
+        initStickyOffset()
+    } else {
+        document.addEventListener("DOMContentLoaded", initStickyOffset)
+    }
+    document.addEventListener("astro:page-load", initStickyOffset)
 </script>
