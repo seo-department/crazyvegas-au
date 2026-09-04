@@ -1,7 +1,29 @@
-User-agent: *
+# Sitemaps
+Sitemap: https://au.crazyvegas.com/sitemap.xml
 
+# Global Rules
+User-agent: *
 Disallow: /*?btag=*
 Disallow: /*&btag=*
-
 Disallow: /play/
-Sitemap: https://au.crazyvegas.com/sitemap.xml
+
+# Blocked Bots & Scrapers
+User-agent: Barkrowler
+User-agent: Black Hole
+User-agent: BlowFish/1.0
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: CherryPicker
+User-agent: DotBot
+User-agent: EroCrawler
+User-agent: ia_archiver
+User-agent: LinkWalker
+User-agent: LNSpiderguy
+User-agent: lwp-trivial
+User-agent: Mister PiX
+User-agent: MJ12bot
+User-agent: moget
+User-agent: PetalBot
+User-agent: TextTrust Crawler
+User-agent: VelenPublicWebCrawler
+Disallow: /
