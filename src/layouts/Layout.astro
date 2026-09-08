@@ -242,6 +242,16 @@ function timeAgo(dateString: string) {
         {robots && <meta name="robots" content={robots} />}
         {keywords && <meta name="keywords" content={keywords} />}
         {author && <meta name="author" content={author} />}
+
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0b1120" />
+
+        <!-- iOS PWA support (Safari ignores manifest.json almost entirely) -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Crazy Vegas" />
+        <link rel="apple-touch-icon" href="/images/pwa/icon-192.png" />
+
         <link
             rel="icon"
             type="image/png"
@@ -16652,4 +16662,14 @@ function timeAgo(dateString: string) {
         document.addEventListener("DOMContentLoaded", initStickyOffset)
     }
     document.addEventListener("astro:page-load", initStickyOffset)
+</script>
+
+<script is:inline>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/sw.js").catch((err) => {
+        console.warn("SW registration failed:", err);
+      });
+    });
+  }
 </script>
