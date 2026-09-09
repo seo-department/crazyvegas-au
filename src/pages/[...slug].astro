@@ -292,6 +292,91 @@ export async function getStaticPaths() {
         }
     }
 
+    // --- 🚨 PRE-FETCH TOOLTIP DATA ONCE TO FIX VERCEL TIMEOUT ---
+    // 1. Small helpers to determine authors/reviewers inside this scope
+    const getAuthorNameLocal = (node: any) => {
+        const aNode = node.author?.node;
+        return aNode ? (aNode.firstName && aNode.lastName ? `${aNode.firstName} ${aNode.lastName}` : aNode.name) : "Editorial Team";
+    };
+
+    const REVIEWER_POOL_LOCAL = [
+        { name: "Caleb Daly", slug: "caleb-daly" },
+        { name: "Daphne Hutchens", slug: "daphne-hutchens" },
+        { name: "Kayla McBrien", slug: "kayla-mcbrien" },
+        { name: "Mason Heaton", slug: "mason-heaton" }
+    ];
+
+    const stableHashLocal = (str: string) => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = (hash << 5) - hash + str.charCodeAt(i);
+            hash |= 0;
+        }
+        return Math.abs(hash);
+    };
+
+    const getReviewerNameLocal = (author: string) => {
+        const authorKey = author.toLowerCase().trim();
+        const authorSlugified = authorKey.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+        let index = stableHashLocal(authorKey) % REVIEWER_POOL_LOCAL.length;
+        let candidate = REVIEWER_POOL_LOCAL[index];
+        let attempts = 0;
+        while (candidate.slug === authorSlugified && attempts < REVIEWER_POOL_LOCAL.length) {
+            index = (index + 1) % REVIEWER_POOL_LOCAL.length;
+            candidate = REVIEWER_POOL_LOCAL[index];
+            attempts++;
+        }
+        return candidate.name;
+    };
+
+    // 2. Build a Set of all unique people
+    const uniquePeople = new Set<string>();
+    allNodes.forEach((node: any) => {
+        const aName = getAuthorNameLocal(node);
+        uniquePeople.add(aName);
+        uniquePeople.add(getReviewerNameLocal(aName));
+    });
+
+    // 3. Fetch data for unique people ONCE
+    const tooltipCache: Record<string, any> = {};
+    for (const personName of uniquePeople) {
+        try {
+            const res = await fetch(wpUrl, {
+                method: "POST",
+                headers: safeHeaders,
+                body: JSON.stringify({
+                    query: `
+                        query AuthorTooltipData($search: String!) {
+                            users(where: { search: $search }, first: 10) {
+                                nodes {
+                                    name
+                                    registeredDate
+                                    posts(first: 6) { nodes { title uri } }
+                                }
+                            }
+                        }
+                    `,
+                    variables: { search: personName },
+                }),
+            });
+            const result = await res.json();
+            const candidates = result?.data?.users?.nodes || [];
+            const user = candidates.find((u: any) => (u.name || "").trim().toLowerCase() === personName.trim().toLowerCase()) || candidates[0];
+
+            if (user) {
+                const sinceLabel = user.registeredDate ? new Date(user.registeredDate).toLocaleDateString("en-US", { year: "numeric", month: "short" }) : null;
+                const posts = (user.posts?.nodes || []).map((p: any) => ({ title: p.title, uri: p.uri }));
+                tooltipCache[personName] = { sinceLabel, posts };
+            } else {
+                tooltipCache[personName] = { sinceLabel: null, posts: [] };
+            }
+        } catch (e) {
+            console.warn("⚠️ Tooltip fetch failed for", personName);
+            tooltipCache[personName] = { sinceLabel: null, posts: [] };
+        }
+    }
+
+
     // --- FILTER AND RETURN ---
     const sanitizeSlug = (uri: string) => {
         if (!uri) return ""
@@ -316,11 +401,13 @@ export async function getStaticPaths() {
 
     return validNodes.map((node: any) => {
         const cleanSlug = sanitizeSlug(node.uri)
+        const related = node.contentType === "post"
+            ? recentPosts.filter(p => p.uri !== node.uri).slice(0, 7)
+            : []
 
-        const related =
-            node.contentType === "post"
-                ? recentPosts.filter(p => p.uri !== node.uri).slice(0, 7)
-                : []
+        // Extract author and reviewer for this specific node
+        const nodeAuthorName = getAuthorNameLocal(node);
+        const nodeReviewerName = getReviewerNameLocal(nodeAuthorName);
 
         return {
             params: { slug: cleanSlug || undefined },
@@ -328,6 +415,9 @@ export async function getStaticPaths() {
                 post: node,
                 contentType: node.contentType,
                 relatedPosts: related,
+                // Pass the cached data down via props
+                authorTooltipRaw: tooltipCache[nodeAuthorName] || { sinceLabel: null, posts: [] },
+                reviewerTooltipRaw: tooltipCache[nodeReviewerName] || { sinceLabel: null, posts: [] },
             },
         }
     })
@@ -338,9 +428,12 @@ interface Props {
     contentType: "post" | "page" | "game"
     relatedPosts: any[]
     post: any
+    authorTooltipRaw: { sinceLabel: string | null; posts: any[] }
+    reviewerTooltipRaw: { sinceLabel: string | null; posts: any[] }
 }
 
-const { post, contentType, relatedPosts } = Astro.props
+const { post, contentType, relatedPosts, authorTooltipRaw, reviewerTooltipRaw } = Astro.props
+
 const { slug } = Astro.params
 
 // --- Dynamic Ratings Calculation ---
@@ -705,115 +798,50 @@ const reviewerBio = boldName(assignedReviewer.bio, assignedReviewer.name)
 const reviewerSlug = assignedReviewer.slug
 const reviewerLink = `/about-us/${reviewerSlug}/`
 
-// --- 🚨 NEW: RICH AUTHOR/REVIEWER HOVER TOOLTIP ---
-// Fetches each person's latest posts + WP registration date, then builds
-// the wider hover-card (avatar, "Part of the Team Since", shortened bio,
-// "Has Also Written" links, "Author Profile" button) used for both the
-// byline author and the "Fact Checked by" reviewer.
-
-const tooltipWpUrl =
-    "https://wordpress-1164434-6467266.cloudwaysapps.com/graphql"
-const tooltipSafeHeaders = {
-    "Content-Type": "application/json",
-    "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-}
+// --- 🚨 NEW: PROCESS PRE-FETCHED AUTHOR/REVIEWER TOOLTIP DATA ---
 
 function truncateText(text: string, maxChars = 130): string {
     const clean = (text || "").trim()
     if (clean.length <= maxChars) return clean
-    // Cut at the last full word before the limit so it doesn't chop mid-word
     const cut = clean.slice(0, maxChars)
     const lastSpace = cut.lastIndexOf(" ")
     return `${cut.slice(0, lastSpace > 0 ? lastSpace : maxChars)}…`
 }
 
-async function fetchTooltipPersonData(displayName: string, currentUri: string) {
-    const fallback = {
-        sinceLabel: null as string | null,
-        posts: [] as { title: string; uri: string }[],
-    }
-    if (!displayName) return fallback
-
-    try {
-        const response = await fetch(tooltipWpUrl, {
-            method: "POST",
-            headers: tooltipSafeHeaders,
-            body: JSON.stringify({
-                query: `
-                    query AuthorTooltipData($search: String!) {
-                        users(where: { search: $search }, first: 10) {
-                            nodes {
-                                name
-                                registeredDate
-                                posts(first: 6) {
-                                    nodes { title uri }
-                                }
-                            }
-                        }
-                    }
-                `,
-                variables: { search: displayName },
-            }),
-        })
-
-        const contentType = response.headers.get("content-type")
-        if (!response.ok || !contentType?.includes("application/json")) {
-            console.warn(
-                "⚠️ CLOUDWAYS BLOCKED TOOLTIP USERS REQUEST for",
-                displayName,
-            )
-            return fallback
-        }
-
-        const result = await response.json()
-
-        if (result.errors) {
-            console.warn(
-                "⚠️ GRAPHQL TOOLTIP USERS ERROR for",
-                displayName,
-                JSON.stringify(result.errors),
-            )
-            return fallback
-        }
-
-        const candidates = result?.data?.users?.nodes || []
-        // "search" can return partial/fuzzy matches, so pick the exact
-        // display-name match if one exists; otherwise fall back to the
-        // first candidate returned.
-        const user =
-            candidates.find(
-                (u: any) =>
-                    (u.name || "").trim().toLowerCase() ===
-                    displayName.trim().toLowerCase(),
-            ) || candidates[0]
-
-        if (!user) {
-            console.warn("⚠️ No WP user match found for", displayName)
-            return fallback
-        }
-
-        const sinceLabel = user.registeredDate
-            ? new Date(user.registeredDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-              })
-            : null
-
-        const posts = (user.posts?.nodes || [])
-            .filter((p: any) => p.uri && p.uri !== currentUri)
-            .slice(0, 5)
-            .map((p: any) => ({
-                title: p.title,
-                uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
-            }))
-
-        return { sinceLabel, posts }
-    } catch (e) {
-        console.warn("⚠️ Could not fetch tooltip data for", displayName, e)
-        return fallback
-    }
+// Strip every Cloudways host variant -> root-relative path
+function stripWp(input = "") {
+    const hosts = [
+        "https://wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://wordpress-1164434-6467266.cloudwaysapps.com",
+        "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
+        "//wordpress-1164434-6467266.cloudwaysapps.com",
+    ]
+    let out = input
+    for (const h of hosts) out = out.split(h).join("")
+    return out
 }
+
+// Filter the raw fetched posts to exclude the current URI and clean the paths
+const processTooltipPosts = (rawPosts: any[]) => {
+    return rawPosts
+        .filter((p: any) => p.uri && p.uri !== post.uri)
+        .slice(0, 5)
+        .map((p: any) => ({
+            title: p.title,
+            uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
+        }));
+};
+
+const authorTooltipInfo = {
+    sinceLabel: authorTooltipRaw?.sinceLabel || null,
+    posts: processTooltipPosts(authorTooltipRaw?.posts || []),
+};
+
+const reviewerTooltipInfo = {
+    sinceLabel: reviewerTooltipRaw?.sinceLabel || null,
+    posts: processTooltipPosts(reviewerTooltipRaw?.posts || []),
+};
 
 function buildTooltipHtml(opts: {
     roleLabel: string
@@ -859,11 +887,6 @@ function buildTooltipHtml(opts: {
         </a>
     `
 }
-
-const [authorTooltipInfo, reviewerTooltipInfo] = await Promise.all([
-    fetchTooltipPersonData(authorName, post.uri),
-    fetchTooltipPersonData(reviewerName, post.uri),
-])
 
 const authorTooltipHtml = buildTooltipHtml({
     roleLabel: "Author",
@@ -943,20 +966,6 @@ if (tocItems.length > 0) {
 }
 
 const displayTitle = (post.title || "").replaceAll("[year]", currentYear)
-
-// Strip every Cloudways host variant -> root-relative path
-function stripWp(input = "") {
-    const hosts = [
-        "https://wordpress-1164434-6467266.cloudwaysapps.com",
-        "http://wordpress-1164434-6467266.cloudwaysapps.com",
-        "https://www.wordpress-1164434-6467266.cloudwaysapps.com",
-        "http://www.wordpress-1164434-6467266.cloudwaysapps.com",
-        "//wordpress-1164434-6467266.cloudwaysapps.com",
-    ]
-    let out = input
-    for (const h of hosts) out = out.split(h).join("")
-    return out
-}
 
 // --- 7. FINAL CONTENT REPLACEMENTS ---
 let fixedContent = contentWithIds
