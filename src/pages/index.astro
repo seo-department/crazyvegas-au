@@ -521,7 +521,8 @@ if (yoastSchema && !yoastHasPerson) {
 
 // Clean the WordPress Content
 const rawContent = page?.content || ""
-const fixedContent = rawContent
+// Clean the WordPress Content
+let fixedContent = rawContent
 	.replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, "")
 	.replace(/src="[^"]*placeholder[^"]*"/gi, "")
 	.replaceAll('data-src="/wp-content/', 'src="/wp-content/')
@@ -563,18 +564,32 @@ const blogPosts = recentPosts.slice(3, 7)
 
 
 
-// --- Build sidebar TOC from the homepage's own h2 headings ---
+// --- Build sidebar TOC from the homepage's own h2 headings, and stamp ---
+// --- matching ids onto the real headings so the jump links actually work ---
 const tocItems: { text: string; slug: string }[] = []
-const h2Regex = /<h2([^>]*)>([\s\S]*?)<\/h2>/gi
-let m: RegExpExecArray | null
-while ((m = h2Regex.exec(fixedContent)) !== null) {
-	const cleanText = m[2].replace(/<\/?[^>]+(>|$)/g, "").trim()
-	const h2Slug = cleanText
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, "-")
-		.replace(/(^-|-$)+/g, "")
-	if (cleanText.length > 0) tocItems.push({ text: cleanText, slug: h2Slug })
-}
+const usedSlugs = new Set<string>()
+
+fixedContent = fixedContent.replace(
+	/<h2([^>]*)>([\s\S]*?)<\/h2>/gi,
+	(_full: string, attrs: string, inner: string) => {
+		const cleanText = inner.replace(/<\/?[^>]+(>|$)/g, "").trim()
+
+		let slug = cleanText
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, "-")
+			.replace(/(^-|-$)+/g, "")
+		if (!slug) slug = "section"
+		while (usedSlugs.has(slug)) slug += "-x"
+		usedSlugs.add(slug)
+
+		if (cleanText.length > 0) tocItems.push({ text: cleanText, slug })
+
+		// Strip any id WordPress may have already added, then set ours so
+		// there's only one place generating (and one place trusting) the id.
+		const cleanedAttrs = attrs.replace(/\s*id="[^"]*"/i, "")
+		return `<h2${cleanedAttrs} id="${slug}">${inner}</h2>`
+	},
+)
 ---
 
 <Layout
