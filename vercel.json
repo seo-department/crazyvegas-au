@@ -2502,6 +2502,11 @@
       "permanent": true
     },
     {
+      "source": "/play/casiyou-casino",
+      "destination": "https://www.casiyou.com/en",
+      "permanent": true
+    },
+    {
       "source": "/play/bearo-casino",
       "destination": "https://bro.kronvax.com/?mid=378403_2198998&utm_source=cpa&utm_medium=affiliate",
       "permanent": true
