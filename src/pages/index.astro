@@ -562,8 +562,6 @@ const recentPosts = result.data?.posts?.nodes || []
 const breakingStories = recentPosts.slice(0, 3)
 const blogPosts = recentPosts.slice(3, 7)
 
-
-
 // --- Build sidebar TOC from the homepage's own h2 headings, and stamp ---
 // --- matching ids onto the real headings so the jump links actually work ---
 const tocItems: { text: string; slug: string }[] = []
@@ -619,7 +617,6 @@ fixedContent = fixedContent.replace(
 							<span class="mob-meta-label">Last updated:</span>
 							<span class="mob-meta-value">{formattedDate}</span>
 						</div>
-						
 					</div>
 
 					<div class="mob-meta-peoplerow">
@@ -877,14 +874,47 @@ fixedContent = fixedContent.replace(
 							<div class="hero-disclaimer-box desktop-dis">
 								<div class="disclaimer-cl">
 									<p>
-										<b>Editorial Statement:</b> We independently
-										review and select all operators. While we
-										may earn commissions from affiliate links
-										or paid placements, these never influence
-										our editors' opinions or evaluations. Every
-										platform is assessed against our own standards,
-										and we highlight both strengths and shortcomings,
-										regardless of any commercial relationship.
+										<strong>Editorial Statement:</strong>{
+											" "
+										}
+										<span data-teams="true">
+											<>
+												<em>We </em>
+												<a
+													title="Editorial Statement"
+													href="https://au.crazyvegas.com/editorial-policy/"
+													target="_blank"
+													rel="noreferrer noopener"
+												>
+													independently review and
+													select all operators
+												</a>
+												<em>
+													. While we may earn
+													commissions from affiliate
+													links or paid placements,
+													these never influence our
+													editors' opinions or
+													evaluations. Every platform
+													is{" "}
+												</em>
+												<a
+													title="How we rate casinos"
+													href="https://au.crazyvegas.com/how-we-rate-casinos/"
+													target="_blank"
+													rel="noreferrer noopener"
+												>
+													assessed against our own
+													standards
+												</a>
+												<em>
+													, and we highlight both
+													strengths and shortcomings,
+													regardless of any commercial
+													relationship.
+												</em>
+											</>
+										</span>
 									</p>
 								</div>
 							</div>
@@ -897,8 +927,7 @@ fixedContent = fixedContent.replace(
 						>
 							<div class="hero-lead-text">
 								<p>
-									Finding the <b
-										>best online casinos in Australia</b
+									Finding the <b>best online casinos in Australia</b
 									> comes down to one question: will it pay you
 									out when you win? Pick the wrong casino site
 									and a $500 win can sit frozen in “pending” for
@@ -907,8 +936,7 @@ fixedContent = fixedContent.replace(
 								</p>
 
 								<p>
-									At <b>Crazy Vegas</b>, <i
-										>we’ve tested 150+ top-rated Australian</i
+									At <b>Crazy Vegas</b>, <i>we’ve tested 150+ top-rated Australian</i
 									> online casino sites, and in our opinion, the
 									cashout test matters most. We check AUD banking
 									like PayID and crypto, bonus terms, pokies and
@@ -961,267 +989,259 @@ fixedContent = fixedContent.replace(
 		</div>
 	</header>
 
-		<div class="gi-page-grid home-page-grid">
+	<div class="gi-page-grid home-page-grid">
 		<main class="home-wrapper" id="content">
-			<article class="home-container wp-content" set:html={fixedContent} />
+			<article
+				class="home-container wp-content"
+				set:html={fixedContent}
+			/>
 		</main>
 
 		<aside class="gi-sidebar">
-			
-
-			{tocItems.length > 0 && (
-				<div class="gi-sidebar-box gi-toc-box">
-					<div class="gi-sidebar-heading">Table of Contents</div>
-					<ul class="gi-toc-sidebar-list">
-						{tocItems.map(item => (
-							<li>
-								
-								<a	href={`#${item.slug}`}
-									class="gi-toc-sidebar-link toc-jump-link"
-								>
-									{item.text}
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
+			{
+				tocItems.length > 0 && (
+					<div class="gi-sidebar-box gi-toc-box">
+						<div class="gi-sidebar-heading">Table of Contents</div>
+						<ul class="gi-toc-sidebar-list">
+							{tocItems.map(item => (
+								<li>
+									<a
+										href={`#${item.slug}`}
+										class="gi-toc-sidebar-link toc-jump-link"
+									>
+										{item.text}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				)
+			}
 		</aside>
 	</div>
 
-		{
-			recentPosts.length >= 4 && (
-				<section class="full-width-discovery-section">
-					<div class="discovery-container">
-						<div class="discovery-columns">
-							<div class="discovery-left-col">
-								<h2 class="discovery-section-title">
-									Read today's breaking stories
-								</h2>
-								<div class="breaking-stories-list">
-									{breakingStories.map((story: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = story.uri
-											? story.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const storyLink = `/${cleanSlug}/`
-
-										const storyDate = new Date(
-											story.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
-
-										let storyImage =
-											story.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/300x150"
-
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(
-												storyImage,
+	{
+		recentPosts.length >= 4 && (
+			<section class="full-width-discovery-section">
+				<div class="discovery-container">
+					<div class="discovery-columns">
+						<div class="discovery-left-col">
+							<h2 class="discovery-section-title">
+								Read today's breaking stories
+							</h2>
+							<div class="breaking-stories-list">
+								{breakingStories.map((story: any) => {
+									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+									let relativeUri = story.uri
+										? story.uri.replace(
+												/https?:\/\/[^\/]+/g,
+												"",
 											)
-											storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
-										} catch (e) {}
+										: "/"
+									const cleanSlug = relativeUri.replace(
+										/^\/|\/$/g,
+										"",
+									)
+									const storyLink = `/${cleanSlug}/`
 
-										const authorObj = story.author?.node
-										const recAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let recAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+									const storyDate = new Date(
+										story.date,
+									).toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})
 
-										return (
-											<div class="breaking-story-card">
-												<div class="breaking-story-image">
-													<a
-														href={storyLink}
-														class="thumbnail-link"
-													>
-														<img
-															src={storyImage}
-															alt={
-																story
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																story.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
+									let storyImage =
+										story.featuredImage?.node?.sourceUrl ||
+										"https://via.placeholder.com/300x150"
+
+									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+									try {
+										const parsedUrl = new URL(storyImage)
+										storyImage = parsedUrl.pathname // Turns "https://wp.../wp-content/..." into "/wp-content/..."
+									} catch (e) {}
+
+									const authorObj = story.author?.node
+									const recAuthorName = authorObj
+										? authorObj.firstName &&
+											authorObj.lastName
+											? `${authorObj.firstName} ${authorObj.lastName}`
+											: authorObj.name
+										: "Editorial Team"
+									let recAuthorAvatar =
+										authorObj?.avatar?.url ||
+										`https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+									return (
+										<div class="breaking-story-card">
+											<div class="breaking-story-image">
+												<a
+													href={storyLink}
+													class="thumbnail-link"
+												>
+													<img
+														src={storyImage}
+														alt={
+															story.featuredImage
+																?.node
+																?.altText ||
+															story.title
+														}
+														loading="lazy"
+														referrerpolicy="no-referrer"
+													/>
+												</a>
+											</div>
+											<div class="breaking-story-content">
+												<div class="card-meta-top">
+													<span class="card-category">
+														News
+													</span>
+													<span class="card-date">
+														{storyDate}
+													</span>
 												</div>
-												<div class="breaking-story-content">
-													<div class="card-meta-top">
-														<span class="card-category">
-															News
-														</span>
-														<span class="card-date">
-															{storyDate}
-														</span>
-													</div>
-													<a
-														href={storyLink}
-														class="card-title-link"
-													>
-														<h3
-															set:html={
-																story.title
-															}
-														/>
-													</a>
-													<div class="card-meta-bottom">
+												<a
+													href={storyLink}
+													class="card-title-link"
+												>
+													<h3
+														set:html={story.title}
+													/>
+												</a>
+												<div class="card-meta-bottom">
+													<img
+														src={recAuthorAvatar}
+														alt={recAuthorName}
+														class="card-author-avatar"
+													/>
+													<span>
+														{recAuthorName} • 10 min
+														read
+													</span>
+												</div>
+											</div>
+										</div>
+									)
+								})}
+							</div>
+						</div>
+
+						<div class="discovery-right-col">
+							<h2 class="discovery-section-title">
+								Discover our blogs
+							</h2>
+							<div class="discover-blogs-list">
+								{blogPosts.map((blogPost: any) => {
+									// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
+									let relativeUri = blogPost.uri
+										? blogPost.uri.replace(
+												/https?:\/\/[^\/]+/g,
+												"",
+											)
+										: "/"
+									const cleanSlug = relativeUri.replace(
+										/^\/|\/$/g,
+										"",
+									)
+									const blogLink = `/${cleanSlug}/`
+
+									const blogDate = new Date(
+										blogPost.date,
+									).toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})
+
+									let blogImage =
+										blogPost.featuredImage?.node
+											?.sourceUrl ||
+										"https://via.placeholder.com/150"
+
+									// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
+									try {
+										const parsedUrl = new URL(blogImage)
+										blogImage = parsedUrl.pathname
+									} catch (e) {}
+
+									const authorObj = blogPost.author?.node
+									const blogAuthorName = authorObj
+										? authorObj.firstName &&
+											authorObj.lastName
+											? `${authorObj.firstName} ${authorObj.lastName}`
+											: authorObj.name
+										: "Editorial Team"
+									let blogAuthorAvatar =
+										authorObj?.avatar?.url ||
+										`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
+
+									return (
+										<div class="blog-post-card">
+											<div class="blog-post-image">
+												<a href={blogLink}>
+													<img
+														src={blogImage}
+														alt={
+															blogPost
+																.featuredImage
+																?.node
+																?.altText ||
+															blogPost.title
+														}
+														loading="lazy"
+														referrerpolicy="no-referrer"
+													/>
+												</a>
+											</div>
+											<div class="blog-post-content">
+												<a
+													href={blogLink}
+													class="blog-title-link"
+												>
+													<h3
+														set:html={
+															blogPost.title
+														}
+													/>
+												</a>
+												<div class="blog-meta">
+													<div class="blog-meta-author">
 														<img
 															src={
-																recAuthorAvatar
+																blogAuthorAvatar
 															}
-															alt={recAuthorName}
-															class="card-author-avatar"
+															alt={blogAuthorName}
+															class="blog-author-avatar"
 														/>
 														<span>
-															{recAuthorName} • 10
-															min read
+															{blogAuthorName} •{" "}
+															{blogDate}
 														</span>
 													</div>
-												</div>
-											</div>
-										)
-									})}
-								</div>
-							</div>
-
-							<div class="discovery-right-col">
-								<h2 class="discovery-section-title">
-									Discover our blogs
-								</h2>
-								<div class="discover-blogs-list">
-									{blogPosts.map((blogPost: any) => {
-										// 🚨 FIX: Bulletproof Regex cleanly removes any domain to make the link relative
-										let relativeUri = blogPost.uri
-											? blogPost.uri.replace(
-													/https?:\/\/[^\/]+/g,
-													"",
-												)
-											: "/"
-										const cleanSlug = relativeUri.replace(
-											/^\/|\/$/g,
-											"",
-										)
-										const blogLink = `/${cleanSlug}/`
-
-										const blogDate = new Date(
-											blogPost.date,
-										).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})
-
-										let blogImage =
-											blogPost.featuredImage?.node
-												?.sourceUrl ||
-											"https://via.placeholder.com/150"
-
-										// 🚨 BULLETPROOF FIX: Extract only the path so Vercel proxies the image
-										try {
-											const parsedUrl = new URL(blogImage)
-											blogImage = parsedUrl.pathname
-										} catch (e) {}
-
-										const authorObj = blogPost.author?.node
-										const blogAuthorName = authorObj
-											? authorObj.firstName &&
-												authorObj.lastName
-												? `${authorObj.firstName} ${authorObj.lastName}`
-												: authorObj.name
-											: "Editorial Team"
-										let blogAuthorAvatar =
-											authorObj?.avatar?.url ||
-											`https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-
-										return (
-											<div class="blog-post-card">
-												<div class="blog-post-image">
-													<a href={blogLink}>
-														<img
-															src={blogImage}
-															alt={
-																blogPost
-																	.featuredImage
-																	?.node
-																	?.altText ||
-																blogPost.title
-															}
-															loading="lazy"
-															referrerpolicy="no-referrer"
-														/>
-													</a>
-												</div>
-												<div class="blog-post-content">
 													<a
 														href={blogLink}
-														class="blog-title-link"
+														class="blog-read-more"
 													>
-														<h3
-															set:html={
-																blogPost.title
-															}
-														/>
+														Read{" "}
+														<i class="fa-solid fa-arrow-right" />
 													</a>
-													<div class="blog-meta">
-														<div class="blog-meta-author">
-															<img
-																src={
-																	blogAuthorAvatar
-																}
-																alt={
-																	blogAuthorName
-																}
-																class="blog-author-avatar"
-															/>
-															<span>
-																{blogAuthorName}{" "}
-																• {blogDate}
-															</span>
-														</div>
-														<a
-															href={blogLink}
-															class="blog-read-more"
-														>
-															Read{" "}
-															<i class="fa-solid fa-arrow-right" />
-														</a>
-													</div>
 												</div>
 											</div>
-										)
-									})}
-								</div>
+										</div>
+									)
+								})}
 							</div>
 						</div>
 					</div>
-				</section>
-			)
-		}
-	</div>
+				</div>
+			</section>
+		)
+	}
+</Layout>
 
-	<section class="site-trust-section">
-
+<section class="site-trust-section">
 	<section class="site-trust-section">
 		<div class="site-trust-container">
 			<div class="site-author-card">
@@ -1301,7 +1321,7 @@ fixedContent = fixedContent.replace(
 			</div>
 		</div>
 	</section>
-</Layout>
+</section>
 <style is:global>
 	/* Styling to ensure the generated TOC supports 2 columns on desktop */
 	@media (min-width: 768px) {
@@ -2104,8 +2124,16 @@ fixedContent = fixedContent.replace(
 	.hero-intro-box strong,
 	.hero-disclaimer-box b,
 	.hero-disclaimer-box strong {
-		color: #fff;
+		color: #334155;
+		font-weight: 700 !important;
 	}
+
+	.hero-disclaimer-box.desktop-dis a {
+    color: #475569 !important;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
 
 	/* Custom Table inside the Hero */
 	.table-responsive {
@@ -5869,308 +5897,302 @@ fixedContent = fixedContent.replace(
 		background: #25d366 !important;
 	}
 
-
-
-
-
-
 	.mob-meta-bar {
-	display: none;
-}
-
-.mob-meta-bar {
-    width: 100% !important;
-}
-
-@media (max-width: 600px) {
-
-	.mob-meta-updated {
-    display: ruby;
-}
-
-	h1.home-hero-title-us {
-    margin-bottom: 2px !important;
-}
-	/* Hide the desktop bar on mobile now that this new one exists */
-	.hd-in-mobi {
-		display: none !important;
-	}
-
-	.mob-meta-bar {
-		display: block;
-		margin: 0 0 0 0;
-		padding: 3px 3px;
-		background: #f8fafc;
-		border: 1px solid #e2e8f0;
-		border-radius: 12px;
-	}
-
-	.mob-meta-toprow {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-bottom: 12px;
-		margin-bottom: 12px;
-		border-bottom: 1px solid #e2e8f0;
-	}
-
-	.mob-meta-label {
-		display: block;
-		font-size: 0.72rem;
-		font-weight: 600;
-		color: #64748b;
-	}
-
-	.mob-meta-value {
-		display: block;
-		font-size: 0.9rem;
-		font-weight: 800;
-		color: #0f172a;
-	}
-
-	.mob-meta-disclosure {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	.mob-meta-disclosure-link {
-		font-size: 0.85rem;
-		font-weight: 700;
-		color: #0f172a;
-		text-decoration: underline;
-	}
-
-	.mob-meta-disclosure .cus-info-icon {
-		font-size: 0.9rem;
-	}
-
-	.mob-meta-peoplerow {
-		display: flex;
-		gap: 16px;
-	}
-
-	.mob-meta-person {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 6px;
-		background: none;
-		border: none;
-		padding: 0;
-		text-align: left;
-		cursor: pointer;
-		font-family: inherit;
-	}
-
-	.mob-meta-role-label {
-		font-size: 0.72rem;
-		font-weight: 600;
-		color: #64748b;
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	.mob-meta-check {
-		color: #2563eb;
-		font-size: 0.8rem;
-	}
-
-	.mob-meta-person-inner {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.mob-meta-avatar {
-		width: 32px;
-		height: 32px;
-		border-radius: 50%;
-		object-fit: cover;
-		flex-shrink: 0;
-	}
-
-	.mob-meta-name {
-		font-size: 0.9rem;
-		font-weight: 800;
-		color: #dc2626;
-		text-decoration: underline;
-		text-underline-offset: 2px;
-	}
-
-	.mob-meta-panel {
-		margin-top: 14px;
-		padding: 16px;
-		background: #ffffff;
-		border: 1px solid #e2e8f0;
-		border-radius: 10px;
-		font-size: 0.85rem;
-	}
-
-	.mob-meta-panel[hidden] {
 		display: none;
 	}
-}
 
-.home-page-grid {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) 340px;
-	gap: 6px;
-	max-width: 1400px;
-	margin: 0 auto;
-	padding: 0 1rem;
-	align-items: start;
-}
-.home-page-grid .home-wrapper {
-	padding: 0;
-}
-.home-page-grid .home-container {
-	padding: 1rem 0 2rem;
-}
+	.mob-meta-bar {
+		width: 100% !important;
+	}
 
-.gi-sidebar {
-	position: sticky;
-	top: calc(var(--sticky-nav-height, 0px) + 1.5rem);
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-	padding-top: 1rem;
-}
-.gi-mission-box {
-	background: #ffffff;
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-.gi-mission-header {
-	background: #dc2626;
-	color: #ffffff;
-	font-size: 0.78rem;
-	font-weight: 800;
-	letter-spacing: 0.5px;
-	text-transform: uppercase;
-	padding: 0.75rem 1.25rem;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-}
-.gi-mission-title {
-	font-size: 1.1rem;
-	font-weight: 500;
-	color: #0f172a;
-	line-height: 1.4;
-	margin: 1.25rem 1.25rem 1rem;
-}
-.gi-mission-list {
-	list-style: none;
-	margin: 0 1.25rem 1.25rem;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 0.6rem;
-}
-.gi-mission-list li {
-	font-size: 0.88rem;
-	color: #334155;
-	line-height: 1.5;
-	padding-left: 1.6rem;
-	position: relative;
-}
-.gi-mission-list li::before {
-	content: "";
-	position: absolute;
-	left: 0;
-	top: 3px;
-	width: 16px;
-	height: 16px;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-	background-size: contain;
-	background-repeat: no-repeat;
-}
-.gi-mission-btn {
-	display: block;
-	text-align: center;
-	margin: 0 1.25rem 1.25rem;
-	padding: 0.65rem 1rem;
-	border: 1px solid #dc2626;
-	color: #dc2626;
-	font-weight: 700;
-	font-size: 0.88rem;
-	text-decoration: none;
-	border-radius: 8px;
-	transition: all 0.2s ease;
-}
-.gi-mission-btn:hover {
-	background: #dc2626;
-	color: #ffffff;
-}
+	@media (max-width: 600px) {
+		.mob-meta-updated {
+			display: ruby;
+		}
 
-.gi-sidebar-box {
-	background: #ffffff;
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
-	padding: 1.25rem;
-	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-.gi-sidebar-heading {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
-	font-size: 0.85rem;
-	font-weight: 800;
-	font-style: italic;
-	letter-spacing: 0.4px;
-	text-transform: uppercase;
-	color: #0f172a;
-	margin: 0 0 1rem 0;
-	padding-bottom: 0.75rem;
-	border-bottom: 1px solid #1f2937;
-}
-.gi-sidebar-heading::before {
-	content: "";
-	display: inline-block;
-	flex-shrink: 0;
-	width: 20px;
-	height: 10px;
-	border-radius: 2px;
-	background: #dc2626;
-}
-.gi-toc-sidebar-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 0.55rem;
-}
-.gi-toc-sidebar-link {
-	font-size: 0.86rem;
-	color: #475569;
-	text-decoration: none;
-	line-height: 1.4;
-	display: inline-block;
-	transition: color 0.2s ease;
-}
-.gi-toc-sidebar-link:hover {
-	color: #dc2626;
-}
+		h1.home-hero-title-us {
+			margin-bottom: 2px !important;
+		}
+		/* Hide the desktop bar on mobile now that this new one exists */
+		.hd-in-mobi {
+			display: none !important;
+		}
 
-@media (max-width: 1100px) {
+		.mob-meta-bar {
+			display: block;
+			margin: 0 0 0 0;
+			padding: 3px 3px;
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 12px;
+		}
+
+		.mob-meta-toprow {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-bottom: 12px;
+			margin-bottom: 12px;
+			border-bottom: 1px solid #e2e8f0;
+		}
+
+		.mob-meta-label {
+			display: block;
+			font-size: 0.72rem;
+			font-weight: 600;
+			color: #64748b;
+		}
+
+		.mob-meta-value {
+			display: block;
+			font-size: 0.9rem;
+			font-weight: 800;
+			color: #0f172a;
+		}
+
+		.mob-meta-disclosure {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.mob-meta-disclosure-link {
+			font-size: 0.85rem;
+			font-weight: 700;
+			color: #0f172a;
+			text-decoration: underline;
+		}
+
+		.mob-meta-disclosure .cus-info-icon {
+			font-size: 0.9rem;
+		}
+
+		.mob-meta-peoplerow {
+			display: flex;
+			gap: 16px;
+		}
+
+		.mob-meta-person {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 6px;
+			background: none;
+			border: none;
+			padding: 0;
+			text-align: left;
+			cursor: pointer;
+			font-family: inherit;
+		}
+
+		.mob-meta-role-label {
+			font-size: 0.72rem;
+			font-weight: 600;
+			color: #64748b;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.mob-meta-check {
+			color: #2563eb;
+			font-size: 0.8rem;
+		}
+
+		.mob-meta-person-inner {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.mob-meta-avatar {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			object-fit: cover;
+			flex-shrink: 0;
+		}
+
+		.mob-meta-name {
+			font-size: 0.9rem;
+			font-weight: 800;
+			color: #dc2626;
+			text-decoration: underline;
+			text-underline-offset: 2px;
+		}
+
+		.mob-meta-panel {
+			margin-top: 14px;
+			padding: 16px;
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 10px;
+			font-size: 0.85rem;
+		}
+
+		.mob-meta-panel[hidden] {
+			display: none;
+		}
+	}
+
 	.home-page-grid {
-		grid-template-columns: 1fr;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 340px;
+		gap: 6px;
+		max-width: 1400px;
+		margin: 0 auto;
+		padding: 0 1rem;
+		align-items: start;
 	}
-	.gi-sidebar {
-		position: static;
-		padding-top: 0;
+	.home-page-grid .home-wrapper {
+		padding: 0;
 	}
-}
+	.home-page-grid .home-container {
+		padding: 1rem 0 2rem;
+	}
 
-div#toc_container {
-    display: none;
-}
+	.gi-sidebar {
+		position: sticky;
+		top: calc(var(--sticky-nav-height, 0px) + 1.5rem);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		padding-top: 1rem;
+	}
+	.gi-mission-box {
+		background: #ffffff;
+		border: 1px solid #e2e8f0;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	}
+	.gi-mission-header {
+		background: #dc2626;
+		color: #ffffff;
+		font-size: 0.78rem;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		padding: 0.75rem 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.gi-mission-title {
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: #0f172a;
+		line-height: 1.4;
+		margin: 1.25rem 1.25rem 1rem;
+	}
+	.gi-mission-list {
+		list-style: none;
+		margin: 0 1.25rem 1.25rem;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+	.gi-mission-list li {
+		font-size: 0.88rem;
+		color: #334155;
+		line-height: 1.5;
+		padding-left: 1.6rem;
+		position: relative;
+	}
+	.gi-mission-list li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 3px;
+		width: 16px;
+		height: 16px;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+	.gi-mission-btn {
+		display: block;
+		text-align: center;
+		margin: 0 1.25rem 1.25rem;
+		padding: 0.65rem 1rem;
+		border: 1px solid #dc2626;
+		color: #dc2626;
+		font-weight: 700;
+		font-size: 0.88rem;
+		text-decoration: none;
+		border-radius: 8px;
+		transition: all 0.2s ease;
+	}
+	.gi-mission-btn:hover {
+		background: #dc2626;
+		color: #ffffff;
+	}
+
+	.gi-sidebar-box {
+		background: #ffffff;
+		border: 1px solid #e2e8f0;
+		border-radius: 12px;
+		padding: 1.25rem;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+	}
+	.gi-sidebar-heading {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-size: 0.85rem;
+		font-weight: 800;
+		font-style: italic;
+		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		color: #0f172a;
+		margin: 0 0 1rem 0;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid #1f2937;
+	}
+	.gi-sidebar-heading::before {
+		content: "";
+		display: inline-block;
+		flex-shrink: 0;
+		width: 20px;
+		height: 10px;
+		border-radius: 2px;
+		background: #dc2626;
+	}
+	.gi-toc-sidebar-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+	}
+	.gi-toc-sidebar-link {
+		font-size: 0.86rem;
+		color: #475569;
+		text-decoration: none;
+		line-height: 1.4;
+		display: inline-block;
+		transition: color 0.2s ease;
+	}
+	.gi-toc-sidebar-link:hover {
+		color: #dc2626;
+	}
+
+	@media (max-width: 1100px) {
+		.home-page-grid {
+			grid-template-columns: 1fr;
+		}
+		.gi-sidebar {
+			position: static;
+			padding-top: 0;
+		}
+	}
+
+	div#toc_container {
+		display: none;
+	}
 </style>
 
 <script>

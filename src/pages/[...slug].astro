@@ -295,50 +295,59 @@ export async function getStaticPaths() {
     // --- 🚨 PRE-FETCH TOOLTIP DATA ONCE TO FIX VERCEL TIMEOUT ---
     // 1. Small helpers to determine authors/reviewers inside this scope
     const getAuthorNameLocal = (node: any) => {
-        const aNode = node.author?.node;
-        return aNode ? (aNode.firstName && aNode.lastName ? `${aNode.firstName} ${aNode.lastName}` : aNode.name) : "Editorial Team";
-    };
+        const aNode = node.author?.node
+        return aNode
+            ? aNode.firstName && aNode.lastName
+                ? `${aNode.firstName} ${aNode.lastName}`
+                : aNode.name
+            : "Editorial Team"
+    }
 
     const REVIEWER_POOL_LOCAL = [
         { name: "Caleb Daly", slug: "caleb-daly" },
         { name: "Daphne Hutchens", slug: "daphne-hutchens" },
         { name: "Kayla McBrien", slug: "kayla-mcbrien" },
-        { name: "Mason Heaton", slug: "mason-heaton" }
-    ];
+        { name: "Mason Heaton", slug: "mason-heaton" },
+    ]
 
     const stableHashLocal = (str: string) => {
-        let hash = 0;
+        let hash = 0
         for (let i = 0; i < str.length; i++) {
-            hash = (hash << 5) - hash + str.charCodeAt(i);
-            hash |= 0;
+            hash = (hash << 5) - hash + str.charCodeAt(i)
+            hash |= 0
         }
-        return Math.abs(hash);
-    };
+        return Math.abs(hash)
+    }
 
     const getReviewerNameLocal = (author: string) => {
-        const authorKey = author.toLowerCase().trim();
-        const authorSlugified = authorKey.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
-        let index = stableHashLocal(authorKey) % REVIEWER_POOL_LOCAL.length;
-        let candidate = REVIEWER_POOL_LOCAL[index];
-        let attempts = 0;
-        while (candidate.slug === authorSlugified && attempts < REVIEWER_POOL_LOCAL.length) {
-            index = (index + 1) % REVIEWER_POOL_LOCAL.length;
-            candidate = REVIEWER_POOL_LOCAL[index];
-            attempts++;
+        const authorKey = author.toLowerCase().trim()
+        const authorSlugified = authorKey
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)+/g, "")
+        let index = stableHashLocal(authorKey) % REVIEWER_POOL_LOCAL.length
+        let candidate = REVIEWER_POOL_LOCAL[index]
+        let attempts = 0
+        while (
+            candidate.slug === authorSlugified &&
+            attempts < REVIEWER_POOL_LOCAL.length
+        ) {
+            index = (index + 1) % REVIEWER_POOL_LOCAL.length
+            candidate = REVIEWER_POOL_LOCAL[index]
+            attempts++
         }
-        return candidate.name;
-    };
+        return candidate.name
+    }
 
     // 2. Build a Set of all unique people
-    const uniquePeople = new Set<string>();
+    const uniquePeople = new Set<string>()
     allNodes.forEach((node: any) => {
-        const aName = getAuthorNameLocal(node);
-        uniquePeople.add(aName);
-        uniquePeople.add(getReviewerNameLocal(aName));
-    });
+        const aName = getAuthorNameLocal(node)
+        uniquePeople.add(aName)
+        uniquePeople.add(getReviewerNameLocal(aName))
+    })
 
     // 3. Fetch data for unique people ONCE
-    const tooltipCache: Record<string, any> = {};
+    const tooltipCache: Record<string, any> = {}
     for (const personName of uniquePeople) {
         try {
             const res = await fetch(wpUrl, {
@@ -358,24 +367,36 @@ export async function getStaticPaths() {
                     `,
                     variables: { search: personName },
                 }),
-            });
-            const result = await res.json();
-            const candidates = result?.data?.users?.nodes || [];
-            const user = candidates.find((u: any) => (u.name || "").trim().toLowerCase() === personName.trim().toLowerCase()) || candidates[0];
+            })
+            const result = await res.json()
+            const candidates = result?.data?.users?.nodes || []
+            const user =
+                candidates.find(
+                    (u: any) =>
+                        (u.name || "").trim().toLowerCase() ===
+                        personName.trim().toLowerCase(),
+                ) || candidates[0]
 
             if (user) {
-                const sinceLabel = user.registeredDate ? new Date(user.registeredDate).toLocaleDateString("en-US", { year: "numeric", month: "short" }) : null;
-                const posts = (user.posts?.nodes || []).map((p: any) => ({ title: p.title, uri: p.uri }));
-                tooltipCache[personName] = { sinceLabel, posts };
+                const sinceLabel = user.registeredDate
+                    ? new Date(user.registeredDate).toLocaleDateString(
+                          "en-US",
+                          { year: "numeric", month: "short" },
+                      )
+                    : null
+                const posts = (user.posts?.nodes || []).map((p: any) => ({
+                    title: p.title,
+                    uri: p.uri,
+                }))
+                tooltipCache[personName] = { sinceLabel, posts }
             } else {
-                tooltipCache[personName] = { sinceLabel: null, posts: [] };
+                tooltipCache[personName] = { sinceLabel: null, posts: [] }
             }
         } catch (e) {
-            console.warn("⚠️ Tooltip fetch failed for", personName);
-            tooltipCache[personName] = { sinceLabel: null, posts: [] };
+            console.warn("⚠️ Tooltip fetch failed for", personName)
+            tooltipCache[personName] = { sinceLabel: null, posts: [] }
         }
     }
-
 
     // --- FILTER AND RETURN ---
     const sanitizeSlug = (uri: string) => {
@@ -401,13 +422,14 @@ export async function getStaticPaths() {
 
     return validNodes.map((node: any) => {
         const cleanSlug = sanitizeSlug(node.uri)
-        const related = node.contentType === "post"
-            ? recentPosts.filter(p => p.uri !== node.uri).slice(0, 7)
-            : []
+        const related =
+            node.contentType === "post"
+                ? recentPosts.filter(p => p.uri !== node.uri).slice(0, 7)
+                : []
 
         // Extract author and reviewer for this specific node
-        const nodeAuthorName = getAuthorNameLocal(node);
-        const nodeReviewerName = getReviewerNameLocal(nodeAuthorName);
+        const nodeAuthorName = getAuthorNameLocal(node)
+        const nodeReviewerName = getReviewerNameLocal(nodeAuthorName)
 
         return {
             params: { slug: cleanSlug || undefined },
@@ -416,8 +438,14 @@ export async function getStaticPaths() {
                 contentType: node.contentType,
                 relatedPosts: related,
                 // Pass the cached data down via props
-                authorTooltipRaw: tooltipCache[nodeAuthorName] || { sinceLabel: null, posts: [] },
-                reviewerTooltipRaw: tooltipCache[nodeReviewerName] || { sinceLabel: null, posts: [] },
+                authorTooltipRaw: tooltipCache[nodeAuthorName] || {
+                    sinceLabel: null,
+                    posts: [],
+                },
+                reviewerTooltipRaw: tooltipCache[nodeReviewerName] || {
+                    sinceLabel: null,
+                    posts: [],
+                },
             },
         }
     })
@@ -432,7 +460,13 @@ interface Props {
     reviewerTooltipRaw: { sinceLabel: string | null; posts: any[] }
 }
 
-const { post, contentType, relatedPosts, authorTooltipRaw, reviewerTooltipRaw } = Astro.props
+const {
+    post,
+    contentType,
+    relatedPosts,
+    authorTooltipRaw,
+    reviewerTooltipRaw,
+} = Astro.props
 
 const { slug } = Astro.params
 
@@ -830,18 +864,18 @@ const processTooltipPosts = (rawPosts: any[]) => {
         .map((p: any) => ({
             title: p.title,
             uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
-        }));
-};
+        }))
+}
 
 const authorTooltipInfo = {
     sinceLabel: authorTooltipRaw?.sinceLabel || null,
     posts: processTooltipPosts(authorTooltipRaw?.posts || []),
-};
+}
 
 const reviewerTooltipInfo = {
     sinceLabel: reviewerTooltipRaw?.sinceLabel || null,
     posts: processTooltipPosts(reviewerTooltipRaw?.posts || []),
-};
+}
 
 function buildTooltipHtml(opts: {
     roleLabel: string
@@ -1189,7 +1223,6 @@ fixedContent = stripWp(fixedContent)
                                             {formattedDate}
                                         </span>
                                     </div>
-                                    
                                 </div>
 
                                 <div class="mob-meta-peoplerow">
@@ -1455,14 +1488,41 @@ fixedContent = stripWp(fixedContent)
                         </div>
 
                         <p class="gi-editorial-note">
-                            <strong>Editorial Statement:</strong> We
-                            independently review and select all operators. While
-                            we may earn commissions from affiliate links or paid
-                            placements, these never influence our editors'
-                            opinions or evaluations. Every platform is assessed
-                            against our own standards, and we highlight both
-                            strengths and shortcomings, regardless of any
-                            commercial relationship.
+                            <strong>Editorial Statement:</strong>{" "}
+                            <span data-teams="true">
+                                <>
+                                    <em>We </em>
+                                    <a
+                                        title="https://au.crazyvegas.com/editorial-policy"
+                                        href="https://au.crazyvegas.com/editorial-policy"
+                                        target="_blank"
+                                        rel="noreferrer noopener"
+                                    >
+                                        independently review and select all
+                                        operators
+                                    </a>
+                                    <em>
+                                        . While we may earn commissions from
+                                        affiliate links or paid placements,
+                                        these never influence our editors'
+                                        opinions or evaluations. Every platform
+                                        is{" "}
+                                    </em>
+                                    <a
+                                        title="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                        href="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                        target="_blank"
+                                        rel="noreferrer noopener"
+                                    >
+                                        assessed against our own standards
+                                    </a>
+                                    <em>
+                                        , and we highlight both strengths and
+                                        shortcomings, regardless of any
+                                        commercial relationship.
+                                    </em>
+                                </>
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -1515,7 +1575,6 @@ fixedContent = stripWp(fixedContent)
                                     {formattedDate}
                                 </span>
                             </div>
-                            
                         </div>
 
                         <div class="mob-meta-peoplerow">
@@ -1737,14 +1796,42 @@ fixedContent = stripWp(fixedContent)
                     </div>
 
                     <p class="gi-editorial-note">
-                        <strong>Editorial Statement:</strong> We independently
-                        review and select all operators. While we may earn
-                        commissions from affiliate links or paid placements,
-                        these never influence our editors' opinions or
-                        evaluations. Every platform is assessed against our own
-                        standards, and we highlight both strengths and
-                        shortcomings, regardless of any commercial relationship.
-                    </p>
+                            <strong>Editorial Statement:</strong>{" "}
+                            <span data-teams="true">
+                                <>
+                                    <em>We </em>
+                                    <a
+                                        title="https://au.crazyvegas.com/editorial-policy"
+                                        href="https://au.crazyvegas.com/editorial-policy"
+                                        target="_blank"
+                                        rel="noreferrer noopener"
+                                    >
+                                        independently review and select all
+                                        operators
+                                    </a>
+                                    <em>
+                                        . While we may earn commissions from
+                                        affiliate links or paid placements,
+                                        these never influence our editors'
+                                        opinions or evaluations. Every platform
+                                        is{" "}
+                                    </em>
+                                    <a
+                                        title="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                        href="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                        target="_blank"
+                                        rel="noreferrer noopener"
+                                    >
+                                        assessed against our own standards
+                                    </a>
+                                    <em>
+                                        , and we highlight both strengths and
+                                        shortcomings, regardless of any
+                                        commercial relationship.
+                                    </em>
+                                </>
+                            </span>
+                        </p>
                 </div>
             </header>
         )
@@ -2810,13 +2897,17 @@ fixedContent = stripWp(fixedContent)
     }
 
     .gi-editorial-note {
-        font-size: 11px;
+        font-size: 11px !important;
         font-style: italic;
         line-height: 1.6;
         color: #94a3b8;
         max-width: 1100px;
         margin: 0;
     }
+
+    .hero-disclaimer-box.desktop-dis p {
+    color: #8892a0 !important;
+}
 
     .gi-editorial-note a {
         color: #64748b;
@@ -3068,8 +3159,6 @@ fixedContent = stripWp(fixedContent)
             overflow-y: visible;
         }
     }
-
-    
 
     /* ----------------------------------------------------
    1. TABLE RESET & WRAPPER
@@ -5237,7 +5326,6 @@ fixedContent = stripWp(fixedContent)
     }
 
     .gi-editorial-note {
-        font-size: 0.82rem;
         line-height: 1.6;
         color: #94a3b8;
         max-width: 1100px;
@@ -5261,357 +5349,348 @@ fixedContent = stripWp(fixedContent)
         }
     }
 
-
-
     .mob-meta-bar {
-	display: none;
-}
-
-@media (max-width: 600px) {
-	/* Hide the desktop byline bar + editorial note on mobile now that
-	   the new bar covers the same info */
-	.gi-byline-bar,
-	.gi-editorial-note {
-		display: none !important;
-	}
-
-	.mob-meta-bar {
-		display: block;
-		margin: 16px 0 20px 0;
-		padding: 4px 4px;
-		background: #f8fafc;
-		border: 1px solid #e2e8f0;
-		border-radius: 12px;
-	}
-
-	.mob-meta-bar-review {
-		background: #f8fafc;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.mob-meta-bar-review .mob-meta-toprow,
-	.mob-meta-bar-review .mob-meta-label,
-	.mob-meta-bar-review .mob-meta-role-label {
-		border-color: rgba(255, 255, 255, 0.12);
-	}
-
-	.mob-meta-bar-review .mob-meta-value,
-	.mob-meta-bar-review .mob-meta-disclosure-link,
-	.mob-meta-bar-review .mob-meta-name {
-		color: #f8fafc;
-	}
-
-	.mob-meta-toprow {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-bottom: 12px;
-		margin-bottom: 12px;
-		border-bottom: 1px solid #e2e8f0;
-	}
-
-	.mob-meta-label {
-		display: block;
-		font-size: 0.72rem;
-		font-weight: 600;
-		color: #64748b;
-	}
-
-	.mob-meta-value {
-		display: block;
-		font-size: 0.9rem;
-		font-weight: 800;
-		color: #0f172a;
-	}
-
-	.mob-meta-disclosure {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	.mob-meta-disclosure-link {
-		font-size: 0.85rem;
-		font-weight: 700;
-		color: #0f172a;
-		text-decoration: underline;
-	}
-
-	.mob-meta-disclosure .cus-info-icon {
-		font-size: 0.9rem;
-	}
-
-	.mob-meta-peoplerow {
-		display: flex;
-		gap: 16px;
-	}
-
-	.mob-meta-person {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 6px;
-		background: none;
-		border: none;
-		padding: 0;
-		text-align: left;
-		cursor: pointer;
-		font-family: inherit;
-	}
-
-	.mob-meta-role-label {
-		font-size: 0.72rem;
-		font-weight: 600;
-		color: #64748b;
-		display: flex;
-		align-items: center;
-		gap: 4px;
-	}
-
-	.mob-meta-check {
-		color: #2563eb;
-		font-size: 0.8rem;
-	}
-
-	.mob-meta-person-inner {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.mob-meta-avatar {
-		width: 32px;
-		height: 32px;
-		border-radius: 50%;
-		object-fit: cover;
-		flex-shrink: 0;
-	}
-
-	.mob-meta-name {
-		font-size: 0.9rem;
-		font-weight: 800;
-		color: #dc2626;
-		text-decoration: underline;
-		text-underline-offset: 2px;
-	}
-
-	.mob-meta-panel {
-		margin-top: 14px;
-		padding: 16px;
-		background: #ffffff;
-		border: 1px solid #e2e8f0;
-		border-radius: 10px;
-		font-size: 0.85rem;
-	}
-
-	.mob-meta-panel[hidden] {
-		display: none;
-	}
-}
-
-
-@media (max-width: 600px) {
-
-.card-logo picture {
-        border-radius: unset !important;
-        border: 0px solid #f1f5f9 !important;
-        box-shadow: unset !important; 
+        display: none;
     }
 
-.card-logo picture {
-    width: 233px !important;
-    height: 111px;
-}
-a.card-logo-link.flexbox img {
-    width: 206px !important;
-    height: auto;
-}
+    @media (max-width: 600px) {
+        /* Hide the desktop byline bar + editorial note on mobile now that
+	   the new bar covers the same info */
+        .gi-byline-bar,
+        .gi-editorial-note {
+            display: none !important;
+        }
 
-    .mob-meta-updated {
-    display: ruby;
-}
+        .mob-meta-bar {
+            display: block;
+            margin: 16px 0 20px 0;
+            padding: 4px 4px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+        }
 
-	.modern-review-hero .review-badges {
-		gap: 8px;
-		justify-content: flex-start;
-	}
+        .mob-meta-bar-review {
+            background: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-	.modern-review-hero .badge {
-		font-size: 12.5px;
-		padding: 5px 10px;
-		color: #334155;
-		background: #f1f5f9;
-		border: 1px solid #e2e8f0;
-	}
+        .mob-meta-bar-review .mob-meta-toprow,
+        .mob-meta-bar-review .mob-meta-label,
+        .mob-meta-bar-review .mob-meta-role-label {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
 
-    span.mob-meta-name {
-    color: #dc2626 !important;
-}
+        .mob-meta-bar-review .mob-meta-value,
+        .mob-meta-bar-review .mob-meta-disclosure-link,
+        .mob-meta-bar-review .mob-meta-name {
+            color: #f8fafc;
+        }
 
-span.mob-meta-value {
-    color: #0f172a !important;
-}
+        .mob-meta-toprow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
 
-.mob-meta-toprow {
-    border-bottom: 1px solid #dadada !important;
-}
-}
+        .mob-meta-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+        }
 
+        .mob-meta-value {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
 
+        .mob-meta-disclosure {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-/* =========================================
+        .mob-meta-disclosure-link {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: underline;
+        }
+
+        .mob-meta-disclosure .cus-info-icon {
+            font-size: 0.9rem;
+        }
+
+        .mob-meta-peoplerow {
+            display: flex;
+            gap: 16px;
+        }
+
+        .mob-meta-person {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            background: none;
+            border: none;
+            padding: 0;
+            text-align: left;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .mob-meta-role-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .mob-meta-check {
+            color: #2563eb;
+            font-size: 0.8rem;
+        }
+
+        .mob-meta-person-inner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mob-meta-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .mob-meta-name {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #dc2626;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .mob-meta-panel {
+            margin-top: 14px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .mob-meta-panel[hidden] {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .card-logo picture {
+            border-radius: unset !important;
+            border: 0px solid #f1f5f9 !important;
+            box-shadow: unset !important;
+        }
+
+        .card-logo picture {
+            width: 233px !important;
+            height: 111px;
+        }
+        a.card-logo-link.flexbox img {
+            width: 206px !important;
+            height: auto;
+        }
+
+        .mob-meta-updated {
+            display: ruby;
+        }
+
+        .modern-review-hero .review-badges {
+            gap: 8px;
+            justify-content: flex-start;
+        }
+
+        .modern-review-hero .badge {
+            font-size: 12.5px;
+            padding: 5px 10px;
+            color: #334155;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+        }
+
+        span.mob-meta-name {
+            color: #dc2626 !important;
+        }
+
+        span.mob-meta-value {
+            color: #0f172a !important;
+        }
+
+        .mob-meta-toprow {
+            border-bottom: 1px solid #dadada !important;
+        }
+    }
+
+    /* =========================================
    BLOG/NEWS PAGINATION — pill style
 ========================================= */
-.space-news-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin: 32px 0;
-    padding: 8px;
-    background: #f1f5f9;
-    border-radius: 16px;
-    width: fit-content;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    flex-wrap: wrap;
-}
+    .space-news-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 32px 0;
+        padding: 8px;
+        background: #f1f5f9;
+        border-radius: 16px;
+        width: fit-content;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        flex-wrap: wrap;
+    }
 
-.space-news-pagination button {
-    min-width: 38px;
-    height: 38px;
-    padding: 0 14px;
-    border: none;
-    background: #ffffff;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: #0f172a;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-    transition: all 0.15s ease;
-}
+    .space-news-pagination button {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 14px;
+        border: none;
+        background: #ffffff;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #0f172a;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+        transition: all 0.15s ease;
+    }
 
-.space-news-pagination button:hover:not(:disabled):not(.active) {
-    background: #fef2f2;
-    color: #dc2626;
-}
+    .space-news-pagination button:hover:not(:disabled):not(.active) {
+        background: #fef2f2;
+        color: #dc2626;
+    }
 
-.space-news-pagination button.active {
-    background: #dc2626;
-    color: #ffffff;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
-    cursor: default;
-}
+    .space-news-pagination button.active {
+        background: #dc2626;
+        color: #ffffff;
+        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+        cursor: default;
+    }
 
-.space-news-pagination button.prev-next {
-    background: transparent;
-    box-shadow: none;
-    color: #64748b;
-    font-weight: 600;
-    padding: 0 10px;
-}
+    .space-news-pagination button.prev-next {
+        background: transparent;
+        box-shadow: none;
+        color: #64748b;
+        font-weight: 600;
+        padding: 0 10px;
+    }
 
-.space-news-pagination button.prev-next:hover:not(:disabled) {
-    background: #ffffff;
-    color: #dc2626;
-}
+    .space-news-pagination button.prev-next:hover:not(:disabled) {
+        background: #ffffff;
+        color: #dc2626;
+    }
 
-.space-news-pagination button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    background: transparent;
-    box-shadow: none;
-}
+    .space-news-pagination button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: transparent;
+        box-shadow: none;
+    }
 
-.space-news-pagination .pagination-ellipsis {
-    min-width: 20px;
-    text-align: center;
-    color: #94a3b8;
-    font-weight: 700;
-    user-select: none;
-}
+    .space-news-pagination .pagination-ellipsis {
+        min-width: 20px;
+        text-align: center;
+        color: #94a3b8;
+        font-weight: 700;
+        user-select: none;
+    }
 
+    .space-news-3-items {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px;
+    }
 
+    .space-news-3-item.box-33 {
+        width: 100% !important;
+        float: none !important;
+        margin: 0 !important;
+    }
 
-
-.space-news-3-items {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 20px;
-}
-
-.space-news-3-item.box-33 {
-    width: 100% !important;
-    float: none !important;
-    margin: 0 !important;
-}
-
-.space-news-3-item-ins {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.space-news-3-item-ins:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
-}
-
-.space-news-3-item-img {
-    flex: 0 0 220px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.space-news-3-item-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.space-news-3-item-title-box {
-    flex: 1;
-    min-width: 0;
-}
-
-.space-news-3-item-title a {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #0f172a;
-    text-decoration: none;
-}
-.space-news-3-item-title a:hover {
-    color: #dc2626;
-}
-
-.space-news-3-item-excerpt {
-    color: #475569;
-    font-size: 0.92rem;
-    line-height: 1.5;
-    margin: 8px 0;
-}
-
-@media (max-width: 640px) {
     .space-news-3-item-ins {
-        flex-direction: column;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
     }
+
+    .space-news-3-item-ins:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    }
+
     .space-news-3-item-img {
-        flex: none;
-        width: 100%;
+        flex: 0 0 220px;
+        border-radius: 8px;
+        overflow: hidden;
     }
-}
 
+    .space-news-3-item-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
 
+    .space-news-3-item-title-box {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .space-news-3-item-title a {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: #0f172a;
+        text-decoration: none;
+    }
+    .space-news-3-item-title a:hover {
+        color: #dc2626;
+    }
+
+    .space-news-3-item-excerpt {
+        color: #475569;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        margin: 8px 0;
+    }
+
+    @media (max-width: 640px) {
+        .space-news-3-item-ins {
+            flex-direction: column;
+        }
+        .space-news-3-item-img {
+            flex: none;
+            width: 100%;
+        }
+    }
 </style>
 
 <script>
@@ -5642,132 +5721,128 @@ span.mob-meta-value {
     })
 </script>
 
-
 <script>
-	function initMobMeta() {
-		const buttons = document.querySelectorAll(
-			".mob-meta-person[data-mob-target]",
-		)
-		if (!buttons.length) return
+    function initMobMeta() {
+        const buttons = document.querySelectorAll(
+            ".mob-meta-person[data-mob-target]",
+        )
+        if (!buttons.length) return
 
-		buttons.forEach(btn => {
-			if (btn.dataset.bound === "true") return
-			btn.dataset.bound = "true"
+        buttons.forEach(btn => {
+            if (btn.dataset.bound === "true") return
+            btn.dataset.bound = "true"
 
-			btn.addEventListener("click", () => {
-				const targetId = btn.getAttribute("data-mob-target")
-				const target = document.getElementById(targetId)
-				if (!target) return
+            btn.addEventListener("click", () => {
+                const targetId = btn.getAttribute("data-mob-target")
+                const target = document.getElementById(targetId)
+                if (!target) return
 
-				const isOpen = !target.hasAttribute("hidden")
+                const isOpen = !target.hasAttribute("hidden")
 
-				document
-					.querySelectorAll(".mob-meta-panel")
-					.forEach(p => p.setAttribute("hidden", ""))
+                document
+                    .querySelectorAll(".mob-meta-panel")
+                    .forEach(p => p.setAttribute("hidden", ""))
 
-				if (!isOpen) {
-					target.removeAttribute("hidden")
-				}
-			})
-		})
-	}
+                if (!isOpen) {
+                    target.removeAttribute("hidden")
+                }
+            })
+        })
+    }
 
-	if (document.readyState !== "loading") {
-		initMobMeta()
-	} else {
-		document.addEventListener("DOMContentLoaded", initMobMeta)
-	}
-	document.addEventListener("astro:page-load", initMobMeta)
+    if (document.readyState !== "loading") {
+        initMobMeta()
+    } else {
+        document.addEventListener("DOMContentLoaded", initMobMeta)
+    }
+    document.addEventListener("astro:page-load", initMobMeta)
 </script>
 
 <script is:inline>
     function initSpaceNewsPagination() {
-        document
-            .querySelectorAll(".space-news-3-items")
-            .forEach(container => {
-                if (container.dataset.paginated === "true") return
-                container.dataset.paginated = "true"
+        document.querySelectorAll(".space-news-3-items").forEach(container => {
+            if (container.dataset.paginated === "true") return
+            container.dataset.paginated = "true"
 
-                const items = Array.from(
-                    container.querySelectorAll(":scope > .space-news-3-item"),
+            const items = Array.from(
+                container.querySelectorAll(":scope > .space-news-3-item"),
+            )
+            const perPage = 10
+            const pageCount = Math.ceil(items.length / perPage)
+            if (pageCount <= 1) return
+
+            let currentPage = 1
+
+            const pager = document.createElement("div")
+            pager.className = "space-news-pagination"
+            container.insertAdjacentElement("afterend", pager)
+
+            function renderPage(page) {
+                currentPage = page
+                items.forEach((item, i) => {
+                    const itemPage = Math.floor(i / perPage) + 1
+                    item.style.display = itemPage === page ? "" : "none"
+                })
+                renderPager()
+                container.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                })
+            }
+
+            function renderPager() {
+                pager.innerHTML = ""
+
+                const prevBtn = document.createElement("button")
+                prevBtn.textContent = "‹ Prev"
+                prevBtn.className = "prev-next"
+                prevBtn.disabled = currentPage === 1
+                prevBtn.addEventListener("click", () =>
+                    renderPage(currentPage - 1),
                 )
-                const perPage = 10
-                const pageCount = Math.ceil(items.length / perPage)
-                if (pageCount <= 1) return
+                pager.appendChild(prevBtn)
 
-                let currentPage = 1
-
-                const pager = document.createElement("div")
-                pager.className = "space-news-pagination"
-                container.insertAdjacentElement("afterend", pager)
-
-                function renderPage(page) {
-                    currentPage = page
-                    items.forEach((item, i) => {
-                        const itemPage = Math.floor(i / perPage) + 1
-                        item.style.display =
-                            itemPage === page ? "" : "none"
-                    })
-                    renderPager()
-                    container.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start",
-                    })
+                const addPageBtn = p => {
+                    const btn = document.createElement("button")
+                    btn.textContent = String(p)
+                    if (p === currentPage) btn.classList.add("active")
+                    btn.addEventListener("click", () => renderPage(p))
+                    pager.appendChild(btn)
                 }
 
-                function renderPager() {
-                    pager.innerHTML = ""
-
-                    const prevBtn = document.createElement("button")
-                    prevBtn.textContent = "‹ Prev"
-                    prevBtn.className = "prev-next"
-                    prevBtn.disabled = currentPage === 1
-                    prevBtn.addEventListener("click", () =>
-                        renderPage(currentPage - 1),
-                    )
-                    pager.appendChild(prevBtn)
-
-                    const addPageBtn = p => {
-                        const btn = document.createElement("button")
-                        btn.textContent = String(p)
-                        if (p === currentPage) btn.classList.add("active")
-                        btn.addEventListener("click", () => renderPage(p))
-                        pager.appendChild(btn)
-                    }
-
-                    const addEllipsis = () => {
-                        const span = document.createElement("span")
-                        span.className = "pagination-ellipsis"
-                        span.textContent = "…"
-                        pager.appendChild(span)
-                    }
-
-                    // Build compact range: 1, [gap], current-1..current+1, [gap], last
-                    const pages = new Set([1, pageCount, currentPage])
-                    if (currentPage - 1 > 1) pages.add(currentPage - 1)
-                    if (currentPage + 1 < pageCount) pages.add(currentPage + 1)
-
-                    const sorted = Array.from(pages).sort((a, b) => a - b)
-
-                    let prevShown = 0
-                    sorted.forEach(p => {
-                        if (prevShown && p - prevShown > 1) addEllipsis()
-                        addPageBtn(p)
-                        prevShown = p
-                    })
-
-                    const nextBtn = document.createElement("button")
-                    nextBtn.textContent = "Next ›"
-                    nextBtn.className = "prev-next"
-                    nextBtn.disabled = currentPage === pageCount
-                    nextBtn.addEventListener("click", () =>
-                        renderPage(currentPage + 1),
-                    )
-                    pager.appendChild(nextBtn)
+                const addEllipsis = () => {
+                    const span = document.createElement("span")
+                    span.className = "pagination-ellipsis"
+                    span.textContent = "…"
+                    pager.appendChild(span)
                 }
 
-                renderPage(1)
-            })
+                // Build compact range: 1, [gap], current-1..current+1, [gap], last
+                const pages = new Set([1, pageCount, currentPage])
+                if (currentPage - 1 > 1) pages.add(currentPage - 1)
+                if (currentPage + 1 < pageCount) pages.add(currentPage + 1)
+
+                const sorted = Array.from(pages).sort((a, b) => a - b)
+
+                let prevShown = 0
+                sorted.forEach(p => {
+                    if (prevShown && p - prevShown > 1) addEllipsis()
+                    addPageBtn(p)
+                    prevShown = p
+                })
+
+                const nextBtn = document.createElement("button")
+                nextBtn.textContent = "Next ›"
+                nextBtn.className = "prev-next"
+                nextBtn.disabled = currentPage === pageCount
+                nextBtn.addEventListener("click", () =>
+                    renderPage(currentPage + 1),
+                )
+                pager.appendChild(nextBtn)
+            }
+
+            renderPage(1)
+        })
     }
 
     document.addEventListener("DOMContentLoaded", initSpaceNewsPagination)
