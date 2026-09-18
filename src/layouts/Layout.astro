@@ -861,7 +861,7 @@ function timeAgo(dateString: string) {
         }
         div#main-content {
             max-width: 100% !important;
-            overflow: clip !important;
+            overflow-x: clip !important;
         }
         .top-utility-bar-inner {
             justify-content: center;
@@ -1017,6 +1017,9 @@ function timeAgo(dateString: string) {
     }
 
     @media (max-width: 600px) {
+        .gi-sidebar-box.gi-toc-box {
+    display: none !important;
+}
         .key-insights-box {
             padding: 22px 20px;
         }

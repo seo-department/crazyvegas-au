@@ -1067,7 +1067,22 @@ fixedContent = stripWp(fixedContent)
     keywords={focusKeyword}
     author={authorName}
 >
+    <div id="mobileJumpNav" class="mobile-jump-nav">
+        <button
+            type="button"
+            id="mobileJumpToggle"
+            class="mobile-jump-toggle"
+            aria-expanded="false"
+            aria-controls="mobileJumpList"
+        >
+            <span>Jump to Section</span>
+            <i class="fa-solid fa-chevron-down mobile-jump-arrow"></i>
+        </button>
+        <ul id="mobileJumpList" class="mobile-jump-list" hidden></ul>
+    </div>
+
     {/* UNIQUE LAYOUT FOR GAMES */}
+
     {
         isGame ? (
             <header class="game-hero">
@@ -1796,42 +1811,41 @@ fixedContent = stripWp(fixedContent)
                     </div>
 
                     <p class="gi-editorial-note">
-                            <strong>Editorial Statement:</strong>{" "}
-                            <span data-teams="true">
-                                <>
-                                    <em>We </em>
-                                    <a
-                                        title="https://au.crazyvegas.com/editorial-policy"
-                                        href="https://au.crazyvegas.com/editorial-policy"
-                                        target="_blank"
-                                        rel="noreferrer noopener"
-                                    >
-                                        independently review and select all
-                                        operators
-                                    </a>
-                                    <em>
-                                        . While we may earn commissions from
-                                        affiliate links or paid placements,
-                                        these never influence our editors'
-                                        opinions or evaluations. Every platform
-                                        is{" "}
-                                    </em>
-                                    <a
-                                        title="https://au.crazyvegas.com/how-we-rate-casinos/"
-                                        href="https://au.crazyvegas.com/how-we-rate-casinos/"
-                                        target="_blank"
-                                        rel="noreferrer noopener"
-                                    >
-                                        assessed against our own standards
-                                    </a>
-                                    <em>
-                                        , and we highlight both strengths and
-                                        shortcomings, regardless of any
-                                        commercial relationship.
-                                    </em>
-                                </>
-                            </span>
-                        </p>
+                        <strong>Editorial Statement:</strong>{" "}
+                        <span data-teams="true">
+                            <>
+                                <em>We </em>
+                                <a
+                                    title="https://au.crazyvegas.com/editorial-policy"
+                                    href="https://au.crazyvegas.com/editorial-policy"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    independently review and select all
+                                    operators
+                                </a>
+                                <em>
+                                    . While we may earn commissions from
+                                    affiliate links or paid placements, these
+                                    never influence our editors' opinions or
+                                    evaluations. Every platform is{" "}
+                                </em>
+                                <a
+                                    title="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                    href="https://au.crazyvegas.com/how-we-rate-casinos/"
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                >
+                                    assessed against our own standards
+                                </a>
+                                <em>
+                                    , and we highlight both strengths and
+                                    shortcomings, regardless of any commercial
+                                    relationship.
+                                </em>
+                            </>
+                        </span>
+                    </p>
                 </div>
             </header>
         )
@@ -2440,6 +2454,84 @@ fixedContent = stripWp(fixedContent)
         scroll-behavior: smooth;
     }
 
+    /* MOBILE-ONLY STICKY JUMP-TO NAV */
+    .mobile-jump-nav {
+        display: none;
+    }
+
+    div#mobileJumpNav {
+        /* Offset by the height of your main header */
+        top: 97px !important;
+    }
+
+    @media (max-width: 600px) {
+        .mobile-jump-nav {
+            display: block;
+
+            /* FIX: Changed to fixed so it ignores the parent's overflow:hidden */
+            position: fixed;
+            left: 0;
+            width: 100%;
+
+            z-index: 90;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+        .mobile-jump-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f172a;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .mobile-jump-arrow {
+            font-size: 0.8rem;
+            color: #64748b;
+            transition: transform 0.25s ease;
+        }
+        .mobile-jump-toggle.is-open .mobile-jump-arrow {
+            transform: rotate(180deg);
+        }
+        .mobile-jump-list {
+            list-style: none;
+            margin: 0;
+            padding: 0 16px 14px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border-top: 1px solid #f1f5f9;
+            background: #ffffff;
+        }
+        .mobile-jump-list[hidden] {
+            display: none;
+        }
+        .mobile-jump-list li {
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .mobile-jump-list li:last-child {
+            border-bottom: none;
+        }
+        .mobile-jump-list a {
+            display: block;
+            padding: 12px 2px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .mobile-jump-list a:hover,
+        .mobile-jump-list a:active {
+            color: #dc2626;
+        }
+    }
+
     header.modern-review-hero {
         border-bottom: 1px solid #b3babd;
     }
@@ -2906,8 +2998,8 @@ fixedContent = stripWp(fixedContent)
     }
 
     .hero-disclaimer-box.desktop-dis p {
-    color: #8892a0 !important;
-}
+        color: #8892a0 !important;
+    }
 
     .gi-editorial-note a {
         color: #64748b;
@@ -5847,4 +5939,55 @@ fixedContent = stripWp(fixedContent)
 
     document.addEventListener("DOMContentLoaded", initSpaceNewsPagination)
     document.addEventListener("astro:page-load", initSpaceNewsPagination)
+</script>
+
+<script is:inline>
+    function buildMobileJumpNav() {
+        const wrap = document.getElementById("mobileJumpNav")
+        const list = document.getElementById("mobileJumpList")
+        const toggle = document.getElementById("mobileJumpToggle")
+        if (!wrap || !list || !toggle) return
+
+        const article = document.querySelector(".wp-content")
+        if (!article) return
+
+        const headings = Array.from(article.querySelectorAll("h2[id]"))
+        if (!headings.length) {
+            wrap.style.display = "none"
+            return
+        }
+
+        list.innerHTML = headings
+            .map(h => `<li><a href="#${h.id}">${h.textContent}</a></li>`)
+            .join("")
+
+        if (toggle.dataset.bound === "true") return
+        toggle.dataset.bound = "true"
+
+        toggle.addEventListener("click", () => {
+            const isHidden = list.hasAttribute("hidden")
+            if (isHidden) {
+                list.removeAttribute("hidden")
+            } else {
+                list.setAttribute("hidden", "")
+            }
+            toggle.setAttribute("aria-expanded", String(isHidden))
+            toggle.classList.toggle("is-open", isHidden)
+        })
+
+        list.addEventListener("click", e => {
+            if (e.target.closest("a")) {
+                list.setAttribute("hidden", "")
+                toggle.setAttribute("aria-expanded", "false")
+                toggle.classList.remove("is-open")
+            }
+        })
+    }
+
+    if (document.readyState !== "loading") {
+        buildMobileJumpNav()
+    } else {
+        document.addEventListener("DOMContentLoaded", buildMobileJumpNav)
+    }
+    document.addEventListener("astro:page-load", buildMobileJumpNav)
 </script>
