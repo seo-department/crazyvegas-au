@@ -360,7 +360,14 @@ export async function getStaticPaths() {
                                 nodes {
                                     name
                                     registeredDate
-                                    posts(first: 6) { nodes { title uri } }
+                                    posts(first: 6) {
+                                        nodes {
+                                            title
+                                            uri
+                                            date
+                                            featuredImage { node { sourceUrl } }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -387,6 +394,8 @@ export async function getStaticPaths() {
                 const posts = (user.posts?.nodes || []).map((p: any) => ({
                     title: p.title,
                     uri: p.uri,
+                    image: p.featuredImage?.node?.sourceUrl || null,
+                    date: p.date || null,
                 }))
                 tooltipCache[personName] = { sinceLabel, posts }
             } else {
@@ -704,10 +713,12 @@ const authorBio = authorNode?.description
     : `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
 
 // Build the author slug once — used for both the avatar lookup and the profile link
-const authorSlug = authorName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "")
+const authorSlug = authorNode?.uri
+    ? authorNode.uri.replace(/\/author\//gi, "").replace(/\//g, "")
+    : authorName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, "")
 
 // 🚨 MANUAL AVATAR OVERRIDES (keyed by author slug)
 // Keep paths relative so they resolve the same way as featuredImageUrl.
@@ -731,7 +742,7 @@ let authorAvatar =
 // through into rendered <img src>. Now we strip the Cloudways domain instead.
 authorAvatar = toRelativeMediaUrl(authorAvatar)
 
-const authorLink = `/about-us/${authorSlug}/`
+const authorLink = `/author/${authorSlug}/`
 
 const formatSocial = (value: string | undefined, domain: string) => {
     if (!value) return null
@@ -830,7 +841,7 @@ let reviewerAvatar = toRelativeMediaUrl(assignedReviewer.avatar)
 const reviewerBio = boldName(assignedReviewer.bio, assignedReviewer.name)
 
 const reviewerSlug = assignedReviewer.slug
-const reviewerLink = `/about-us/${reviewerSlug}/`
+const reviewerLink = `/author/${reviewerSlug}/`
 
 // --- 🚨 NEW: PROCESS PRE-FETCHED AUTHOR/REVIEWER TOOLTIP DATA ---
 
@@ -864,6 +875,14 @@ const processTooltipPosts = (rawPosts: any[]) => {
         .map((p: any) => ({
             title: p.title,
             uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
+            image: p.image ? toRelativeMediaUrl(p.image) : null,
+            date: p.date
+                ? new Date(p.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                  })
+                : null,
         }))
 }
 
@@ -883,7 +902,7 @@ function buildTooltipHtml(opts: {
     avatar: string
     bio: string
     since: string | null
-    posts: { title: string; uri: string }[]
+    posts: { title: string; uri: string; image?: string | null; date?: string | null }[]
     profileLink: string
 }): string {
     const { roleLabel, name, avatar, bio, since, posts, profileLink } = opts
@@ -895,10 +914,25 @@ function buildTooltipHtml(opts: {
     const postsHtml =
         posts.length > 0
             ? `
-        <div class="atp-section-label">Has Also Written</div>
+        <div class="atp-section-label">Latest posts by: <i>${name}</i></div>
         <ul class="atp-posts-list">
             ${posts
-                .map(p => `<li><a href="${p.uri}">${p.title}</a></li>`)
+                .map(
+                    p => `
+                <li>
+                    <a href="${p.uri}" class="atp-post-link">
+                        ${
+                            p.image
+                                ? `<img src="${p.image}" alt="" class="atp-post-thumb" referrerpolicy="no-referrer" />`
+                                : `<span class="atp-post-thumb atp-post-thumb-placeholder"></span>`
+                        }
+                        <span class="atp-post-info">
+                            <span class="atp-post-title">${p.title}</span>
+                            ${p.date ? `<span class="atp-post-date">${p.date}</span>` : ""}
+                        </span>
+                    </a>
+                </li>`,
+                )
                 .join("")}
         </ul>`
             : ""
@@ -916,7 +950,7 @@ function buildTooltipHtml(opts: {
         <p class="atp-bio">${truncateText(bio.replace(/<\/?[^>]+(>|$)/g, ""), 130)}</p>
         ${postsHtml}
         <a href="${profileLink}" class="atp-profile-btn">
-            ${roleLabel === "Author" ? "Author" : "Reviewer"} Profile
+            ${roleLabel === "Author" ? "Also" : "Reviewer"} Wrote!
             <i class="fa-solid fa-chevron-right"></i>
         </a>
     `
@@ -2768,6 +2802,39 @@ fixedContent = stripWp(fixedContent)
         text-decoration: underline;
     }
 
+    .atp-post-link {
+        display: flex !important;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .atp-post-thumb {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #f1f5f9;
+    }
+    .atp-post-thumb-placeholder {
+        display: inline-block;
+    }
+    .atp-post-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+    .atp-post-title {
+        display: block;
+        color: #743030;
+        font-weight: 600;
+    }
+    .atp-post-date {
+        font-size: 0.72rem;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
     .atp-profile-btn {
         display: flex;
         align-items: center;
@@ -2944,7 +3011,7 @@ fixedContent = stripWp(fixedContent)
     }
 
     .gi-byline-person div {
-        display: flex;
+        display: block;
         flex-direction: column;
         line-height: 1.3;
     }
@@ -5287,7 +5354,7 @@ fixedContent = stripWp(fixedContent)
     }
 
     .gi-byline-person div {
-        display: flex;
+        display: block;
         flex-direction: column;
         line-height: 1.3;
     }

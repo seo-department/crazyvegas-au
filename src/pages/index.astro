@@ -98,6 +98,7 @@ const response = await fetch(wpUrl, {
                                 lastName
                                 description
                                 url
+                                uri
                                 avatar { url width height }
                                 seo { social { facebook twitter instagram linkedIn } }
                             }
@@ -216,11 +217,15 @@ if (yoastSchema && authorName) {
 let authorAvatar =
 	authorObj?.avatar?.url ||
 	`https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=f1f5f9&color=1e293b&bold=true`
-const authorSlug = authorName
-	.toLowerCase()
-	.replace(/[^a-z0-9]+/g, "-")
-	.replace(/(^-|-$)+/g, "")
-const authorLink = `/about-us/${authorSlug}/`
+// 🚨 Match the real /author/[author]/ archive's slug logic exactly (it derives
+// the slug from WP's own /author/xxx/ URI, not from slugifying the display name)
+const authorSlug = authorObj?.uri
+	? authorObj.uri.replace(/\/author\//gi, "").replace(/\//g, "")
+	: authorName
+			.toLowerCase()
+			.replace(/[^a-z0-9]+/g, "-")
+			.replace(/(^-|-$)+/g, "")
+const authorLink = `/author/${authorSlug}/`
 
 // Author Social Links
 const authorSocials = authorObj?.seo?.social || {}
@@ -286,7 +291,7 @@ const reviewerSlug = reviewerName
 	.toLowerCase()
 	.replace(/[^a-z0-9]+/g, "-")
 	.replace(/(^-|-$)+/g, "")
-const reviewerLink = `/about-us/${reviewerSlug}/`
+const reviewerLink = `/author/${reviewerSlug}/`
 
 // --- 🚨 NEW: RICH AUTHOR/REVIEWER HOVER TOOLTIP ---
 // Same enrichment used on posts/pages/reviews: latest posts + WP
@@ -325,7 +330,12 @@ async function fetchTooltipPersonData(displayName: string, currentUri: string) {
                                 name
                                 registeredDate
                                 posts(first: 6) {
-                                    nodes { title uri }
+                                    nodes {
+                                        title
+                                        uri
+                                        date
+                                        featuredImage { node { sourceUrl } }
+                                    }
                                 }
                             }
                         }
@@ -371,10 +381,26 @@ async function fetchTooltipPersonData(displayName: string, currentUri: string) {
 		const posts = (user.posts?.nodes || [])
 			.filter((p: any) => p.uri && p.uri !== currentUri)
 			.slice(0, 5)
-			.map((p: any) => ({
-				title: p.title,
-				uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
-			}))
+			.map((p: any) => {
+				let img = p.featuredImage?.node?.sourceUrl || ""
+				if (img) {
+					try {
+						img = new URL(img).pathname
+					} catch (e) {}
+				}
+				return {
+					title: p.title,
+					uri: stripWp(p.uri.replace(/https?:\/\/[^\/]+/g, "")),
+					image: img || null,
+					date: p.date
+						? new Date(p.date).toLocaleDateString("en-US", {
+								year: "numeric",
+								month: "short",
+								day: "numeric",
+							})
+						: null,
+				}
+			})
 
 		return { sinceLabel, posts }
 	} catch (e) {
@@ -389,7 +415,7 @@ function buildTooltipHtml(opts: {
 	avatar: string
 	bio: string
 	since: string | null
-	posts: { title: string; uri: string }[]
+	posts: { title: string; uri: string; image?: string | null; date?: string | null }[]
 	profileLink: string
 }): string {
 	const { roleLabel, name, avatar, bio, since, posts, profileLink } = opts
@@ -401,9 +427,26 @@ function buildTooltipHtml(opts: {
 	const postsHtml =
 		posts.length > 0
 			? `
-        <div class="atp-section-label">Has Also Written</div>
+        <div class="atp-section-label">Latest posts by: <i>${name}</i></div>
         <ul class="atp-posts-list">
-            ${posts.map(p => `<li><a href="${p.uri}">${p.title}</a></li>`).join("")}
+            ${posts
+				.map(
+					p => `
+                <li>
+                    <a href="${p.uri}" class="atp-post-link">
+                        ${
+							p.image
+								? `<img src="${p.image}" alt="" class="atp-post-thumb" referrerpolicy="no-referrer" />`
+								: `<span class="atp-post-thumb atp-post-thumb-placeholder"></span>`
+						}
+                        <span class="atp-post-info">
+                            <span class="atp-post-title">${p.title}</span>
+                            ${p.date ? `<span class="atp-post-date">${p.date}</span>` : ""}
+                        </span>
+                    </a>
+                </li>`,
+				)
+				.join("")}
         </ul>`
 			: ""
 
@@ -420,7 +463,7 @@ function buildTooltipHtml(opts: {
         <p class="atp-bio">${truncateText(bio.replace(/<\/?[^>]+(>|$)/g, ""), 130)}</p>
         ${postsHtml}
         <a href="${profileLink}" class="atp-profile-btn">
-            ${roleLabel === "Author" ? "Author" : "Reviewer"} Profile
+            ${roleLabel === "Author" ? "Also" : "Reviewer"} Wrote!
             <i class="fa-solid fa-chevron-right"></i>
         </a>
     `
@@ -1341,6 +1384,52 @@ fixedContent = fixedContent.replace(
 	</section>
 </section>
 <style is:global>
+
+	.atp-posts-list a {
+		font-size: 0.83rem;
+		color: #dc2626;
+		text-decoration: none;
+		line-height: 1.4;
+		display: block;
+	}
+	.atp-posts-list a:hover {
+		text-decoration: underline;
+	}
+	.atp-post-link {
+		display: flex !important;
+		align-items: flex-start;
+		gap: 10px;
+	}
+	.atp-post-thumb {
+		width: 44px;
+		height: 44px;
+		border-radius: 8px;
+		object-fit: cover;
+		flex-shrink: 0;
+		background: #f1f5f9;
+	}
+	.atp-post-thumb-placeholder {
+		display: inline-block;
+	}
+	.atp-post-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+	}
+	.atp-post-title {
+		display: block;
+		color: #dc2626;
+		font-weight: 600;
+	}
+	.atp-post-date {
+		font-size: 0.72rem;
+		color: #94a3b8;
+		font-weight: 500;
+	}
+
+
+	
 
 /* MOBILE-ONLY STICKY JUMP-TO NAV */
 .mobile-jump-nav {
