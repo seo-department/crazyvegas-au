@@ -793,6 +793,37 @@ function timeAgo(dateString: string) {
 </html>
 
 <style is:global>
+
+/* ==============================================================
+   MOBILE-ONLY MEGA MENU SCROLL FIX (overrides grid on small screens)
+============================================================== */
+@media (max-width: 991px) {
+    nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu {
+        display: none;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 65vh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        position: static !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    nav.header-nav .nav-dropdown.open div.nav-dropdown-menu.mega-menu {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    nav.header-nav .nav-dropdown div.nav-dropdown-menu.mega-menu .mega-column {
+        margin-bottom: 12px;
+    }
+}
+
     .meta-avatar {
         width: 100px !important;
         height: 100px !important;
@@ -801,6 +832,7 @@ function timeAgo(dateString: string) {
         object-fit: cover;
         flex-shrink: 0;
     }
+
 
     div#main-content {
         overflow-x: clip !important;
