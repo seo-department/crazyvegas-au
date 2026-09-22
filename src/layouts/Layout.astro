@@ -14101,14 +14101,8 @@ function timeAgo(dateString: string) {
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    a#myBtn {
-        margin-top: -7px;
-        margin-bottom: 25px;
-    }
+   
 
-    tbody#demo tr {
-        margin-bottom: 26px;
-    }
 
     .compare-modal-backdrop.show .compare-modal-content {
         transform: translateY(0) scale(1);
@@ -14301,7 +14295,8 @@ function timeAgo(dateString: string) {
         transition:
             background 0.3s ease,
             transform 0.2s ease;
-        margin-top: 15px;
+        margin-top: -7px;
+        margin-bottom: 25px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
@@ -15955,62 +15950,6 @@ function timeAgo(dateString: string) {
         border-radius: 10px;
     }
 
-    #cvc-offers-table tbody tr.card:nth-child(n + 11) {
-    display: none;
-}
-#cvc-offers-table.cvc-expanded tbody tr.card:nth-child(n + 11) {
-    display: inline-grid; /* falls back to whatever your real CSS declares for .card.flexbox */
-}
-
-
-
-#cvc-toggle-casinos {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin: 32px auto 8px;
-    padding: 14px 32px;
-    background: #fff;
-    color: #d32f2f;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    border: 2px solid #d32f2f;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
-}
-
-#cvc-toggle-casinos:hover {
-    background: #d32f2f;
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(211, 47, 47, 0.35);
-}
-
-#cvc-toggle-casinos:active {
-    transform: scale(0.98);
-}
-
-#cvc-toggle-casinos:focus-visible {
-    outline: 2px solid #1e88e5;
-    outline-offset: 2px;
-}
-
-/* chevron indicator */
-#cvc-toggle-casinos::after {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
-    transition: transform 0.2s ease;
-}
-
-#cvc-toggle-casinos[aria-expanded="true"]::after {
-    transform: rotate(-135deg);
-}
 
 
 
@@ -16734,75 +16673,50 @@ function timeAgo(dateString: string) {
     })
 </script>
 
-<script>
+<script is:inline>
     document.addEventListener("DOMContentLoaded", function () {
         const toggleBtn = document.getElementById("myBtn")
         const collapseDiv = document.getElementById("demo")
 
-        if (toggleBtn && collapseDiv) {
-            toggleBtn.addEventListener("click", function (e) {
-                e.preventDefault()
+        if (!toggleBtn || !collapseDiv) return
 
-                // Check current state based on aria-expanded or inline heights
-                const isExpanded =
-                    toggleBtn.getAttribute("aria-expanded") === "true"
+        // tbody doesn't support animated height reliably across browsers —
+        // toggle display instead.
+        collapseDiv.style.display = "none"
+        toggleBtn.setAttribute("aria-expanded", "false")
 
-                if (!isExpanded) {
-                    // EXPAND
-                    collapseDiv.style.display = "block" // Ensure table structure renders
-                    const fullHeight = collapseDiv.scrollHeight + "px"
-                    collapseDiv.style.height = fullHeight
+        toggleBtn.addEventListener("click", function (e) {
+            e.preventDefault()
 
-                    // Update state attributes
-                    toggleBtn.setAttribute("aria-expanded", "true")
-                    toggleBtn.classList.remove("collapsed")
-                    collapseDiv.setAttribute("aria-expanded", "true")
-                    collapseDiv.classList.remove("collapse")
-                    collapseDiv.classList.add("collapsing")
+            const isExpanded =
+                toggleBtn.getAttribute("aria-expanded") === "true"
 
-                    // Update button text
-                    toggleBtn.textContent = "Show Less"
+            if (!isExpanded) {
+                // EXPAND
+                collapseDiv.style.display = "table-row-group"
+                toggleBtn.setAttribute("aria-expanded", "true")
+                toggleBtn.classList.remove("collapsed")
+                collapseDiv.classList.remove("collapse")
+                toggleBtn.textContent = "Show Less"
+            } else {
+                // COLLAPSE
+                collapseDiv.style.display = "none"
+                toggleBtn.setAttribute("aria-expanded", "false")
+                toggleBtn.classList.add("collapsed")
+                collapseDiv.classList.add("collapse")
+                toggleBtn.textContent = "More Online Casinos"
 
-                    setTimeout(() => {
-                        collapseDiv.classList.remove("collapsing")
-                        collapseDiv.style.height = "auto" // Allow responsive resizing
-                    }, 400) // Matches CSS transition duration
-                } else {
-                    // COLLAPSE
-                    // Explicitly set height back to pixels first instead of 'auto' for transition to work
-                    collapseDiv.style.height = collapseDiv.scrollHeight + "px"
-
-                    // Force a reflow
-                    collapseDiv.offsetHeight
-
-                    collapseDiv.style.height = "0px"
-                    toggleBtn.setAttribute("aria-expanded", "false")
-                    toggleBtn.classList.add("collapsed")
-                    collapseDiv.setAttribute("aria-expanded", "false")
-                    collapseDiv.classList.add("collapsing")
-
-                    // Update button text
-                    toggleBtn.textContent = "More Online Casinos"
-
-                    setTimeout(() => {
-                        collapseDiv.classList.remove("collapsing")
-                        collapseDiv.classList.add("collapse")
-                        collapseDiv.style.display = "none"
-                    }, 400)
-
-                    // Optional: Smoothly scroll view back to the top table if it jumped down too far
-                    const tableContainer = document.querySelector(
-                        ".space-organizations-3-archive-items",
-                    )
-                    if (tableContainer) {
-                        tableContainer.scrollIntoView({
-                            behavior: "smooth",
-                            block: "end",
-                        })
-                    }
+                const tableContainer = document.querySelector(
+                    ".space-organizations-3-archive-items",
+                )
+                if (tableContainer) {
+                    tableContainer.scrollIntoView({
+                        behavior: "smooth",
+                        block: "end",
+                    })
                 }
-            })
-        }
+            }
+        })
     })
 </script>
 
@@ -16949,26 +16863,4 @@ function timeAgo(dateString: string) {
     }
 </script>
 
-<script is:inline>
-    function initCasinoToggle() {
-        const button = document.getElementById("cvc-toggle-casinos")
-        const table = document.getElementById("cvc-offers-table")
-        if (!button || !table || button.dataset.toggleBound) return
-        button.dataset.toggleBound = "true"
 
-        const label = button.querySelector(".cvc-toggle-label")
-
-        button.addEventListener("click", () => {
-            const isExpanded = table.classList.toggle("cvc-expanded")
-            button.setAttribute("aria-expanded", String(isExpanded))
-            if (label) {
-                label.textContent = isExpanded
-                    ? "Show Fewer Casinos"
-                    : "More Online Casinos"
-            }
-        })
-    }
-
-    document.addEventListener("DOMContentLoaded", initCasinoToggle)
-    document.addEventListener("astro:page-load", initCasinoToggle)
-</script>
