@@ -42,33 +42,48 @@ if (!hasOnlinePokies) {
     })
 }
 
-// Fallback: only push "Executives" if WP's primary-menu doesn't already have it
-const hasExecutives = menuTree.some(
-    item =>
-        item.url === "/executives/" ||
-        item.label?.toLowerCase() === "executives",
-)
-
-if (!hasExecutives) {
-    menuTree.push({
-        id: "manual-executives",
-        label: "Executives",
-        url: "/executives/",
-        meta: {},
-        children: [
-            {
-                id: "manual-bruce-mathieson-jnr",
-                label: "Bruce Mathieson Jnr",
-                url: "/executives/bruce-mathieson-jnr/",
-                meta: {},
-                children: [],
-            },
-        ],
-    })
+// FORCE "Executives" as the LAST top-level item, always.
+// Any WP version is removed (whatever its URL format or label markup)
+// and replaced by the hardcoded one below.
+// Keep this block after every other fallback push.
+function normalizePath(url = "") {
+    try {
+        // Strips domain from absolute WP URLs (https://site.com/executives/)
+        url = new URL(url, "https://x.invalid").pathname
+    } catch {}
+    return ("/" + url.replace(/^\/+|\/+$/g, "") + "/").toLowerCase()
 }
 
-const MAX_PER_COLUMN = 4   
-const MAX_COLUMNS = 3      
+function normalizeLabel(label = "") {
+    return label
+        .replace(/<[^>]*>/g, "")   // strip HTML WP may wrap labels in
+        .replace(/&[a-z#0-9]+;/gi, " ")
+        .trim()
+        .toLowerCase()
+}
+
+function isExecutives(item) {
+    return (
+        normalizePath(item.url) === "/executives/" ||
+        normalizeLabel(item.label) === "executives"
+    )
+}
+
+// Remove every WP match (handles duplicates too)
+for (let i = menuTree.length - 1; i >= 0; i--) {
+    if (isExecutives(menuTree[i])) menuTree.splice(i, 1)
+}
+
+menuTree.push({
+    id: "manual-executives",
+    label: "Executives",
+    url: "/executives/",
+    meta: {},
+    children: [],
+})
+
+const MAX_PER_COLUMN = 4
+const MAX_COLUMNS = 3
 
 function itemWeight(child) {
     return 1 + (child.children?.length || 0)
@@ -117,13 +132,18 @@ function buildColumns(children) {
         const icon = top.meta?.icon
         const color = top.meta?.color
 
-        if (top.children && top.children.length === 0) {
+        // Childless items use the SAME markup as dropdown items
+        // (button.nav-dropdown-toggle > a) so the existing CSS/JS
+        // shows them, just without the chevron and dropdown menu.
+        if (!top.children?.length) {
             return (
-                <div class="nav-dropdown">
-                    <a class="nav-link" href={top.url}>
-                        {icon && <i class={icon} style={color ? `color: ${color};` : undefined} />}
-                        <span set:html={top.label} />
-                    </a>
+                <div class="nav-dropdown nav-dropdown--no-children">
+                    <button class="nav-dropdown-toggle">
+                        <a href={top.url}>
+                            {icon && <i class={icon} style={color ? `color: ${color};` : undefined} />}
+                            <span set:html={top.label} />
+                        </a>
+                    </button>
                 </div>
             )
         }
@@ -153,7 +173,6 @@ function buildColumns(children) {
                                         {child.meta?.icon && <i class={child.meta.icon} />}
                                         <span set:html={child.label} />
                                     </a>
-                                    {/* Added safety checks to prevent crashes if a WP item has no children */}
                                     {child.children && child.children.length > 0 &&
                                         child.children.map((grandchild) => (
                                             <a href={grandchild.url} style="padding-left: 2rem; font-size: 0.85rem;">
