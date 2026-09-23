@@ -6058,3 +6058,56 @@ fixedContent = stripWp(fixedContent)
     }
     document.addEventListener("astro:page-load", buildMobileJumpNav)
 </script>
+
+
+<script is:inline>
+    function initCasinoToggle() {
+        // Select all casino rows regardless of which tbody they are inside
+        const rows = document.querySelectorAll('.offers tr.card');
+        const btn = document.getElementById('myBtn');
+
+        if (!btn || rows.length === 0) return;
+
+        // Fix the WordPress injected secondary tbody so it displays normally
+        const demoTbody = document.getElementById('demo');
+        if (demoTbody) {
+            demoTbody.style.height = 'auto';
+            demoTbody.style.display = 'contents'; // Prevents the tbody from restricting row heights
+            demoTbody.classList.remove('collapse');
+        }
+
+        // Initially hide rows after the 10th (index 9)
+        rows.forEach((row, index) => {
+            if (index > 9) {
+                row.style.display = 'none';
+            }
+        });
+
+        let isExpanded = false;
+
+        // Clone the button to wipe out any duplicate event listeners from Astro page loads
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isExpanded = !isExpanded;
+
+            rows.forEach((row, index) => {
+                if (index > 9) {
+                    row.style.display = isExpanded ? '' : 'none';
+                }
+            });
+
+            newBtn.innerHTML = isExpanded ? 'Show Less Casinos ▲' : 'More Online Casinos ▼';
+        });
+    }
+
+    // Initialize on standard page loads and Astro view transition navigations
+    if (document.readyState !== 'loading') {
+        initCasinoToggle();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCasinoToggle);
+    }
+    document.addEventListener('astro:page-load', initCasinoToggle);
+</script>
