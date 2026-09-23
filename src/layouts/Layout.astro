@@ -16674,11 +16674,12 @@ function timeAgo(dateString: string) {
 </script>
 
 <script is:inline>
-    document.addEventListener("DOMContentLoaded", function () {
+    function initMoreCasinosToggle() {
         const toggleBtn = document.getElementById("myBtn")
         const collapseDiv = document.getElementById("demo")
-
         if (!toggleBtn || !collapseDiv) return
+        if (toggleBtn.dataset.bound === "true") return
+        toggleBtn.dataset.bound = "true"
 
         // tbody doesn't support animated height reliably across browsers —
         // toggle display instead.
@@ -16717,7 +16718,14 @@ function timeAgo(dateString: string) {
                 }
             }
         })
-    })
+    }
+
+    if (document.readyState !== "loading") {
+        initMoreCasinosToggle()
+    } else {
+        document.addEventListener("DOMContentLoaded", initMoreCasinosToggle)
+    }
+    document.addEventListener("astro:page-load", initMoreCasinosToggle)
 </script>
 
 <script is:inline>
@@ -16861,6 +16869,41 @@ function timeAgo(dateString: string) {
             })
         })
     }
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Select all casino rows inside the table
+    const rows = document.querySelectorAll(".offers tbody tr.card");
+    const btn = document.getElementById("myBtn");
+
+    if (!btn || rows.length === 0) return;
+
+    // Initially hide all rows past the 10th item (index 9)
+    rows.forEach((row, index) => {
+      if (index > 9) {
+        row.style.display = "none";
+      }
+    });
+
+    let isExpanded = false;
+
+    // Toggle visibility on click
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      isExpanded = !isExpanded;
+
+      rows.forEach((row, index) => {
+        if (index > 9) {
+          // Clear the inline style to let the CSS from layout.txt take over when visible
+          row.style.display = isExpanded ? "" : "none";
+        }
+      });
+
+      // Update the button text based on state
+      btn.innerText = isExpanded ? "Show Less Casinos" : "More Online Casinos";
+    });
+  });
 </script>
 
 
