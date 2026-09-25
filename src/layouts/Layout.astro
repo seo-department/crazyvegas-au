@@ -16169,6 +16169,130 @@ function timeAgo(dateString: string) {
     color: #334155;
 }
 
+
+
+
+.exec-wrap,
+	.exec-section,
+	.exec-card {
+		--ink: #0f172a;
+		--muted: #475569;
+		--card: #ffffff;
+		--card-edge: #d5dbe3;
+		--accent: #d0021b;
+		--avatar-bg: #eef2f7;
+	}
+
+	.exec-wrap {
+		max-width: 1240px;
+		margin: 0 auto;
+		padding: 32px 16px 48px;
+	}
+
+	.exec-section {
+		margin-bottom: 40px;
+	}
+	.exec-section h2 {
+		font-size: 1.9rem;
+		line-height: 1.2;
+		margin: 0 0 6px;
+		color: var(--ink);
+	}
+	.exec-section > p {
+		margin: 0 0 18px;
+		color: var(--muted);
+		max-width: 70ch;
+	}
+
+	.exec-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+		gap: 8px;
+	}
+
+	.exec-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 18px;
+		min-height: 116px;
+		padding: 14px 18px 0 12px;
+		background:
+			radial-gradient(
+				120% 140% at 100% 0%,
+				rgba(208, 2, 27, 0.05),
+				transparent 55%
+			),
+			repeating-radial-gradient(
+				circle at 110% 120%,
+				transparent 0 38px,
+				rgba(15, 23, 42, 0.035) 38px 39px
+			),
+			var(--card);
+		border: 1px solid var(--card-edge);
+		border-radius: 6px;
+		box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+		overflow: hidden;
+	}
+
+	/* Photo slot: drop an <img> in .exec-photo to replace the initials */
+	.exec-photo {
+		flex: 0 0 78px;
+		align-self: flex-end;
+		height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--avatar-bg);
+		border-radius: 50% 50% 0 0;
+		color: #64748b;
+		font-weight: 700;
+		font-size: 1.35rem;
+		letter-spacing: 0.02em;
+	}
+	.exec-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top;
+		border-radius: inherit;
+	}
+
+	.exec-body {
+		flex: 1;
+		min-width: 0;
+		padding-bottom: 14px;
+	}
+
+	.exec-card .exec-name {
+		margin: 0;
+		font-size: 1.05rem;
+		font-weight: 700;
+		line-height: 1.25;
+		padding-bottom: 8px;
+		border-bottom: 1px solid var(--accent);
+		color: var(--ink);
+	}
+	.exec-card .exec-role {
+		margin: 8px 0 2px;
+		font-size: 0.8rem;
+		color: var(--muted);
+		line-height: 1.35;
+	}
+	.exec-card .exec-company {
+		margin: 0;
+		font-size: 0.88rem;
+		font-weight: 500;
+		line-height: 1.35;
+		color: var(--ink);
+	}
+
+	@media (max-width: 480px) {
+		.exec-section h2 {
+			font-size: 1.5rem;
+		}
+	}
+
 </style>
 
 <script is:inline>
