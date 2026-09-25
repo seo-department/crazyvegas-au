@@ -415,7 +415,12 @@ function buildTooltipHtml(opts: {
 	avatar: string
 	bio: string
 	since: string | null
-	posts: { title: string; uri: string; image?: string | null; date?: string | null }[]
+	posts: {
+		title: string
+		uri: string
+		image?: string | null
+		date?: string | null
+	}[]
 	profileLink: string
 }): string {
 	const { roleLabel, name, avatar, bio, since, posts, profileLink } = opts
@@ -645,7 +650,7 @@ fixedContent = fixedContent.replace(
 		)
 	}
 
-		<div id="mobileJumpNav" class="mobile-jump-nav">
+	<div id="mobileJumpNav" class="mobile-jump-nav">
 		<button
 			type="button"
 			id="mobileJumpToggle"
@@ -658,7 +663,6 @@ fixedContent = fixedContent.replace(
 		</button>
 		<ul id="mobileJumpList" class="mobile-jump-list" hidden></ul>
 	</div>
-
 
 	<header class="home-hero new-split-hero">
 		<div class="home-hero-container">
@@ -986,14 +990,27 @@ fixedContent = fixedContent.replace(
 						>
 							<div class="hero-lead-text">
 								<p>
-									You've probably searched for the best online casinos in Australia and gotten a mixed bag. We built Crazy Vegas because most <b>"best of"</b> lists aren't actually testing anything. We've tested over 160 licensed online casinos to build this ranking.
+									You've probably searched for the best online
+									casinos in Australia and gotten a mixed bag.
+									We built Crazy Vegas because most <b
+										>"best of"</b
+									> lists aren't actually testing anything. We've
+									tested over 160 licensed online casinos to build
+									this ranking.
 								</p>
 
 								<p>
-									Real testing means an actual deposit and a timed withdrawal, not a casino's claims repeated back. We haven't tested every offshore-licensed casino in Australia, only the ones worth your time. Our guide also covers what most lists skip, from checking a licence to spotting a copied casino.
+									Real testing means an actual deposit and a
+									timed withdrawal, not a casino's claims
+									repeated back. We haven't tested every
+									offshore-licensed casino in Australia, only
+									the ones worth your time. Our guide also
+									covers what most lists skip, from checking a
+									licence to spotting a copied casino.
 								</p>
 								<p>
-									No casino here is risk-free, so read the licence section before you sign up anywhere.
+									No casino here is risk-free, so read the
+									licence section before you sign up anywhere.
 								</p>
 							</div>
 
@@ -1373,7 +1390,6 @@ fixedContent = fixedContent.replace(
 	</section>
 </section>
 <style is:global>
-
 	.atp-posts-list a {
 		font-size: 0.83rem;
 		color: #dc2626;
@@ -1417,86 +1433,83 @@ fixedContent = fixedContent.replace(
 		font-weight: 500;
 	}
 
+	/* MOBILE-ONLY STICKY JUMP-TO NAV */
+	.mobile-jump-nav {
+		display: none;
+	}
 
-	
+	div#mobileJumpNav {
+		/* Offset by the height of your main header */
+		top: 79px !important;
+	}
 
-/* MOBILE-ONLY STICKY JUMP-TO NAV */
-.mobile-jump-nav {
-    display: none;
-}
+	@media (max-width: 600px) {
+		.mobile-jump-nav {
+			display: block;
 
-div#mobileJumpNav {
-    /* Offset by the height of your main header */
-    top: 79px !important; 
-}
+			/* FIX: Changed to fixed so it ignores the parent's overflow:hidden */
+			position: fixed;
+			left: 0;
+			width: 100%;
 
-@media (max-width: 600px) {
-    .mobile-jump-nav {
-        display: block;
-        
-        /* FIX: Changed to fixed so it ignores the parent's overflow:hidden */
-        position: fixed; 
-        left: 0;
-        width: 100%;
-        
-        z-index: 90;
-        background: #ffffff;
-        border-bottom: 1px solid #e2e8f0;
-        box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-    }
-    .mobile-jump-toggle {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: none;
-        border: none;
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        font-weight: 700;
-        color: #0f172a;
-        cursor: pointer;
-        font-family: inherit;
-    }
-    .mobile-jump-arrow {
-        font-size: 0.8rem;
-        color: #64748b;
-        transition: transform 0.25s ease;
-    }
-    .mobile-jump-toggle.is-open .mobile-jump-arrow {
-        transform: rotate(180deg);
-    }
-    .mobile-jump-list {
-        list-style: none;
-        margin: 0;
-        padding: 0 16px 14px;
-        max-height: 60vh;
-        overflow-y: auto;
-        border-top: 1px solid #f1f5f9;
-        background: #ffffff; 
-    }
-    .mobile-jump-list[hidden] {
-        display: none;
-    }
-    .mobile-jump-list li {
-        border-bottom: 1px solid #f1f5f9;
-    }
-    .mobile-jump-list li:last-child {
-        border-bottom: none;
-    }
-    .mobile-jump-list a {
-        display: block;
-        padding: 12px 2px; 
-        color: #475569;
-        text-decoration: none;
-        font-size: 0.88rem;
-        font-weight: 600;
-    }
-    .mobile-jump-list a:hover,
-    .mobile-jump-list a:active {
-        color: #dc2626;
-    }
-}
+			z-index: 90;
+			background: #ffffff;
+			border-bottom: 1px solid #e2e8f0;
+			box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+		}
+		.mobile-jump-toggle {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			background: none;
+			border: none;
+			padding: 12px 16px;
+			font-size: 0.9rem;
+			font-weight: 700;
+			color: #0f172a;
+			cursor: pointer;
+			font-family: inherit;
+		}
+		.mobile-jump-arrow {
+			font-size: 0.8rem;
+			color: #64748b;
+			transition: transform 0.25s ease;
+		}
+		.mobile-jump-toggle.is-open .mobile-jump-arrow {
+			transform: rotate(180deg);
+		}
+		.mobile-jump-list {
+			list-style: none;
+			margin: 0;
+			padding: 0 16px 14px;
+			max-height: 60vh;
+			overflow-y: auto;
+			border-top: 1px solid #f1f5f9;
+			background: #ffffff;
+		}
+		.mobile-jump-list[hidden] {
+			display: none;
+		}
+		.mobile-jump-list li {
+			border-bottom: 1px solid #f1f5f9;
+		}
+		.mobile-jump-list li:last-child {
+			border-bottom: none;
+		}
+		.mobile-jump-list a {
+			display: block;
+			padding: 12px 2px;
+			color: #475569;
+			text-decoration: none;
+			font-size: 0.88rem;
+			font-weight: 600;
+		}
+		.mobile-jump-list a:hover,
+		.mobile-jump-list a:active {
+			color: #dc2626;
+		}
+	}
 
 	/* Styling to ensure the generated TOC supports 2 columns on desktop */
 	@media (min-width: 768px) {
@@ -6370,6 +6383,111 @@ div#mobileJumpNav {
 
 	div#toc_container {
 		display: none;
+	}
+
+	.exec-wrap {
+		max-width: 1240px;
+		margin: 0 auto;
+		padding: 32px 16px 48px;
+	}
+
+	.exec-section {
+		margin-bottom: 40px;
+	}
+	.exec-section h2 {
+		font-size: 1.9rem;
+		line-height: 1.2;
+		margin: 0 0 6px;
+	}
+	.exec-section > p {
+		margin: 0 0 18px;
+		color: var(--muted);
+		max-width: 70ch;
+	}
+
+	.exec-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+		gap: 8px;
+	}
+
+	.exec-card {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 18px;
+		min-height: 116px;
+		padding: 14px 18px 0 12px;
+		background:
+			radial-gradient(
+				120% 140% at 100% 0%,
+				rgba(208, 2, 27, 0.05),
+				transparent 55%
+			),
+			repeating-radial-gradient(
+				circle at 110% 120%,
+				transparent 0 38px,
+				rgba(15, 23, 42, 0.035) 38px 39px
+			),
+			var(--card);
+		border: 1px solid var(--card-edge);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	/* Photo slot: drop an <img> in .exec-photo to replace the initials */
+	.exec-photo {
+		flex: 0 0 78px;
+		align-self: flex-end;
+		height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--avatar-bg);
+		border-radius: 50% 50% 0 0;
+		color: #64748b;
+		font-weight: 700;
+		font-size: 1.35rem;
+		letter-spacing: 0.02em;
+	}
+	.exec-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top;
+		border-radius: inherit;
+	}
+
+	.exec-body {
+		flex: 1;
+		min-width: 0;
+		padding-bottom: 14px;
+	}
+	.exec-name {
+		margin: 0;
+		font-size: 1.05rem;
+		font-weight: 700;
+		line-height: 1.25;
+		padding-bottom: 8px;
+		border-bottom: 1px solid var(--accent);
+	}
+	.exec-role {
+		margin: 8px 0 2px;
+		font-size: 0.8rem;
+		color: var(--muted);
+		line-height: 1.35;
+	}
+	.exec-company {
+		margin: 0;
+		font-size: 0.88rem;
+		font-weight: 500;
+		line-height: 1.35;
+	}
+
+	@media (max-width: 480px) {
+		.exec-section h2 {
+			font-size: 1.5rem;
+		}
 	}
 </style>
 
