@@ -33,18 +33,31 @@ function toRelativeMediaUrl(url: string | undefined | null): string {
     }
 }
 
+// Shared slug helper: "Daphne Hutchens" -> "daphne-hutchens"
+function slugify(s: string = ""): string {
+    return s
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "");
+}
+
 // 1. Fetch ALL posts and group them by Author, then use Astro's paginate()
 export async function getStaticPaths({ paginate }: { paginate: any }) {
     // SINGLE SOURCE OF TRUTH FOR DOMAIN
     const APP_ID = "6467266";
     const wpDomain = `https://wordpress-1164434-${APP_ID}.cloudwaysapps.com`;
-    const wpUrl = `${wpDomain}/graphql`; 
+    const wpUrl = `${wpDomain}/graphql`;
 
     // MUST INCLUDE THIS TO BYPASS CLOUDWAYS BOT PROTECTION
-    const safeHeaders = { 
+    const safeHeaders = {
         "Content-Type": "application/json",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     };
+
+    // getStaticPaths runs in its own scope, so the slug helper lives here too
+    const slugifyLocal = (s: string = "") =>
+        s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
 
     let allPosts: any[] = [];
     let hasNextPage = true;
@@ -119,25 +132,27 @@ export async function getStaticPaths({ paginate }: { paginate: any }) {
         if (!post.uri || post.uri === '/') return;
 
         const authorNode = post.author?.node;
-        const authorName = authorNode 
-            ? (authorNode.firstName && authorNode.lastName ? `${authorNode.firstName} ${authorNode.lastName}` : authorNode.name) 
+        const authorName = authorNode
+            ? (authorNode.firstName && authorNode.lastName ? `${authorNode.firstName} ${authorNode.lastName}` : authorNode.name)
             : "Editorial Team";
-            
-        // Create the clean dynamic slug (e.g., "dave-cooper")
-        // Create the clean dynamic slug directly from the WordPress URI
-            let authorSlug = "editorial-team";
-            if (authorNode && authorNode.uri) {
-                // This takes "/author/mason/" from WordPress and turns it into just "mason"
-                authorSlug = authorNode.uri.replace(/\/author\//gi, '').replace(/\//g, '');
-            } else {
-                authorSlug = authorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-            }
+
+        // URL slug comes from the WordPress URI (e.g. "/author/mason/" -> "mason")
+        // so existing author URLs don't change.
+        let authorSlug = "editorial-team";
+        if (authorNode && authorNode.uri) {
+            authorSlug = authorNode.uri.replace(/\/author\//gi, '').replace(/\//g, '');
+        } else {
+            authorSlug = slugifyLocal(authorName);
+        }
 
         if (!authorMap.has(authorSlug)) {
             authorMap.set(authorSlug, {
                 authorData: {
                     name: authorName,
                     slug: authorSlug,
+                    // 🚨 Name-based slug ("daphne-hutchens") — used for the
+                    // manual avatar lookup, since WP nicenames often differ
+                    nameSlug: slugifyLocal(authorName),
                     avatar: authorNode?.avatar?.url,
                     social: authorNode?.seo?.social || {}
                 },
@@ -167,27 +182,34 @@ const { author } = Astro.params;
 const APP_ID = "6467266";
 const wpDomain = `https://wordpress-1164434-${APP_ID}.cloudwaysapps.com`;
 
-// 🚨 Relevant real-photo default + manual per-author overrides (same pattern
-// as the slug/hero). Keys are the author URL slug; point each at a REAL
-// uploaded image. Never falls back to a random generated avatar.
+// 🚨 Relevant real-photo default + manual per-author overrides.
+// Keys can be EITHER the WP nicename (URL slug) OR the name slug
+// ("Daphne Hutchens" -> "daphne-hutchens"). Both are checked.
 const DEFAULT_AVATAR = "/wp-content/uploads/2026/03/mason-j.png";
 const manualAvatars: Record<string, string> = {
     "mason": "/wp-content/uploads/2026/03/mason-j.png",
+    "mason-heaton": "/wp-content/uploads/2026/03/mason-j.png",
     "caleb-daly": "/wp-content/uploads/2026/03/caleb-daly.png",
     "kayla-mcbrien": "/wp-content/uploads/2026/03/kayla-mcbrien.png",
     "daphne-hutchens": "/wp-content/uploads/2026/03/daphne-hutchens.png",
 };
 
-let authorAvatar =
-    manualAvatars[author] ||   // 1. manual override (real photo, already relative)
-    authorData.avatar ||       // 2. dynamic WP avatar (may be a raw Cloudways URL)
-    DEFAULT_AVATAR;            // 3. relevant default (real image, already relative)
+const nameSlug = authorData.nameSlug || slugify(authorData.name);
 
-// 🔒 FIX: was doing authorAvatar.replace('https://au.crazyvegas.com', wpDomain)
-// — that's backwards. It only fires if the string already contains the LIVE
-// domain (it never does for a fresh WP avatar URL), so the raw Cloudways host
-// sailed straight through into rendered <img src>. Now we strip the Cloudways
-// domain down to a relative path instead, so it never leaks.
+// Gravatar URLs are the generic "mystery person" silhouette when no real
+// photo is set in WP — treat them as missing so we never render them.
+const wpAvatar =
+    authorData.avatar && !/gravatar\.com/i.test(authorData.avatar)
+        ? authorData.avatar
+        : null;
+
+let authorAvatar =
+    manualAvatars[author] ||    // 1. manual override by WP nicename
+    manualAvatars[nameSlug] ||  // 2. manual override by display-name slug
+    wpAvatar ||                 // 3. real uploaded WP avatar (non-Gravatar)
+    DEFAULT_AVATAR;             // 4. relevant default (real image)
+
+// 🔒 Strip the Cloudways domain down to a relative path so it never leaks.
 authorAvatar = toRelativeMediaUrl(authorAvatar);
 
 const formatSocial = (value: string | undefined, domain: string) => {
@@ -207,14 +229,14 @@ const stripHtml = (html: string) => {
 };
 ---
 
-<Layout 
-    title={`Articles by ${authorData.name} | AU Crazy Vegas`} 
+<Layout
+    title={`Articles by ${authorData.name} | AU Crazy Vegas`}
     description={`Read the latest casino reviews, news, and guides written by ${authorData.name}.`}
     robots="index, follow"
 >
     <header class="author-hero">
         <div class="author-hero-container">
-            
+
             <nav class="post-breadcrumbs" aria-label="breadcrumb">
                 <a href="/">Home</a>
                 <span class="separator">›</span>
@@ -225,11 +247,11 @@ const stripHtml = (html: string) => {
 
             <div class="author-profile-box">
                 <img src={authorAvatar} alt={authorData.name} class="author-hero-avatar" referrerpolicy="no-referrer" />
-                
+
                 <div class="author-hero-info">
                     <h1 class="author-hero-title">{authorData.name}</h1>
                     <p class="author-hero-subtitle">Casino Expert & Contributing Writer</p>
-                    
+
                     <div class="meta-share" style="margin-top: 1rem;">
                         {twitterLink && (
                             <a href={twitterLink} target="_blank" rel="noopener noreferrer" class="share-btn twitter" aria-label="Twitter">
@@ -260,19 +282,18 @@ const stripHtml = (html: string) => {
 
     <main class="page-wrapper">
         <section class="page-container" style="background: transparent; box-shadow: none; border: none; padding: 0;">
-            
+
             <div class="posts-grid">
                 {page.data.map((post: any) => {
                     // Format Post Data properly by stripping the domain
                     let relativeUri = post.uri ? post.uri.replace(/https?:\/\/[^\/]+/g, "") : "/";
                     const cleanSlug = relativeUri.replace(/^\/|\/$/g, '');
                     const postLink = `/${cleanSlug}/`;
-                    
+
                     let featImage = post.featuredImage?.node?.sourceUrl || 'https://via.placeholder.com/600x400?text=Casino';
-                    // 🔒 FIX: this had NO sanitization at all — the raw Cloudways
-                    // featured-image URL was rendering straight into <img src>.
+                    // 🔒 Strip the raw Cloudways featured-image host
                     featImage = toRelativeMediaUrl(featImage);
-                    
+
                     const postDate = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
                     const excerpt = stripHtml(post.excerpt).substring(0, 120) + '...';
 
@@ -344,7 +365,7 @@ const stripHtml = (html: string) => {
        AUTHOR HERO SECTION
     ========================================= */
     .author-hero {
-        background-color: #0f172a; 
+        background-color: #0f172a;
         color: #ffffff;
         padding: 4rem 1rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -357,7 +378,7 @@ const stripHtml = (html: string) => {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 70%), 
+        background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 70%),
                     linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 1) 100%);
         pointer-events: none;
     }
@@ -408,7 +429,7 @@ const stripHtml = (html: string) => {
         font-size: 0.85rem;
         font-weight: 600;
         letter-spacing: 0.5px;
-        background: rgba(255, 255, 255, 0.05); 
+        background: rgba(255, 255, 255, 0.05);
         padding: 0.5rem 1.25rem;
         border-radius: 50px;
         backdrop-filter: blur(10px);
@@ -416,7 +437,7 @@ const stripHtml = (html: string) => {
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin-bottom: 0.5rem;
     }
-    
+
     .post-breadcrumbs a { color: #93c5fd; text-decoration: none; transition: color 0.2s ease; }
     .post-breadcrumbs a:hover { color: #ffffff; }
     .post-breadcrumbs .separator { color: #64748b; font-size: 1rem; line-height: 1; }

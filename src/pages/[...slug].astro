@@ -680,6 +680,15 @@ function toRelativeMediaUrl(url: string | undefined | null): string {
     }
 }
 
+// Shared slug helper: "Daphne Hutchens" -> "daphne-hutchens"
+function slugify(s: string = ""): string {
+    return (s || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "")
+}
+
 const authorNode = post.author?.node
 const authorName = authorNode
     ? authorNode.firstName && authorNode.lastName
@@ -712,35 +721,60 @@ const authorBio = authorNode?.description
     ? boldName(stripHtmlTags(stripWp(authorNode.description)), authorName)
     : `${authorName} is part of our editorial team, contributing casino guides, news, and reviews.`
 
-// Build the author slug once — used for both the avatar lookup and the profile link
+// Build the author slug once — used for the profile link (WP nicename,
+// e.g. "/author/daphne/" -> "daphne"). Unchanged so author URLs stay the same.
 const authorSlug = authorNode?.uri
     ? authorNode.uri.replace(/\/author\//gi, "").replace(/\//g, "")
-    : authorName
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)+/g, "")
+    : slugify(authorName)
 
-// 🚨 MANUAL AVATAR OVERRIDES (keyed by author slug)
+// 🚨 Name-based slug ("Daphne Hutchens" -> "daphne-hutchens"). The WP
+// nicename often differs from this, which is why the manual avatar lookup
+// used to miss and fall through to the Gravatar silhouette.
+const authorNameSlug = slugify(authorName)
+
+// 🚨 MANUAL AVATAR OVERRIDES — keys can be the name slug OR the WP nicename.
 // Keep paths relative so they resolve the same way as featuredImageUrl.
 const manualAvatars: Record<string, string> = {
     "caleb-daly": "/wp-content/uploads/2026/03/caleb-daly.png",
     "kayla-mcbrien": "/wp-content/uploads/2026/03/kayla-mcbrien.png",
     "daphne-hutchens": "/wp-content/uploads/2026/03/daphne-hutchens.png",
+    "mason-heaton": "/wp-content/uploads/2026/03/mason-j.png",
+    "mason": "/wp-content/uploads/2026/03/mason-j.png",
 }
 
 // 🚨 DEFAULT relevant fallback image — a REAL editorial photo, never a
 // random generated avatar. Swap this for whatever default you upload to WP.
 const DEFAULT_AVATAR = "/wp-content/uploads/2026/03/mason-j.png"
 
-let authorAvatar =
-    manualAvatars[authorSlug] || // 1. manual override (real photo, already relative)
-    authorNode?.avatar?.url || // 2. dynamic WP gravatar (may be a raw Cloudways URL)
-    DEFAULT_AVATAR // 3. relevant default (real image, already relative)
-// 🔒 FIX: was doing two backwards .replace(casinous.com/au.crazyvegas.com -> wpDomain)
-// calls — those only fire if the string already contains a LIVE domain, which
-// a fresh WP avatar URL never does, so the raw Cloudways host sailed straight
-// through into rendered <img src>. Now we strip the Cloudways domain instead.
-authorAvatar = toRelativeMediaUrl(authorAvatar)
+// Gravatar URLs are the generic "mystery person" silhouette when no real
+// photo is set in WP — treat them as missing so they never render.
+const realWpAvatar = (url?: string | null) =>
+    url && !/gravatar\.com/i.test(url) ? url : null
+
+// Single avatar resolver used everywhere on the page (hero, tooltip,
+// footer card, related-post cards).
+function resolveAvatar(
+    name: string,
+    wpUri?: string | null,
+    wpAvatarUrl?: string | null,
+    fallback: string = DEFAULT_AVATAR,
+): string {
+    const nicename = wpUri
+        ? wpUri.replace(/\/author\//gi, "").replace(/\//g, "")
+        : ""
+    const found =
+        (nicename && manualAvatars[nicename]) || // 1. manual override by WP nicename
+        manualAvatars[slugify(name)] || // 2. manual override by name slug
+        realWpAvatar(wpAvatarUrl) || // 3. real uploaded WP avatar (non-Gravatar)
+        fallback // 4. fallback
+    return toRelativeMediaUrl(found)
+}
+
+let authorAvatar = resolveAvatar(
+    authorName,
+    authorNode?.uri,
+    authorNode?.avatar?.url,
+)
 
 const authorLink = `/author/${authorSlug}/`
 
@@ -832,9 +866,8 @@ function getReviewerFor(author: string) {
 const assignedReviewer = getReviewerFor(authorName)
 const reviewerName = assignedReviewer.name
 
-// 🔒 FIX: same backwards-replace bug as authorAvatar above. The pool entries
-// are already relative paths, so in practice this was harmless — but any
-// future entry pointing at a raw WP avatar URL would have leaked silently.
+// 🔒 Pool entries are already relative paths; sanitize anyway so any
+// future entry pointing at a raw WP avatar URL can't leak.
 let reviewerAvatar = toRelativeMediaUrl(assignedReviewer.avatar)
 
 // 🚨 NEW: Hover-tooltip bio text for the reviewer name link
@@ -2113,11 +2146,14 @@ fixedContent = stripWp(fixedContent)
                                             ? `${authorObj.firstName} ${authorObj.lastName}`
                                             : authorObj.name
                                         : "Editorial Team"
-                                    let recAuthorAvatar =
-                                        authorObj?.avatar?.url ||
-                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-                                    recAuthorAvatar =
-                                        toRelativeMediaUrl(recAuthorAvatar)
+                                    // 🚨 Same resolver as the hero avatar;
+                                    // initials badge only if no real photo exists
+                                    const recAuthorAvatar = resolveAvatar(
+                                        recAuthorName,
+                                        authorObj?.uri,
+                                        authorObj?.avatar?.url,
+                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(recAuthorName)}&background=f1f5f9&color=1e293b&bold=true`,
+                                    )
 
                                     return (
                                         <div class="breaking-story-card">
@@ -2161,6 +2197,7 @@ fixedContent = stripWp(fixedContent)
                                                         src={recAuthorAvatar}
                                                         alt={recAuthorName}
                                                         class="card-author-avatar"
+                                                        referrerpolicy="no-referrer"
                                                     />
                                                     <span>
                                                         {recAuthorName} • 10 min
@@ -2215,11 +2252,14 @@ fixedContent = stripWp(fixedContent)
                                             ? `${authorObj.firstName} ${authorObj.lastName}`
                                             : authorObj.name
                                         : "Editorial Team"
-                                    let blogAuthorAvatar =
-                                        authorObj?.avatar?.url ||
-                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`
-                                    blogAuthorAvatar =
-                                        toRelativeMediaUrl(blogAuthorAvatar)
+                                    // 🚨 Same resolver as the hero avatar;
+                                    // initials badge only if no real photo exists
+                                    const blogAuthorAvatar = resolveAvatar(
+                                        blogAuthorName,
+                                        authorObj?.uri,
+                                        authorObj?.avatar?.url,
+                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(blogAuthorName)}&background=f1f5f9&color=1e293b&bold=true`,
+                                    )
 
                                     return (
                                         <div class="blog-post-card">
@@ -2258,6 +2298,7 @@ fixedContent = stripWp(fixedContent)
                                                             }
                                                             alt={blogAuthorName}
                                                             class="blog-author-avatar"
+                                                            referrerpolicy="no-referrer"
                                                         />
                                                         <span>
                                                             {blogAuthorName} •{" "}
